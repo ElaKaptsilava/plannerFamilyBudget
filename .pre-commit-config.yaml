@@ -1,0 +1,31 @@
+repos:
+    - repo: https://github.com/compilerla/conventional-pre-commit
+      rev: v3.7.0
+      hooks:
+        - id: conventional-pre-commit
+          stages: [ commit-msg ]
+          args: [ --strict, build, feat, fix, chore, test, custom, docs ]
+    - repo: https://github.com/pre-commit/pre-commit-hooks
+      rev: v3.2.0
+      hooks:
+          - id: trailing-whitespace
+    - repo: https://github.com/psf/black
+      rev: v24.4.2
+      hooks:
+        - id: black
+    - repo: https://github.com/astral-sh/ruff-pre-commit
+      rev: v0.4.3
+      hooks:
+        - id: ruff
+    - repo: https://github.com/PyCQA/bandit
+      rev: '1.7.8'
+      hooks:
+        - id: bandit
+          args: [ "-r", "core" ]
+          additional_dependencies: [ "bandit[toml]" ]
+    - repo: https://github.com/pycqa/isort
+      rev: 5.13.2
+      hooks:
+        - id: isort
+          args: ["--profile", "black"]
+          name: isort (python)
