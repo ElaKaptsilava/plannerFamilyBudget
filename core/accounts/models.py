@@ -3,8 +3,11 @@ from django.db import models
 
 
 class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True)
-    username = models.CharField(max_length=50)
+    email = models.EmailField(unique=True, help_text="Email address")
+    username = models.CharField(
+        max_length=50,
+        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
+    )
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["last_name", "first_name", "username"]
 
