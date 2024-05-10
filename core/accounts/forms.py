@@ -34,7 +34,6 @@ class CustomUserLoginForm(AuthenticationForm):
         self.user_cache = authenticate(self.request, email=email, password=password)
         if not self.user_cache:
             raise forms.ValidationError("Invalid email or password")
-        print(self.cleaned_data)
         return self.cleaned_data
 
 
