@@ -13,7 +13,7 @@ def index(request):
 class CustomLoginView(LoginView):
     authentication_form = CustomUserLoginForm
     template_name = "accounts/login.html"
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("accounts:home")
 
 
 def register_view(request):
