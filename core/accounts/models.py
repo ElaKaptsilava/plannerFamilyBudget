@@ -9,7 +9,7 @@ class CustomUser(AbstractUser):
         help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
     )
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["last_name", "first_name", "username"]
+    REQUIRED_FIELDS = ["last_name", "first_name"]
 
     def __str__(self) -> str:
         return f"{self.email}"
