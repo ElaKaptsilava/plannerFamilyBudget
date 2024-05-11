@@ -1,5 +1,4 @@
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import redirect, render
 from django.views.decorators.csrf import csrf_protect
 
@@ -10,7 +9,7 @@ from .forms import AccountAuthenticationForm, RegistrationForm
 def register_view(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
-        return HttpResponse("You are already authenticated as " + str(user.email))
+        return redirect("accounts:login")
 
     context = {}
     if request.POST:
@@ -19,11 +18,8 @@ def register_view(request, *args, **kwargs):
             form.save()
             email = form.cleaned_data.get("email").lower()
             raw_password = form.cleaned_data.get("password1")
-            account = authenticate(email=email, password=raw_password)
-            login(request, account)
-            destination = kwargs.get("next")
-            if destination:
-                return redirect(destination)
+            user_authenticate = authenticate(email=email, password=raw_password)
+            login(request, user_authenticate)
             return redirect("home")
         else:
             context["registration_form"] = form
@@ -41,8 +37,6 @@ def login_view(request, *args, **kwargs):
     if user.is_authenticated:
         return redirect("home")
 
-    destination = get_redirect_if_exists(request)
-
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
         if form.is_valid():
@@ -52,8 +46,6 @@ def login_view(request, *args, **kwargs):
 
             if user:
                 login(request, user)
-                if destination:
-                    return redirect(destination)
                 return redirect("home")
 
     else:
@@ -64,9 +56,6 @@ def login_view(request, *args, **kwargs):
     return render(request, "accounts/login.html", context)
 
 
-def get_redirect_if_exists(request):
-    redirect_ = None
-    if request.GET:
-        if request.GET.get("next"):
-            redirect_ = str(request.GET.get("next"))
-    return redirect_
+def logout_view(request):
+    logout(request)
+    return redirect("home")

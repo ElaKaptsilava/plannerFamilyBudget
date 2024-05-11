@@ -49,6 +49,7 @@ class TestRegisterUser(TestCase):
             "password2": self.user_build.password,
         }
 
+    @tag("x")
     def test_register_view_post_success(self):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
@@ -97,7 +98,6 @@ class TestRegisterUser(TestCase):
             f"Email {self.user_build.email} is already in use.",
         )
 
-    @tag("x")
     def test_register_view_post_password_mismatch(self):
         self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
 
