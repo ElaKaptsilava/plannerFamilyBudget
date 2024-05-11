@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -31,7 +32,8 @@ class CustomLoginView(LoginView):
     redirect_field_name = reverse_lazy("home")
 
 
-class RegisterView(CreateView):
+class RegisterView(CreateView, SuccessMessageMixin):
     template_name = "accounts/register.html"
     form_class = RegistrationForm
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("accounts:login")
+    success_message = "You have successfully registered."
