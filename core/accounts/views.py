@@ -14,6 +14,9 @@ class CustomLoginView(LoginView, SuccessMessageMixin):
     redirect_authenticated_user = True
     success_message = "You have successfully logged in."
 
+    def get_redirect_url(self):
+        return reverse_lazy("home")
+
     def form_invalid(self, form):
         messages.error(self.request, "Please try again.")
         return redirect("accounts:login")
