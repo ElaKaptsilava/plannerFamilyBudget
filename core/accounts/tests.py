@@ -19,6 +19,15 @@ class TestLoginUser(TestCase):
             is_active=False,
         )
 
+    @tag("x")
+    def test_login(self):
+        data = {"email": self.user_build.email, "password": self.user_build.password}
+
+        response = self.client.post(reverse_lazy("accounts:login"), data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(response, reverse_lazy("home"))
+
 
 class TestRegisterUser(TestCase):
     def setUp(self):
@@ -73,7 +82,6 @@ class TestRegisterUser(TestCase):
         )
         self.assertFormError(form, "email", "This email is already in use.")
 
-    @tag("x")
     def test_register_view_post_password_mismatch(self):
         self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
 

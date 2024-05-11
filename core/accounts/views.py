@@ -12,7 +12,6 @@ class CustomLoginView(LoginView, SuccessMessageMixin):
     template_name = "accounts/login.html"
     success_url = reverse_lazy("home")
     redirect_authenticated_user = True
-    redirect_field_name = reverse_lazy("home")
     success_message = "You have successfully logged in."
 
     def form_invalid(self, form):
