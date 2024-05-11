@@ -19,14 +19,23 @@ class TestLoginUser(TestCase):
             is_active=False,
         )
 
-    @tag("x")
     def test_login(self):
         data = {"email": self.user_build.email, "password": self.user_build.password}
 
         response = self.client.post(reverse_lazy("accounts:login"), data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        # self.assertRedirects(response, reverse_lazy("home"))
+        self.assertRedirects(response, reverse_lazy("home"))
+
+    @tag("x")
+    def test_login_with_invalid_email(self):
+        data = {"email": self.user_build.username, "password": self.user_build.password}
+
+        response = self.client.post(reverse_lazy("accounts:login"), data)
+        login_form = response.context["login_form"]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(login_form, "email", "Enter a valid email address.")
 
 
 class TestRegisterUser(TestCase):

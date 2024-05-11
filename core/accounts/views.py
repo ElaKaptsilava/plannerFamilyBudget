@@ -1,25 +1,48 @@
-from django.contrib import messages
-from django.contrib.auth.views import LoginView
+from django.contrib.auth import authenticate, login
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from .forms import RegistrationForm
+from .forms import AccountAuthenticationForm, RegistrationForm
 
 
-class CustomLoginView(LoginView, SuccessMessageMixin):
-    template_name = "accounts/login.html"
-    success_url = reverse_lazy("home")
-    redirect_authenticated_user = True
-    success_message = "You have successfully logged in."
+def login_view(request, *args, **kwargs):
+    context = {}
 
-    def get_redirect_url(self):
-        return reverse_lazy("home")
+    user = request.user
+    if user.is_authenticated:
+        return redirect("home")
 
-    def form_invalid(self, form):
-        messages.error(self.request, "Please try again.")
-        return redirect("accounts:login")
+    destination = get_redirect_if_exists(request)
+
+    if request.POST:
+        form = AccountAuthenticationForm(request.POST)
+        if form.is_valid():
+            email = request.POST["email"]
+            password = request.POST["password"]
+            user = authenticate(email=email, password=password)
+
+            if user:
+                login(request, user)
+                if destination:
+                    return redirect(destination)
+                return redirect("home")
+
+    else:
+        form = AccountAuthenticationForm()
+
+    context["login_form"] = form
+
+    return render(request, "accounts/login.html", context)
+
+
+def get_redirect_if_exists(request):
+    redirect_ = None
+    if request.GET:
+        if request.GET.get("next"):
+            redirect_ = str(request.GET.get("next"))
+    return redirect_
 
 
 class RegisterView(CreateView, SuccessMessageMixin):
