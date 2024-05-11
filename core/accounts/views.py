@@ -1,32 +1,37 @@
-from django.contrib.auth import login
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import LoginView
-from django.shortcuts import redirect, render
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.generic import CreateView
 
-from .forms import CustomUserLoginForm, CustomUserRegisterForm
+from .forms import RegistrationForm
 
 
-def index(request):
-    return render(request, "accounts/index.html")
+def log_in(request):
+    if request.method == "POST":
+        email = request.POST["email"]
+        password = request.POST["password"]
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return HttpResponseRedirect("home")
+        else:
+            messages.error(request, "There was an error Logging In. Try again...")
+    else:
+        return render(request, "accounts/login.html")
 
 
 class CustomLoginView(LoginView):
-    authentication_form = CustomUserLoginForm
+    # authentication_form = CustomUserLoginForm
     template_name = "accounts/login.html"
-    success_url = reverse_lazy("accounts:home")
+    success_url = reverse_lazy("home")
     redirect_authenticated_user = True
-    redirect_field_name = reverse_lazy("accounts:home")
+    redirect_field_name = reverse_lazy("home")
 
 
-def register_view(request):
-    if request.method == "POST":
-        form = CustomUserRegisterForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password"])
-            user.save()
-            login(request, user)
-            return redirect("home")
-    else:
-        form = CustomUserRegisterForm()
-    return render(request, "accounts/register.html", {"form": form})
+class RegisterView(CreateView):
+    template_name = "accounts/register.html"
+    form_class = RegistrationForm
+    success_url = reverse_lazy("home")

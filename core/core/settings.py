@@ -151,7 +151,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-LOGIN_REDIRECT_URL = "accounts:home"
+LOGIN_REDIRECT_URL = "home"
 
 sentry_sdk.init(
     dsn="https://f0b4ba9c057dd7b657c5026ebaf27844@o4506400042844160.ingest.us.sentry.io/4507231938215936",
