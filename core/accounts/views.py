@@ -1,10 +1,37 @@
 from django.contrib.auth import authenticate, login
-from django.contrib.messages.views import SuccessMessageMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.decorators.csrf import csrf_protect
 
 from .forms import AccountAuthenticationForm, RegistrationForm
+
+
+@csrf_protect
+def register_view(request, *args, **kwargs):
+    user = request.user
+    if user.is_authenticated:
+        return HttpResponse("You are already authenticated as " + str(user.email))
+
+    context = {}
+    if request.POST:
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data.get("email").lower()
+            raw_password = form.cleaned_data.get("password1")
+            account = authenticate(email=email, password=raw_password)
+            login(request, account)
+            destination = kwargs.get("next")
+            if destination:
+                return redirect(destination)
+            return redirect("home")
+        else:
+            context["registration_form"] = form
+
+    else:
+        form = RegistrationForm()
+        context["registration_form"] = form
+    return render(request, "accounts/register.html", context)
 
 
 def login_view(request, *args, **kwargs):
@@ -43,10 +70,3 @@ def get_redirect_if_exists(request):
         if request.GET.get("next"):
             redirect_ = str(request.GET.get("next"))
     return redirect_
-
-
-class RegisterView(CreateView, SuccessMessageMixin):
-    template_name = "accounts/register.html"
-    form_class = RegistrationForm
-    success_url = reverse_lazy("accounts:login")
-    success_message = "You have successfully registered."

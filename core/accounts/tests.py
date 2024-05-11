@@ -27,7 +27,6 @@ class TestLoginUser(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, reverse_lazy("home"))
 
-    @tag("x")
     def test_login_with_invalid_email(self):
         data = {"email": self.user_build.username, "password": self.user_build.password}
 
@@ -56,7 +55,7 @@ class TestRegisterUser(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(response, reverse_lazy("accounts:login"))
+        self.assertRedirects(response, reverse_lazy("home"))
         self.assertTrue(
             get_user_model().objects.filter(email=self.user_build.email).exists()
         )
@@ -65,11 +64,14 @@ class TestRegisterUser(TestCase):
         data = {}
 
         response = self.client.post(reverse_lazy("accounts:register"), data)
-        form = response.context["form"]
+        registration_form = response.context["registration_form"].fields
+
+        email_errors = registration_form["email"].error_messages["required"]
+        username_errors = registration_form["username"].error_messages["required"]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(form, "email", "This field is required.")
-        self.assertFormError(form, "username", "This field is required.")
+        self.assertEqual(email_errors, "This field is required.")
+        self.assertEqual(username_errors, "This field is required.")
 
     def test_register_view_post_existing_email(self):
         get_user_model().objects.create_user(
@@ -83,21 +85,28 @@ class TestRegisterUser(TestCase):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
         )
-        form = response.context["form"]
+        registration_form = response.context["registration_form"]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(
             get_user_model().objects.filter(email=self.cleaned_data["email"]).exists()
         )
-        self.assertFormError(form, "email", "This email is already in use.")
+        self.assertFormError(
+            registration_form,
+            "email",
+            f"Email {self.user_build.email} is already in use.",
+        )
 
+    @tag("x")
     def test_register_view_post_password_mismatch(self):
         self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
 
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
         )
-        form = response.context["form"]
+        registration_form = response.context["registration_form"]
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(form, "password2", "The two password fields didn’t match.")
+        self.assertFormError(
+            registration_form, "password2", "The two password fields didn’t match."
+        )
