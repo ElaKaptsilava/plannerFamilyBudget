@@ -23,6 +23,7 @@ def register_view(request, *args, **kwargs):
             login(request, user_authenticate)
             return redirect("home")
         else:
+            print(form.errors)
             context["registration_form"] = form
 
     else:
@@ -33,7 +34,6 @@ def register_view(request, *args, **kwargs):
 
 def login_view(request, *args, **kwargs):
     context = {}
-
     user = request.user
     if user.is_authenticated:
         return redirect("home")
@@ -52,7 +52,7 @@ def login_view(request, *args, **kwargs):
     else:
         form = AccountAuthenticationForm()
 
-    context["login_form"] = form
+        context["login_form"] = form
 
     return render(request, "accounts/login.html", context)
 
