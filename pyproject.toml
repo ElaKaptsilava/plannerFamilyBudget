@@ -18,6 +18,7 @@ pre-commit = "^3.7.0"
 factory-boy = "^3.3.0"
 djangorestframework = "^3.15.1"
 sentry-sdk = {extras = ["django"], version = "^2.1.1"}
+safety = "^3.2.0"
 
 
 [build-system]

@@ -32,4 +32,13 @@ jobs:
       run: |
         cd core
         poetry run python manage.py test
-        
+    - name: Run Bandit
+      run: |
+        poetry run bandit -r core
+    - name: Run Safety
+      run: |
+        poetry run safety check
+    - name: Run Ruff
+      run: |
+        poetry run ruff core
+
