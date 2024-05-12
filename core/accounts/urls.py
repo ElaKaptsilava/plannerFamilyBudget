@@ -1,6 +1,7 @@
-import views as accounts_views
 from django.contrib.auth import views as auth_views
 from django.urls import path
+
+from . import views as accounts_views
 
 app_name = "accounts"
 
@@ -10,15 +11,26 @@ urlpatterns = [
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
 ]
 
-reset_password_urls = [
+reset_password_urlpatterns = [
     path(
-        "password_reset/",
-        accounts_views.MyPasswordResetView.as_view(),
-        name="password-reset",
+        "password-reset/",
+        accounts_views.CustomResetPasswordView.as_view(),
+        name="reset-password",
     ),
-    # path('password_reset/done/', MyPasswordResetDoneView.as_view(), name='password-reset-done'),
-    # path('reset/<uidb64>/<token>/', MyPasswordResetConfirmView.as_view(), name='password-reset-confirm'),
-    # path('reset/done/', MyPasswordResetCompleteView.as_view(), name='password-reset-complete'),
+    path(
+        "password-reset-confirm/<uidb64>/<token>/",
+        auth_views.PasswordResetConfirmView.as_view(
+            template_name="accounts/password-reset-confirm.html"
+        ),
+        name="password_reset_confirm",
+    ),
+    path(
+        "password-reset-complete/",
+        auth_views.PasswordResetCompleteView.as_view(
+            template_name="accounts/password-reset-complete.html"
+        ),
+        name="password_reset_complete",
+    ),
 ]
 
-urlpatterns += reset_password_urls
+urlpatterns += reset_password_urlpatterns

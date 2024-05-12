@@ -1,5 +1,8 @@
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 
 from .forms import AccountAuthenticationForm, RegistrationForm
 
@@ -52,3 +55,16 @@ def login_view(request, *args, **kwargs):
     context["login_form"] = form
 
     return render(request, "accounts/login.html", context)
+
+
+class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = "accounts/forgot-password.html"
+    email_template_name = "users/password-reset-email.html"
+    subject_template_name = "users/password_reset_subject"
+    success_message = (
+        "We've emailed you instructions for setting your password, "
+        "if an account exists with the email you entered. You should receive them shortly."
+        " If you don't receive an email, "
+        "please make sure you've entered the address you registered with, and check your spam folder."
+    )
+    success_url = reverse_lazy("accounts:login")
