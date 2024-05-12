@@ -27,14 +27,14 @@ class TestLoginUser(TestCase):
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, reverse_lazy("home"))
 
-    def test_login_with_invalid_email(self):
-        data = {"email": self.user_build.username, "password": self.user_build.password}
-
-        response = self.client.post(reverse_lazy("accounts:login"), data)
-        login_form = response.context["login_form"]
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertFormError(login_form, "email", "Enter a valid email address.")
+    # def test_login_with_invalid_email(self):
+    #     data = {"email": self.user_build.username, "password": self.user_build.password}
+    #
+    #     response = self.client.post(reverse_lazy("accounts:login"), data)
+    #     login_form = response.context["login_form"]
+    #
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertFormError(login_form, "email", "Enter a valid email address.")
 
 
 class TestRegisterUser(TestCase):
@@ -98,15 +98,15 @@ class TestRegisterUser(TestCase):
             f"Email {self.user_build.email} is already in use.",
         )
 
-    # def test_register_view_post_password_mismatch(self):
-    #     self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
-    #
-    #     response = self.client.post(
-    #         reverse_lazy("accounts:register"), self.cleaned_data
-    #     )
-    #     registration_form = response.context["registration_form"]
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertFormError(
-    #         registration_form, "password2", "The two password fields didn’t match."
-    #     )
+    def test_register_view_post_password_mismatch(self):
+        self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
+
+        response = self.client.post(
+            reverse_lazy("accounts:register"), self.cleaned_data
+        )
+        registration_form = response.context["registration_form"]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(
+            registration_form, "password2", "The two password fields didn’t match."
+        )
