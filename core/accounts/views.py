@@ -1,11 +1,9 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 from django.shortcuts import redirect, render
-from django.views.decorators.csrf import csrf_protect
 
 from .forms import AccountAuthenticationForm, RegistrationForm
 
 
-@csrf_protect
 def register_view(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
@@ -54,8 +52,3 @@ def login_view(request, *args, **kwargs):
     context["login_form"] = form
 
     return render(request, "accounts/login.html", context)
-
-
-def logout_view(request):
-    logout(request)
-    return redirect("home")
