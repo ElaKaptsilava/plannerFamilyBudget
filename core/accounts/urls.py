@@ -9,9 +9,6 @@ urlpatterns = [
     path("login/", accounts_views.login_view, name="login"),
     path("register/", accounts_views.register_view, name="register"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-]
-
-reset_password_urlpatterns = [
     path(
         "password-reset/",
         accounts_views.CustomResetPasswordView.as_view(),
@@ -32,5 +29,3 @@ reset_password_urlpatterns = [
         name="password_reset_complete",
     ),
 ]
-
-urlpatterns += reset_password_urlpatterns
