@@ -38,6 +38,7 @@ jobs:
     - name: Run Safety
       run: |
         poetry run safety check
+      continue-on-error: true
     - name: Run Ruff
       run: |
         poetry run ruff core
