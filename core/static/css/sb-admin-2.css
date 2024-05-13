@@ -6567,7 +6567,8 @@ button.bg-dark:focus {
 }
 
 .border-dark {
-  border-color: #5a5c69 !important;
+  border-color: black !important;
+  border-width: 50px;
 }
 
 .border-white {
