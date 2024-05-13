@@ -162,4 +162,6 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    print(EMAIL_BACKEND)

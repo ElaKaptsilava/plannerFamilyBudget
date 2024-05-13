@@ -21,6 +21,15 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
 
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var bottomElement = document.getElementById('bottom');
+        if (bottomElement) {
+            bottomElement.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
+    });
+    </script>
+
 </head>
 
 <body class="bg-gradient-primary">

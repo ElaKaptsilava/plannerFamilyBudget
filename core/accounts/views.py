@@ -1,8 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
-from django.urls import reverse_lazy
 
 from .forms import AccountAuthenticationForm, RegistrationForm
 
@@ -59,12 +59,26 @@ def login_view(request, *args, **kwargs):
 
 class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = "accounts/forgot-password.html"
-    email_template_name = "users/password-reset-email.html"
-    subject_template_name = "users/password_reset_subject"
+    email_template_name = "accounts/password-reset-email.html"
+    subject_template_name = "accounts/password-reset-subject.txt"
     success_message = (
         "We've emailed you instructions for setting your password, "
         "if an account exists with the email you entered. You should receive them shortly."
         " If you don't receive an email, "
         "please make sure you've entered the address you registered with, and check your spam folder."
     )
-    success_url = reverse_lazy("accounts:login")
+
+    def form_valid(self, form):
+        """
+        If the form is valid, send a password reset email to the user.
+        """
+        form.save(
+            subject_template_name=self.subject_template_name,
+            email_template_name=self.email_template_name,
+            html_email_template_name=self.html_email_template_name,
+            request=self.request,
+            token_generator=self.token_generator,
+            from_email=self.from_email,
+        )
+        messages.success(self.request, self.success_message)
+        return self.render_to_response(self.get_context_data(form=form))

@@ -10,21 +10,31 @@ urlpatterns = [
     path("register/", accounts_views.register_view, name="register"),
     path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path(
-        "password-reset/",
+        "password-change/",
+        auth_views.PasswordChangeView.as_view(),
+        name="password_change",
+    ),
+    path(
+        "password-change/done/",
+        auth_views.PasswordChangeDoneView.as_view(),
+        name="password_change_done",
+    ),
+    path(
+        "reset-password/",
         accounts_views.CustomResetPasswordView.as_view(),
-        name="reset-password",
+        name="password_reset",
     ),
     path(
         "password-reset-confirm/<uidb64>/<token>/",
         auth_views.PasswordResetConfirmView.as_view(
-            template_name="accounts/password-reset-confirm.html"
+            template_name="accounts/forgot-password-confirm.html",
         ),
         name="password_reset_confirm",
     ),
     path(
-        "password-reset-complete/",
+        "reset/done/",
         auth_views.PasswordResetCompleteView.as_view(
-            template_name="accounts/password-reset-complete.html"
+            template_name="accounts/password-reset-complete.html",
         ),
         name="password_reset_complete",
     ),
