@@ -36,7 +36,7 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.AllowAllUsersModelBackend",
-    "accounts.auth.CaseInsensitiveModelBackend",
+    "registration.auth.CaseInsensitiveModelBackend",
 )
 
 # Application definition
@@ -51,11 +51,12 @@ INSTALLED_APPS = [
 ]
 
 CUSTOM_APPS = [
-    "accounts",
+    "accounts.apps.AccountsConfig",
 ]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "crispy_forms",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS
@@ -153,7 +154,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = reverse_lazy("accounts:login")
+LOGIN_URL = reverse_lazy("registration:login")
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 
 sentry_sdk.init(
@@ -169,3 +170,5 @@ if DEBUG:
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"

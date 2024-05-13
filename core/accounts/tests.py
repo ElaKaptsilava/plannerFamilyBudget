@@ -22,7 +22,7 @@ class TestLoginUser(TestCase):
     def test_login(self):
         data = {"email": self.user_build.email, "password": self.user_build.password}
 
-        response = self.client.post(reverse_lazy("accounts:login"), data)
+        response = self.client.post(reverse_lazy("registration:login"), data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(response, reverse_lazy("home"))
@@ -30,7 +30,7 @@ class TestLoginUser(TestCase):
     # def test_login_with_invalid_email(self):
     #     data = {"email": self.user_build.username, "password": self.user_build.password}
     #
-    #     response = self.client.post(reverse_lazy("accounts:login"), data)
+    #     response = self.client.post(reverse_lazy("registration:login"), data)
     #     login_form = response.context["login_form"]
     #
     #     self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -51,7 +51,7 @@ class TestRegisterUser(TestCase):
 
     def test_register_view_post_success(self):
         response = self.client.post(
-            reverse_lazy("accounts:register"), self.cleaned_data
+            reverse_lazy("registration:register"), self.cleaned_data
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -63,7 +63,7 @@ class TestRegisterUser(TestCase):
     def test_register_view_post_invalid_form(self):
         data = {}
 
-        response = self.client.post(reverse_lazy("accounts:register"), data)
+        response = self.client.post(reverse_lazy("registration:register"), data)
         registration_form = response.context["registration_form"].fields
 
         email_errors = registration_form["email"].error_messages["required"]
@@ -83,7 +83,7 @@ class TestRegisterUser(TestCase):
         )
 
         response = self.client.post(
-            reverse_lazy("accounts:register"), self.cleaned_data
+            reverse_lazy("registration:register"), self.cleaned_data
         )
         registration_form = response.context["registration_form"]
 
@@ -101,7 +101,7 @@ class TestRegisterUser(TestCase):
         self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
 
         response = self.client.post(
-            reverse_lazy("accounts:register"), self.cleaned_data
+            reverse_lazy("registration:register"), self.cleaned_data
         )
         registration_form = response.context["registration_form"]
 

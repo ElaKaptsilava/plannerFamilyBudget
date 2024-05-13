@@ -1,8 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.views import PasswordResetView
+from django.contrib.auth.views import (
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetView,
+)
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 
 from .forms import AccountAuthenticationForm, RegistrationForm
 
@@ -10,7 +15,7 @@ from .forms import AccountAuthenticationForm, RegistrationForm
 def register_view(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
-        return redirect("accounts:login")
+        return redirect("registration:login")
 
     context = {}
     if request.POST:
@@ -29,7 +34,7 @@ def register_view(request, *args, **kwargs):
     else:
         form = RegistrationForm()
         context["registration_form"] = form
-    return render(request, "accounts/register.html", context)
+    return render(request, "registration/register.html", context)
 
 
 def login_view(request, *args, **kwargs):
@@ -54,13 +59,13 @@ def login_view(request, *args, **kwargs):
 
         context["login_form"] = form
 
-    return render(request, "accounts/login.html", context)
+    return render(request, "registration/login.html", context)
 
 
 class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
-    template_name = "accounts/forgot-password.html"
-    email_template_name = "accounts/password-reset-email.html"
-    subject_template_name = "accounts/password-reset-subject.txt"
+    template_name = "registration/reset_password.html"
+    email_template_name = "registration/password_reset_email.html"
+    subject_template_name = "registration/password_reset_subject.txt"
     success_message = (
         "We've emailed you instructions for setting your password, "
         "if an account exists with the email you entered. You should receive them shortly."
@@ -82,3 +87,12 @@ class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
         )
         messages.success(self.request, self.success_message)
         return self.render_to_response(self.get_context_data(form=form))
+
+
+class CustomResetPasswordConfirmView(PasswordResetConfirmView):
+    template_name = ("registration/reset_password_confirm.html",)
+    success_url = reverse_lazy("registration:password_reset_complete")
+
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    template_name = "registration/password_reset_complete.html"

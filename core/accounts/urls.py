@@ -15,27 +15,23 @@ urlpatterns = [
         name="password_change",
     ),
     path(
-        "reset-password/",
-        accounts_views.CustomResetPasswordView.as_view(),
-        name="password_reset",
-    ),
-    path(
         "password-change/done/",
         auth_views.PasswordChangeDoneView.as_view(),
         name="password_change_done",
     ),
     path(
+        "reset-password/",
+        accounts_views.CustomResetPasswordView.as_view(),
+        name="password_reset",
+    ),
+    path(
         "password-reset-confirm/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name="accounts/forgot-password-confirm.html",
-        ),
+        accounts_views.CustomResetPasswordConfirmView.as_view(),
         name="password_reset_confirm",
     ),
     path(
         "reset/done/",
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name="accounts/password-reset-complete.html",
-        ),
+        accounts_views.CustomPasswordResetCompleteView.as_view(),
         name="password_reset_complete",
     ),
 ]
