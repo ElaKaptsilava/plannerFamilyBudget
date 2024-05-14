@@ -1,5 +1,10 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from PIL import Image
+
+
+def get_upload_path(instance, filename):
+    return "/".join(["accounts", str(instance.id), filename])
 
 
 class CustomUser(AbstractUser):
@@ -16,3 +21,23 @@ class CustomUser(AbstractUser):
 
     def __repr__(self) -> str:
         return f"CustomUser(email={self.email!r})"
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+    )
+    avatar = models.ImageField(default="undraw_profile.svg", upload_to=get_upload_path)
+
+    def __str__(self):
+        return f"{self.user.first_name} Profile"
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        img = Image.open(self.avatar.path)
+        if img.height > 300 or img.width > 300:
+            output_size = (300, 300)
+            img.thumbnail(output_size)
+            img.save(self.avatar.path)
