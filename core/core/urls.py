@@ -26,8 +26,13 @@ urlpatterns = [
     path("auth/", include("accounts.urls"), name="accounts"),
     path(
         "home/",
-        TemplateView.as_view(template_name="registration/index.html"),
+        TemplateView.as_view(template_name="accounts/dashboard.html"),
         name="home",
+    ),
+    path(
+        "test/",
+        TemplateView.as_view(template_name="accounts/dashboard.html"),
+        name="test",
     ),
 ]
 
