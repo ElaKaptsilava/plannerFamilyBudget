@@ -13,7 +13,7 @@ urlpatterns = [
         auth_views.LogoutView.as_view(template_name="registration/logged_out.html"),
         name="logout",
     ),
-    path("profile/", accounts_views.ProfileView.as_view(), name="profile"),
+    path("profile/<int:user_id>", accounts_views.ProfileView.as_view(), name="profile"),
     path(
         "password-change/",
         auth_views.PasswordChangeView.as_view(),

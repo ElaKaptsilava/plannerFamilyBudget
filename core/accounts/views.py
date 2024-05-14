@@ -33,7 +33,7 @@ def register_view(request, *args, **kwargs):
             raw_password = form.cleaned_data.get("password1")
             user_authenticate = authenticate(email=email, password=raw_password)
             login(request, user_authenticate)
-            return redirect("home")
+            return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
         else:
             print(form.errors)
             context["registration_form"] = form
@@ -48,7 +48,7 @@ def login_view(request, *args, **kwargs):
     context = {}
     user = request.user
     if user.is_authenticated:
-        return redirect("home")
+        return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
 
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
@@ -59,7 +59,7 @@ def login_view(request, *args, **kwargs):
 
             if user:
                 login(request, user)
-                return redirect("home")
+                return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
 
     else:
         form = AccountAuthenticationForm()
@@ -108,7 +108,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
 class ProfileView(LoginRequiredMixin, View):
     template_name: str = "accounts/profile.html"
 
-    def get(self, request):
+    def get(self, request, user_id):
         user_form = CustomUserUpdateForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
 
@@ -116,7 +116,7 @@ class ProfileView(LoginRequiredMixin, View):
 
         return render(request, self.template_name, context)
 
-    def post(self, request):
+    def post(self, request, user_id):
         user_form = CustomUserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileForm(
             request.POST, request.FILES, instance=request.user.profile
@@ -127,8 +127,9 @@ class ProfileView(LoginRequiredMixin, View):
             profile_form.save()
 
             messages.success(request, "Your profile has been updated successfully")
-
-            return redirect("profile")
+            return redirect(
+                reverse_lazy("accounts:profile", kwargs={"user_id": request.user.id})
+            )
         else:
             context = {"user_form": user_form, "profile_form": profile_form}
             messages.error(request, "Error updating you profile")
