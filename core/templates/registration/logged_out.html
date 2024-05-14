@@ -1,0 +1,10 @@
+{% extends "registration/base_auth.html" %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4"><p>You are logged out!</p></h1>
+</div>
+<div class="text-center">
+    <a class="small" href="{% url 'accounts:login' %}">Login!</a>
+</div>
+{% endblock %}

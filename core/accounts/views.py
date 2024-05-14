@@ -15,7 +15,7 @@ from .forms import AccountAuthenticationForm, RegistrationForm
 def register_view(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
-        return redirect("registration:login")
+        return redirect("accounts:login")
 
     context = {}
     if request.POST:
@@ -91,7 +91,7 @@ class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 class CustomResetPasswordConfirmView(PasswordResetConfirmView):
     template_name = ("registration/reset_password_confirm.html",)
-    success_url = reverse_lazy("registration:password_reset_complete")
+    success_url = reverse_lazy("accounts:password_reset_complete")
 
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):

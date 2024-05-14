@@ -36,7 +36,7 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.AllowAllUsersModelBackend",
-    "registration.auth.CaseInsensitiveModelBackend",
+    "accounts.auth.CaseInsensitiveModelBackend",
 )
 
 # Application definition
@@ -154,7 +154,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-LOGIN_URL = reverse_lazy("registration:login")
+LOGIN_URL = reverse_lazy("accounts:login")
 LOGIN_REDIRECT_URL = reverse_lazy("home")
 
 sentry_sdk.init(
