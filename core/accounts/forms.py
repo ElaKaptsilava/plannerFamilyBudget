@@ -1,8 +1,8 @@
 from django import forms
 from django.contrib.auth import authenticate, get_user_model
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
 
-from .models import CustomUser
+from .models import CustomUser, Profile
 
 
 class RegistrationForm(UserCreationForm):
@@ -45,3 +45,15 @@ class AccountAuthenticationForm(forms.ModelForm):
             password = self.cleaned_data["password"]
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError("Invalid login")
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ["avatar"]
+
+
+class CustomUserUpdateForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ["first_name", "last_name", "email", "username"]

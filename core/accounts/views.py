@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
     PasswordResetCompleteView,
     PasswordResetConfirmView,
@@ -8,8 +9,14 @@ from django.contrib.auth.views import (
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
+from django.views import View
 
-from .forms import AccountAuthenticationForm, RegistrationForm
+from .forms import (
+    AccountAuthenticationForm,
+    CustomUserUpdateForm,
+    ProfileForm,
+    RegistrationForm,
+)
 
 
 def register_view(request, *args, **kwargs):
@@ -96,3 +103,34 @@ class CustomResetPasswordConfirmView(PasswordResetConfirmView):
 
 class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "registration/password_reset_complete.html"
+
+
+class ProfileView(LoginRequiredMixin, View):
+    template_name: str = "accounts/profile.html"
+
+    def get(self, request):
+        user_form = CustomUserUpdateForm(instance=request.user)
+        profile_form = ProfileForm(instance=request.user.profile)
+
+        context = {"user_form": user_form, "profile_form": profile_form}
+
+        return render(request, self.template_name, context)
+
+    def post(self, request):
+        user_form = CustomUserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileForm(
+            request.POST, request.FILES, instance=request.user.profile
+        )
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+
+            messages.success(request, "Your profile has been updated successfully")
+
+            return redirect("profile")
+        else:
+            context = {"user_form": user_form, "profile_form": profile_form}
+            messages.error(request, "Error updating you profile")
+
+            return render(request, self.template_name, context)
