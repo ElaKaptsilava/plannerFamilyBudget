@@ -8,11 +8,9 @@ class CaseInsensitiveModelBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
         if username is None:
             username = kwargs.get(get_user_model().USERNAME_FIELD)
-            print(username)
         try:
             case_insensitive_user = "{}__iexact".format(get_user_model().USERNAME_FIELD)
             user = get_user_model().objects.get(**{case_insensitive_user: username})
-            print()
         except get_user_model().DoesNotExist:
             get_user_model().set_password(password)
         else:

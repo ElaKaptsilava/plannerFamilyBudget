@@ -33,9 +33,10 @@ def register_view(request, *args, **kwargs):
             raw_password = form.cleaned_data.get("password1")
             user_authenticate = authenticate(email=email, password=raw_password)
             login(request, user_authenticate)
-            return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
+            return redirect(
+                reverse_lazy("home", kwargs={"user_id": user_authenticate.id})
+            )
         else:
-            print(form.errors)
             context["registration_form"] = form
 
     else:
@@ -64,7 +65,7 @@ def login_view(request, *args, **kwargs):
     else:
         form = AccountAuthenticationForm()
 
-        context["login_form"] = form
+    context["login_form"] = form
 
     return render(request, "registration/login.html", context)
 

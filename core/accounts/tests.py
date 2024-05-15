@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse_lazy
 from rest_framework import status
 
@@ -7,9 +7,9 @@ from .factories import CustomUserFactory
 from .models import CustomUser
 
 
-class TestLoginUser(TestCase):
+class TestLoginLogoutUser(TestCase):
     def setUp(self):
-        self.user_build = CustomUserFactory.build(is_active=False)
+        self.user_build = CustomUserFactory.build()
         self.user = CustomUser.objects.create_user(
             email=self.user_build.email,
             username=self.user_build.username,
@@ -22,24 +22,26 @@ class TestLoginUser(TestCase):
     def test_login(self):
         data = {"email": self.user_build.email, "password": self.user_build.password}
 
-        response = self.client.post(reverse_lazy("registration:login"), data)
+        response = self.client.post(reverse_lazy("accounts:login"), data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(response, reverse_lazy("home"))
+        self.assertRedirects(
+            response, reverse_lazy("home", kwargs={"user_id": self.user.pk})
+        )
 
-    # def test_login_with_invalid_email(self):
-    #     data = {"email": self.user_build.username, "password": self.user_build.password}
-    #
-    #     response = self.client.post(reverse_lazy("registration:login"), data)
-    #     login_form = response.context["login_form"]
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertFormError(login_form, "email", "Enter a valid email address.")
+    def test_login_with_invalid_email(self):
+        data = {"email": "", "password": self.user_build.password}
+
+        response = self.client.post(reverse_lazy("accounts:login"), data)
+        login_form = response.context["login_form"]
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFormError(login_form, "email", "This field is required.")
 
 
 class TestRegisterUser(TestCase):
     def setUp(self):
-        self.user_build = CustomUserFactory.build(is_active=False)
+        self.user_build = CustomUserFactory.build()
         self.cleaned_data = {
             "email": self.user_build.email,
             "username": self.user_build.username,
@@ -49,13 +51,16 @@ class TestRegisterUser(TestCase):
             "password2": self.user_build.password,
         }
 
+    @tag("x")
     def test_register_view_post_success(self):
         response = self.client.post(
-            reverse_lazy("registration:register"), self.cleaned_data
+            reverse_lazy("accounts:register"), self.cleaned_data
         )
-
+        user = CustomUser.objects.get(email=self.user_build.email)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(response, reverse_lazy("home"))
+        self.assertRedirects(
+            response, reverse_lazy("home", kwargs={"user_id": user.pk})
+        )
         self.assertTrue(
             get_user_model().objects.filter(email=self.user_build.email).exists()
         )
@@ -63,7 +68,7 @@ class TestRegisterUser(TestCase):
     def test_register_view_post_invalid_form(self):
         data = {}
 
-        response = self.client.post(reverse_lazy("registration:register"), data)
+        response = self.client.post(reverse_lazy("accounts:register"), data)
         registration_form = response.context["registration_form"].fields
 
         email_errors = registration_form["email"].error_messages["required"]
@@ -83,7 +88,7 @@ class TestRegisterUser(TestCase):
         )
 
         response = self.client.post(
-            reverse_lazy("registration:register"), self.cleaned_data
+            reverse_lazy("accounts:register"), self.cleaned_data
         )
         registration_form = response.context["registration_form"]
 
@@ -101,7 +106,7 @@ class TestRegisterUser(TestCase):
         self.cleaned_data["password2"] = self.cleaned_data["password2"][:3]
 
         response = self.client.post(
-            reverse_lazy("registration:register"), self.cleaned_data
+            reverse_lazy("accounts:register"), self.cleaned_data
         )
         registration_form = response.context["registration_form"]
 
@@ -109,3 +114,8 @@ class TestRegisterUser(TestCase):
         self.assertFormError(
             registration_form, "password2", "The two password fields didn’t match."
         )
+
+    def test_create_profile_with_register_user(self):
+        user_create = CustomUser.objects.create_user(self.cleaned_data)
+
+        self.assertTrue(user_create.profile)

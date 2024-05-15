@@ -4,7 +4,8 @@ from PIL import Image
 
 
 def get_upload_path(instance, filename):
-    return "/".join(["accounts", str(instance.id), filename])
+    folder_name = f"{instance.email}_{instance.id}"
+    return "/".join(["accounts", folder_name, filename])
 
 
 class CustomUser(AbstractUser):
