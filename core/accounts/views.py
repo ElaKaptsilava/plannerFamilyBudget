@@ -50,7 +50,6 @@ def login_view(request, *args, **kwargs):
     user = request.user
     if user.is_authenticated:
         return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
-
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
         if form.is_valid():

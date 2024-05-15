@@ -38,6 +38,20 @@ class TestLoginLogoutUser(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(login_form, "email", "This field is required.")
 
+    @tag("x")
+    def test_login_case_insensitive_user_success(self):
+        data = {
+            "email": self.user_build.email.upper(),
+            "password": self.user_build.password,
+        }
+
+        response = self.client.post(reverse_lazy("accounts:login"), data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertRedirects(
+            response, reverse_lazy("home", kwargs={"user_id": self.user.pk})
+        )
+
 
 class TestRegisterUser(TestCase):
     def setUp(self):
@@ -51,7 +65,6 @@ class TestRegisterUser(TestCase):
             "password2": self.user_build.password,
         }
 
-    @tag("x")
     def test_register_view_post_success(self):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
