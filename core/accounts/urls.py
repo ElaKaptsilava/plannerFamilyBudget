@@ -6,8 +6,8 @@ from . import views as accounts_views
 app_name = "accounts"
 
 urlpatterns = [
-    path("login/", accounts_views.login_view, name="login"),
-    path("register/", accounts_views.register_view, name="register"),
+    path("login/", accounts_views.CustomLoginView.as_view(), name="login"),
+    path("register/", accounts_views.CustomRegisterView.as_view(), name="register"),
     path(
         "logout/",
         auth_views.LogoutView.as_view(template_name="registration/logged_out.html"),

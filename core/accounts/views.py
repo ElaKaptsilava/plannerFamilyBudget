@@ -19,13 +19,47 @@ from .forms import (
 )
 
 
-def register_view(request, *args, **kwargs):
-    user = request.user
-    if user.is_authenticated:
-        return redirect("accounts:login")
+class CustomLoginView(View):
+    template_name = "registration/login.html"
 
-    context = {}
-    if request.POST:
+    def get(self, request, *args, **kwargs):
+        context = {}
+        user = request.user
+        if user.is_authenticated:
+            return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
+        form = AccountAuthenticationForm()
+        context["login_form"] = form
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        context = {}
+        form = AccountAuthenticationForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+            user = authenticate(email=email, password=password)
+            if user:
+                login(request, user)
+                return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
+        context["login_form"] = form
+        return render(request, self.template_name, context)
+
+
+class CustomRegisterView(View):
+    template_name = "registration/register.html"
+
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            return redirect("accounts:login")
+        context = {"registration_form": RegistrationForm()}
+        return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        if user.is_authenticated:
+            return redirect("accounts:login")
+
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
@@ -37,36 +71,8 @@ def register_view(request, *args, **kwargs):
                 reverse_lazy("home", kwargs={"user_id": user_authenticate.id})
             )
         else:
-            context["registration_form"] = form
-
-    else:
-        form = RegistrationForm()
-        context["registration_form"] = form
-    return render(request, "registration/register.html", context)
-
-
-def login_view(request, *args, **kwargs):
-    context = {}
-    user = request.user
-    if user.is_authenticated:
-        return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
-    if request.POST:
-        form = AccountAuthenticationForm(request.POST)
-        if form.is_valid():
-            email = request.POST["email"]
-            password = request.POST["password"]
-            user = authenticate(email=email, password=password)
-
-            if user:
-                login(request, user)
-                return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
-
-    else:
-        form = AccountAuthenticationForm()
-
-    context["login_form"] = form
-
-    return render(request, "registration/login.html", context)
+            context = {"registration_form": form}
+            return render(request, self.template_name, context)
 
 
 class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
