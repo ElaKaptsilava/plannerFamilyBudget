@@ -31,7 +31,6 @@ DEBUG = os.environ.get("DEBUG", True)
 
 ALLOWED_HOSTS = []
 
-
 AUTH_USER_MODEL = "accounts.CustomUser"
 
 AUTHENTICATION_BACKENDS = (
@@ -51,11 +50,13 @@ INSTALLED_APPS = [
 ]
 
 CUSTOM_APPS = [
-    "accounts",
+    "accounts.apps.AccountsConfig",
+    "incomes.apps.IncomesConfig",
 ]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
+    "crispy_forms",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS
@@ -95,6 +96,10 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+
 WSGI_APPLICATION = "core.wsgi.application"
 
 # Database
@@ -133,7 +138,6 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.ScryptPasswordHasher",
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -162,4 +166,12 @@ sentry_sdk.init(
     profiles_sample_rate=1.0,
 )
 
-EMAIL_BACKEND = "django.core.mail.backends.filebased.EmailBackend"
+if DEBUG:
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    print(EMAIL_BACKEND)
+
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+CRISPY_TEMPLATE_PACK = "bootstrap4"
