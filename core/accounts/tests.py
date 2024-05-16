@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework import status
 
@@ -64,7 +64,6 @@ class TestRegisterUser(TestCase):
             "password2": self.user_build.password,
         }
 
-    @tag("x")
     def test_register_view_post_success(self):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data

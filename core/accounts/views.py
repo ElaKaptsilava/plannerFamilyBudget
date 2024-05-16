@@ -1,11 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import (
-    PasswordResetCompleteView,
-    PasswordResetConfirmView,
-    PasswordResetView,
-)
+from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
@@ -100,15 +96,6 @@ class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
         )
         messages.success(self.request, self.success_message)
         return self.render_to_response(self.get_context_data(form=form))
-
-
-class CustomResetPasswordConfirmView(PasswordResetConfirmView):
-    template_name = ("registration/reset_password_confirm.html",)
-    success_url = reverse_lazy("accounts:password_reset_complete")
-
-
-class CustomPasswordResetCompleteView(PasswordResetCompleteView):
-    template_name = "registration/password_reset_complete.html"
 
 
 class ProfileView(LoginRequiredMixin, View):
