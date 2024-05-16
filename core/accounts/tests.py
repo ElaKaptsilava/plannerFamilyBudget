@@ -131,3 +131,37 @@ class TestRegisterUser(TestCase):
         user_create = CustomUser.objects.create_user(self.cleaned_data)
 
         self.assertTrue(user_create.profile)
+
+
+class TestResetPassword(TestCase):
+    def setUp(self):
+        self.user_build = CustomUserFactory.build()
+        self.cleaned_data = {
+            "email": self.user_build.email,
+            "username": self.user_build.username,
+            "last_name": self.user_build.last_name,
+            "first_name": self.user_build.first_name,
+            "password1": self.user_build.password,
+            "password2": self.user_build.password,
+        }
+        self.new_password = CustomUser.objects.make_random_password()
+
+    def test_reset_password(self):
+        user_create = CustomUser.objects.create_user(self.cleaned_data)
+        data = {
+            "old_password": self.user_build.password,
+            "new_password1": self.new_password,
+            "new_password2": self.new_password,
+        }
+        response = self.client.post(
+            reverse_lazy(
+                "accounts:password_change", kwargs={"user_id": user_create.id}
+            ),
+            data,
+        )
+
+        print(response.status_code)
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        user = CustomUser.objects.all()
+        print(user)
+        # self.assertTrue(user.check_password(self.new_password))
