@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
 CUSTOM_APPS = [
     "accounts.apps.AccountsConfig",
+    "budgets.apps.BudgetsConfig",
 ]
 
 THIRD_PARTY_APPS = [
