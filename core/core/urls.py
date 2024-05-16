@@ -29,6 +29,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="accounts/dashboard.html"),
         name="home",
     ),
+    path("home/<int:user_id>/", include("incomes.urls"), name="incomes"),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
