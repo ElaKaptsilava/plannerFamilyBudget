@@ -1,5 +1,6 @@
 from accounts.models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
@@ -8,12 +9,12 @@ from incomes.models import Income
 
 
 class IncomesView(View, LoginRequiredMixin):
-    template_name = "incomes/create_income.html"
-    login_url = reverse_lazy("accounts:login")
+    template_name: str = "incomes/create_income.html"
+    login_url: reverse_lazy = reverse_lazy("accounts:login")
 
-    def post(self, request, *args, **kwargs):
-        context = {}
-        user = request.user
+    def post(self, request, *args, **kwargs) -> HttpResponse:
+        context = dict()
+        user: CustomUser = request.user
         income_form = IncomeForm(request.POST)
         if income_form.is_valid():
             if isinstance(request.user, CustomUser):
@@ -27,7 +28,7 @@ class IncomesView(View, LoginRequiredMixin):
         context["form"] = income_form
         return render(request, self.template_name, context)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         if request.user.is_authenticated:
             incomes = Income.objects.filter(user=request.user)
             return render(request, "incomes/tables.html", {"incomes": incomes})
