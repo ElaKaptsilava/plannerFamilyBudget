@@ -1,5 +1,6 @@
 from accounts.models import CustomUser
 from django.db import models
+from django.utils import timezone
 
 
 class Income(models.Model):
@@ -15,7 +16,9 @@ class Income(models.Model):
         help_text="Enter the source of the income (e.g., employer, client)",
     )
     amount = models.FloatField(help_text="Enter the amount of the income")
-    date = models.DateTimeField(help_text="Date and time when the income was recorded")
+    date = models.DateTimeField(
+        default=timezone.now, help_text="Date and time when the income was recorded"
+    )
 
     def __str__(self):
         return f"{self.user.username}'s {self.category} Income of {self.amount} recorded on {self.date}"

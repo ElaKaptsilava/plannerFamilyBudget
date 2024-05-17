@@ -1,7 +1,7 @@
 from accounts.models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 from incomes.forms import IncomeForm
@@ -32,6 +32,16 @@ class IncomesView(View, LoginRequiredMixin):
         if request.user.is_authenticated:
             form = IncomeForm()
             return render(request, self.template_name, {"income_form": form})
+        return redirect(self.login_url)
+
+    def delete(self, request, *args, **kwargs) -> HttpResponse:
+        if request.user.is_authenticated:
+            income_id = kwargs.get("income_pk")
+            income_to_delete = get_object_or_404(
+                Income, id=income_id, user=request.user
+            )
+            income_to_delete.delete()
+            return JsonResponse({"message": "Income deleted successfully"}, status=200)
         return redirect(self.login_url)
 
 
