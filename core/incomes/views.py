@@ -35,6 +35,7 @@ class IncomesView(View, LoginRequiredMixin):
         return redirect(self.login_url)
 
     def delete(self, request, *args, **kwargs) -> HttpResponse:
+        print(kwargs)
         if request.user.is_authenticated:
             income_id = kwargs.get("income_pk")
             income_to_delete = get_object_or_404(
