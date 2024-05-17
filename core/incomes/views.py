@@ -20,16 +20,28 @@ class IncomesView(View, LoginRequiredMixin):
             if isinstance(request.user, CustomUser):
                 income_form.instance.user = request.user
                 income_form.save()
-                return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
+                return redirect(reverse_lazy("home", kwargs={"user_id": user.pk}))
             else:
                 raise TypeError(
                     "The 'id' field expected a number but got an invalid user object."
                 )
-        context["form"] = income_form
+        context["income_form"] = income_form
         return render(request, self.template_name, context)
 
     def get(self, request, *args, **kwargs) -> HttpResponse:
         if request.user.is_authenticated:
+            form = IncomeForm()
+            return render(request, self.template_name, {"income_form": form})
+        return redirect(self.login_url)
+
+
+class GetIncomesView(View, LoginRequiredMixin):
+    template_name: str = "incomes/incomes.html"
+    login_url: reverse_lazy = reverse_lazy("accounts:login")
+    http_method_names = ["get"]
+
+    def get(self, request, *args, **kwargs) -> HttpResponse:
+        if request.user.is_authenticated:
             incomes = Income.objects.filter(user=request.user)
-            return render(request, "incomes/tables.html", {"incomes": incomes})
+            return render(request, self.template_name, {"incomes": incomes})
         return redirect(self.login_url)

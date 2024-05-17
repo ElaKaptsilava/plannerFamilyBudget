@@ -1,10 +1,10 @@
 from django.urls import path
 
-from .views import IncomesView
+from .views import GetIncomesView, IncomesView
 
 app_name = "incomes"
 
 urlpatterns = [
-    path("create-income/", IncomesView.as_view(), name="create-income"),
-    path("tables/", IncomesView.as_view(), name="tables"),
+    path("incomes/create/", IncomesView.as_view(), name="create_income"),
+    path("incomes/", GetIncomesView.as_view(), name="incomes"),
 ]
