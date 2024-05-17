@@ -20,7 +20,10 @@ class TestLoginLogoutUser(TestCase):
         )
 
     def test_login(self):
-        data = {"email": self.user_build.email, "password": self.user_build.password}
+        data: dict = {
+            "email": self.user_build.email,
+            "password": self.user_build.password,
+        }
 
         response = self.client.post(reverse_lazy("accounts:login"), data)
 
@@ -30,7 +33,7 @@ class TestLoginLogoutUser(TestCase):
         )
 
     def test_login_with_invalid_email(self):
-        data = {"email": "", "password": self.user_build.password}
+        data: dict = {"email": "", "password": self.user_build.password}
 
         response = self.client.post(reverse_lazy("accounts:login"), data)
         login_form = response.context["login_form"]
@@ -39,7 +42,7 @@ class TestLoginLogoutUser(TestCase):
         self.assertFormError(login_form, "email", "This field is required.")
 
     def test_login_case_insensitive_user_success(self):
-        data = {
+        data: dict = {
             "email": self.user_build.email.upper(),
             "password": self.user_build.password,
         }
@@ -55,7 +58,7 @@ class TestLoginLogoutUser(TestCase):
 class TestRegisterUser(TestCase):
     def setUp(self):
         self.user_build = CustomUserFactory.build()
-        self.cleaned_data = {
+        self.cleaned_data: dict = {
             "email": self.user_build.email,
             "username": self.user_build.username,
             "last_name": self.user_build.last_name,
@@ -68,7 +71,7 @@ class TestRegisterUser(TestCase):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
         )
-        user = CustomUser.objects.get(email=self.user_build.email)
+        user: CustomUser = CustomUser.objects.get(email=self.user_build.email)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertRedirects(
             response, reverse_lazy("home", kwargs={"user_id": user.pk})
@@ -78,7 +81,7 @@ class TestRegisterUser(TestCase):
         )
 
     def test_register_view_post_invalid_form(self):
-        data = {}
+        data = dict()
 
         response = self.client.post(reverse_lazy("accounts:register"), data)
         registration_form = response.context["registration_form"].fields
@@ -136,7 +139,7 @@ class TestRegisterUser(TestCase):
 class TestResetPassword(TestCase):
     def setUp(self):
         self.user_build = CustomUserFactory.build()
-        self.cleaned_data = {
+        self.cleaned_data: dict = {
             "email": self.user_build.email,
             "username": self.user_build.username,
             "last_name": self.user_build.last_name,
