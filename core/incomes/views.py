@@ -9,6 +9,8 @@ class IncomesView(View, LoginRequiredMixin):
     template_name = "incomes/create_income.html"
 
     def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse_lazy("accounts:login"))
         context = {}
         user = request.user
         income_form = IncomeForm(request.POST)
@@ -19,6 +21,8 @@ class IncomesView(View, LoginRequiredMixin):
         return render(request, self.template_name, context)
 
     def get(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect(reverse_lazy("accounts:login"))
         income_form = IncomeForm()
         context = {"form": income_form}
         return render(request, self.template_name, context)
