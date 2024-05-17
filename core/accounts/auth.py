@@ -2,6 +2,8 @@ import os
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
+from django.http import HttpResponseRedirect, HttpRequest
+from django.urls import reverse
 
 
 class CaseInsensitiveModelBackend(ModelBackend):

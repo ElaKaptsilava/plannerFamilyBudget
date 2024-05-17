@@ -19,14 +19,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from django.views.generic import TemplateView
+from accounts.views import HomeView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("accounts.urls"), name="accounts"),
     path(
         "home/<int:user_id>/",
-        TemplateView.as_view(template_name="accounts/dashboard.html"),
+        HomeView.as_view(),
         name="home",
     ),
     path("home/<int:user_id>/", include("incomes.urls"), name="incomes"),

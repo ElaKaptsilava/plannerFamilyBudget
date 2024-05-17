@@ -102,6 +102,8 @@ class ProfileView(LoginRequiredMixin, View):
     template_name: str = "accounts/profile.html"
 
     def get(self, request, user_id):
+        if not request.user.is_authenticated:
+            return redirect("accounts:login")
         user_form = CustomUserUpdateForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
 
@@ -110,6 +112,8 @@ class ProfileView(LoginRequiredMixin, View):
         return render(request, self.template_name, context)
 
     def post(self, request, user_id):
+        if not request.user.is_authenticated:
+            return redirect("accounts:login")
         user_form = CustomUserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileForm(
             request.POST, request.FILES, instance=request.user.profile
@@ -128,3 +132,13 @@ class ProfileView(LoginRequiredMixin, View):
             messages.error(request, "Error updating you profile")
 
             return render(request, self.template_name, context)
+
+
+class HomeView(LoginRequiredMixin, View):
+    template_name: str = "accounts/dashboard.html"
+    http_method_names = ["get"]
+
+    def get(self, request, user_id):
+        if not request.user.is_authenticated:
+            return redirect("accounts:login")
+        return render(request, self.template_name, {"user_id": user_id})
