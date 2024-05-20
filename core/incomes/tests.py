@@ -36,7 +36,6 @@ class IncomesTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Income.objects.filter(user__email=self.user.email).count(), 0)
 
-    @tag("x")
     def test_user_delete_incomes_success(self):
         self.client.force_login(self.user)
 
@@ -49,3 +48,17 @@ class IncomesTests(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Income.objects.filter(user__email=self.user.email).count(), 1)
+
+    @tag("x")
+    def test_update_incomes_success(self):
+        self.client.force_login(self.user)
+
+        IncomeFactory.create(user=self.user)
+        income2 = IncomeFactory.create(user=self.user)
+
+        response = self.client.patch(
+            reverse_lazy("incomes:income_update", kwargs={"income_pk": income2.pk}),
+            {"category": "test"},
+        )
+
+        print(response.status_code)

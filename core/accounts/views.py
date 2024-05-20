@@ -151,10 +151,7 @@ class ProfileView(LoginRequiredMixin, View):
 
 class HomeView(LoginRequiredMixin, View):
     template_name: str = "accounts/dashboard.html"
-    login_url: reverse_lazy = reverse_lazy("accounts:login")
     http_method_names: list = ["get"]
 
     def get(self, request, user_id: int) -> HttpResponse:
-        if not request.user.is_authenticated:
-            return redirect(self.login_url)
         return render(request, self.template_name, {"user_id": user_id})

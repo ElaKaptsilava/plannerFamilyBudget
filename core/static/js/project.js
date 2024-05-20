@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', function () {
             })
                 .then(response => {
                     if (response.ok) {
-                        // Close modal and reload page or update UI accordingly
                         $('#deleteIncomeModal').modal('hide');
                         location.reload();
                     } else {

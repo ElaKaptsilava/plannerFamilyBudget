@@ -20,7 +20,7 @@ class TestLoginLogoutUser(TestCase):
         )
 
     def test_login(self):
-        data: dict = {
+        data = {
             "email": self.user_build.email,
             "password": self.user_build.password,
         }
@@ -139,7 +139,7 @@ class TestRegisterUser(TestCase):
 class TestResetPassword(TestCase):
     def setUp(self):
         self.user_build = CustomUserFactory.build()
-        self.cleaned_data: dict = {
+        self.cleaned_data = {
             "email": self.user_build.email,
             "username": self.user_build.username,
             "last_name": self.user_build.last_name,
