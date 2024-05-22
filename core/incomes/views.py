@@ -1,49 +1,41 @@
-from accounts.models import CustomUser
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.views import View
-from django.views.generic import ListView
+from django.views.generic import FormView, ListView
 from incomes.forms import IncomeForm
 from incomes.models import Income
 
 
-class IncomesView(LoginRequiredMixin, View):
-    template_name: str = "incomes/create_income.html"
+class IncomesView(LoginRequiredMixin, FormView):
+    template_name = "incomes/create_income.html"
+    form_class = IncomeForm
+    success_url = reverse_lazy("incomes:incomes-list")
 
-    def post(self, request, *args, **kwargs) -> HttpResponse:
-        context = dict()
-        user: CustomUser = request.user
-        income_form = IncomeForm(request.POST)
-        if income_form.is_valid():
-            income_form.instance.user = request.user
-            income_form.save()
-            return redirect(reverse_lazy("home", kwargs={"user_id": user.pk}))
-        context["income_form"] = income_form
-        return render(request, self.template_name, context)
+    def get_success_url(self):
+        return reverse_lazy("incomes:incomes-list")
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
-        form = IncomeForm()
-        return render(request, self.template_name, {"income_form": form})
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        if self.request.method == "PATCH":
+            income = get_object_or_404(
+                Income, pk=self.kwargs["pk"], user=self.request.user
+            )
+            kwargs["instance"] = income
+        return kwargs
+
+    def form_valid(self, form):
+        income = form.save(commit=False)
+        income.user = self.request.user
+        income.save()
+        return super().form_valid(form)
 
     def delete(self, request, *args, **kwargs) -> HttpResponse:
         income_id: int = kwargs.get("income_pk")
         income_to_delete = get_object_or_404(Income, id=income_id, user=request.user)
         income_to_delete.delete()
         return JsonResponse({"message": "Income deleted successfully"}, status=200)
-
-    def patch(self, request, *args, **kwargs) -> HttpResponse:
-        income_id = kwargs.get("income_pk")
-        income = get_object_or_404(Income, pk=income_id, user=request.user)
-        print(income)
-        form = IncomeForm(request.POST, instance=income)
-        print(form)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse_lazy("home", kwargs={"user_id": request.user.pk}))
-        return JsonResponse({"error": "Invalid data"}, status=400)
 
 
 class GetIncomesView(LoginRequiredMixin, ListView):

@@ -5,18 +5,16 @@ from .views import GetIncomesView, IncomesView
 app_name = "incomes"
 
 urlpatterns = [
-    path("incomes/", GetIncomesView.as_view(), name="incomes"),  # income-list
-    path(
-        "incomes/create/", IncomesView.as_view(), name="create_income"
-    ),  # income-list-create
+    path("incomes/", GetIncomesView.as_view(), name="incomes-list"),
+    path("incomes/create/", IncomesView.as_view(), name="income-list-create"),
     path(
         "incomes/<int:income_pk>/delete/",
         IncomesView.as_view(),
-        name="income_delete",  # income-detail-delete
+        name="income-detail-delete",
     ),
     path(
-        "incomes/<int:income_pk>/update/",
+        "incomes/<int:pk>/update/",
         IncomesView.as_view(),
-        name="income_update",  # income-detail-update
+        name="income-detail-update",
     ),
 ]

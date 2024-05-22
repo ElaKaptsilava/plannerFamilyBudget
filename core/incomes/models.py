@@ -20,10 +20,10 @@ class Income(models.Model):
         default=timezone.now, help_text="Date and time when the income was recorded"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.username}'s {self.category} Income of {self.amount} recorded on {self.date}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return f"Income(user={self.user!s}, category={self.category!r},amount={self.amount!r}, date={self.date!r})"
 
     class Meta:

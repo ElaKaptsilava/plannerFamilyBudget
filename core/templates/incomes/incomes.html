@@ -12,10 +12,8 @@
     <!-- DataTales Example -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <!--            action="{% url 'incomes:create_income' %} -->
             <div class="card-header py-3 d-flex justify-content-between align-items-center">
-                <!-- "+" button to trigger modal -->
-                <form method="get" action="{% url 'incomes:create_income' %}">
+                <form method="get" action="{% url 'incomes:income-list-create' %}">
                     <button class="btn btn-success btn-circle" data-toggle="modal">
                         +
                     </button>
@@ -57,6 +55,10 @@
                                    data-target="#deleteIncomeModal" data-income-id="{{ income.id }}">
                                     <i class="fa fa-trash"></i>
                                 </a>
+                                <a class="btn-primary btn-circle btn-sm" href="#" data-toggle="modal"
+                                   data-target="#editIncomeModal{{ income.id }}">
+                                    <i class="fa fa-edit"></i>
+                                </a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -67,6 +69,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="deleteIncomeModal" tabindex="-1" role="dialog" aria-labelledby="deleteIncomeModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -87,6 +90,48 @@
         </div>
     </div>
 </div>
+
+{% for income in incomes %}
+<div class="modal fade" id="editIncomeModal{{ income.id }}" tabindex="-1" role="dialog"
+     aria-labelledby="editIncomeModalLabel{{ income.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editIncomeModalLabel{{ income.id }}">Edit Income</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'incomes:income-detail-update' income.id %}" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="_method" value="PATCH">
+                    <div class="form-group">
+                        <label for="source{{ income.id }}">Source</label>
+                        <input type="text" class="form-control" id="source{{ income.id }}" name="source" value="{{ income.source }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category{{ income.id }}">Category</label>
+                        <input type="text" class="form-control" id="category{{ income.id }}" name="category" value="{{ income.category }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="amount{{ income.id }}">Amount</label>
+                        <input type="number" class="form-control" id="amount{{ income.id }}" name="amount" value="{{ income.amount }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="date{{ income.id }}">Datetime</label>
+                        <input type="datetime-local" class="form-control" id="date{{ income.id }}" name="date" value="{{ income.date|date:'Y-m-d\TH:i' }}" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
 <script src="/static/js/project.js"></script>
+
+
 <!-- /.container-fluid -->
 {% endblock %}
