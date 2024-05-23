@@ -33,8 +33,6 @@ class ExpenseView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context["categories"] = ExpenseCategory.objects.all()
         context["form"] = self.get_form()
-        print(context["form"])
-
         return context
 
     def form_valid(self, form) -> HttpResponse:
