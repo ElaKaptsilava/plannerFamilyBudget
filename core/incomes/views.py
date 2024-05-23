@@ -11,7 +11,7 @@ from incomes.models import Income
 
 
 class IncomesView(LoginRequiredMixin, FormView):
-    template_name = "incomes/create_income.html"
+    template_name = "incomes/incomes.html"
     form_class = IncomeForm
     success_url = reverse_lazy("incomes:incomes-list")
 
@@ -38,12 +38,6 @@ class IncomesView(LoginRequiredMixin, FormView):
         income.save()
         return super().form_valid(form)
 
-    def delete(self, request, *args, **kwargs) -> HttpResponse:
-        income_id: int = kwargs.get("income_pk")
-        income_to_delete = get_object_or_404(Income, id=income_id, user=request.user)
-        income_to_delete.delete()
-        return self.success_url
-
 
 class GetIncomesView(LoginRequiredMixin, ListView):
     template_name: str = "incomes/incomes.html"
@@ -54,7 +48,7 @@ class GetIncomesView(LoginRequiredMixin, ListView):
         return Income.objects.filter(user=self.request.user)
 
 
-class DeleteMultipleIncomesView(View):
+class DeleteMultipleIncomesView(LoginRequiredMixin, View):
     def post(self, request):
         selected_incomes = request.POST.getlist("selected_incomes")
         if selected_incomes:
