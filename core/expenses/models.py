@@ -18,7 +18,7 @@ class Expense(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
-    datatime = models.DateTimeField(default=timezone.now)
+    datetime = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:
         return str(self.amount)
@@ -27,4 +27,4 @@ class Expense(models.Model):
         return f"Expense(amount={self.amount!r}, user={self.user!r}, category={self.category!r})"
 
     class Meta:
-        ordering = ["-datatime"]
+        ordering = ["-datetime"]

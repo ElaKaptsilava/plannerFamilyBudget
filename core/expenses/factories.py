@@ -11,7 +11,7 @@ class ExpenseCategoryFactory(factory.django.DjangoModelFactory):
     description = factory.Faker("sentence")
 
 
-class IncomeFactory(factory.django.DjangoModelFactory):
+class ExpenseFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Expense
 

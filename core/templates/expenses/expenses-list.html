@@ -10,7 +10,7 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createIncomeModal">
+            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createExpensesModal">
                 <i class="fas fa-plus"></i> Add Expenses
             </button>
             <button class="btn btn-outline-danger" data-toggle="modal"
@@ -39,19 +39,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for income in incomes %}
-                        <tr class="table-row" data-income-id="{{ income.id }}">
+                        {% for expense in expenses %}
+                        <tr class="table-row" data-income-id="{{ expense.id }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
-                                           value="{{ income.id }}" name="selected_incomes"
-                                           data-income-id="{{ income.id }}" id="row-checkbox">
-                                    <label class="form-check-label" for="markSource{{ income.id }}"></label>
+                                           value="{{ expense.id }}" name="selected_incomes"
+                                           data-income-id="{{ expense.id }}" id="row-checkbox">
+                                    <label class="form-check-label" for="markSource{{ expense.id }}"></label>
                                 </div>
                             </td>
-                            <td>{{ income.category }}</td>
-                            <td>{{ income.amount }}</td>
-                            <td>{{ income.date }}</td>
+                            <td>{{ expense.category }}</td>
+                            <td>{{ expense.amount }}</td>
+                            <td>{{ expense.datetime }}</td>
                             <td>
                                 <a class="btn btn-outline-primary btn-circle edit-button" href="#" data-toggle="modal"
                                    data-target="#editIncomeModal{{ income.id }}">
@@ -125,63 +125,60 @@
 <!--</div>-->
 <!--{% endfor %}-->
 
-<!--&lt;!&ndash; Create Income Modal &ndash;&gt;-->
-<!--<div class="modal fade" id="createIncomeModal" tabindex="-1" role="dialog" aria-labelledby="createIncomeModalLabel"-->
-<!--     aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title" id="createIncomeModalLabel">Create Income</h5>-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                    <span aria-hidden="true">&times;</span>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <form action="{% url 'incomes:income-list-create' %}" method="post">-->
-<!--                    {% csrf_token %}-->
-<!--                    <div class="container">-->
-<!--                        <div class="main-body">-->
-<!--                            <div class="row gutters-sm">-->
-<!--                                <div class="card-body">-->
-<!--                                    <input type="hidden" name="_method" value="PATCH">-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="source">Source</label>-->
-<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
-<!--                                               id="source" name="source"-->
-<!--                                               placeholder="Enter source">-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="category">Category</label>-->
-<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
-<!--                                               id="category" name="category"-->
-<!--                                               placeholder="Enter category">-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="amount">Amount</label>-->
-<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
-<!--                                               id="amount" name="amount"-->
-<!--                                               placeholder="Enter amount">-->
-<!--                                    </div>-->
-<!--                                    <div class="form-group">-->
-<!--                                        <label for="date">Datetime</label>-->
-<!--                                        <input type="datetime-local"-->
-<!--                                               class="form-control form-control-user text-secondary"-->
-<!--                                               id="datetime" name="date"-->
-<!--                                               placeholder="Enter date">-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="modal-footer">-->
-<!--                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>-->
-<!--                        <button type="submit" class="btn btn-outline-success">Create</button>-->
-<!--                    </div>-->
-<!--                </form>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+<!-- Create Income Modal -->
+<div class="modal fade" id="createExpensesModal" tabindex="-1" role="dialog" aria-labelledby="createExpensesModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createExpensesModalLabel">Create Expenses</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="{% url 'expenses:expenses-list-create' %}" method="post">
+                    {% csrf_token %}
+                    <div class="container">
+                        <div class="main-body">
+                            <div class="row gutters-sm">
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="category">Category</label>
+                                        <select class="form-control form-control-user text-secondary" id="category"
+                                                name="category">
+                                            <option value="" disabled selected>Select a category</option>
+                                            {% for category in categories %}
+                                            <option value="{{ category.id }}">{{ category.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="amount">Amount</label>
+                                        <input type="number" class="form-control form-control-user text-secondary"
+                                               id="amount" name="amount"
+                                               placeholder="Enter amount" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="datetime">Datetime</label>
+                                        <input type="datetime-local"
+                                               class="form-control form-control-user text-secondary"
+                                               id="datetime" name="datetime"
+                                               placeholder="Enter date" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-outline-success">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--&lt;!&ndash;Multiple delete by selected incomes&ndash;&gt;-->
 <!--<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"-->
