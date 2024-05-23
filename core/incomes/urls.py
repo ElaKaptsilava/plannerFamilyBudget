@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import GetIncomesView, IncomesView
+from .views import DeleteMultipleIncomesView, GetIncomesView, IncomesView
 
 app_name = "incomes"
 
@@ -16,5 +16,8 @@ urlpatterns = [
         "incomes/<int:pk>/update/",
         IncomesView.as_view(),
         name="income-detail-update",
+    ),
+    path(
+        "delete-multiple/", DeleteMultipleIncomesView.as_view(), name="delete-multiple"
     ),
 ]

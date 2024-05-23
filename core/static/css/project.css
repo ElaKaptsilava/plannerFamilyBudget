@@ -1,0 +1,30 @@
+/* CSS for modern table row styling */
+.table-row {
+    transition: background-color 0.3s;
+}
+
+.table-row:hover {
+    background-color: #f8f9fa;
+}
+
+.table-link {
+    color: #007bff;
+    transition: color 0.3s;
+}
+
+.table-link:hover {
+    color: #0056b3;
+}
+
+.edit-button, .delete-button {
+    transition: transform 0.3s;
+}
+
+.edit-button:hover, .delete-button:hover {
+    transform: scale(1.1);
+}
+
+/* Active state styling */
+.table-row.active {
+    background-color: #e0f7fa; /* Light cyan background for active state */
+}
