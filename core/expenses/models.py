@@ -25,3 +25,6 @@ class Expense(models.Model):
 
     def __repr__(self) -> str:
         return f"Expense(amount={self.amount!r}, user={self.user!r}, category={self.category!r})"
+
+    class Meta:
+        ordering = ["-datatime"]

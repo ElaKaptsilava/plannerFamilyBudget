@@ -30,6 +30,7 @@ urlpatterns = [
     ),
     path("auth/", include("accounts.urls"), name="accounts"),
     path("", include("incomes.urls"), name="incomes"),
+    path("expenses/", include("expenses.urls"), name="expenses"),
 ]
 
 if settings.DEBUG:

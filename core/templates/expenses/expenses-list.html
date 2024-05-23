@@ -1,0 +1,236 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <!-- Messages -->
+    <h1 class="h3 mb-4 text-gray-800">Expenses</h1>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createIncomeModal">
+                <i class="fas fa-plus"></i> Add Expenses
+            </button>
+            <button class="btn btn-outline-danger" data-toggle="modal"
+                    data-target="#confirmDeleteModal">
+                <i class="fas fa-minus"></i> Delete Selected
+            </button>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
+                    {% csrf_token %}
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="selectAll">
+                                    <label class="form-check-label" for="selectAll"></label>
+                                </div>
+                            </th>
+                            <th>Category</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for income in incomes %}
+                        <tr class="table-row" data-income-id="{{ income.id }}">
+                            <td>
+                                <div class="form-check checkbox-container">
+                                    <input class="form-check-input row-checkbox" type="checkbox"
+                                           value="{{ income.id }}" name="selected_incomes"
+                                           data-income-id="{{ income.id }}" id="row-checkbox">
+                                    <label class="form-check-label" for="markSource{{ income.id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ income.category }}</td>
+                            <td>{{ income.amount }}</td>
+                            <td>{{ income.date }}</td>
+                            <td>
+                                <a class="btn btn-outline-primary btn-circle edit-button" href="#" data-toggle="modal"
+                                   data-target="#editIncomeModal{{ income.id }}">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</div>
+
+
+<!--&lt;!&ndash; Modals&ndash;&gt;-->
+
+<!--&lt;!&ndash;Edit income by id&ndash;&gt;-->
+<!--{% for income in incomes %}-->
+<!--<div class="modal fade" id="editIncomeModal{{ income.id }}" tabindex="-1" role="dialog"-->
+<!--     aria-labelledby="editIncomeModalLabel{{ income.id }}" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="editIncomeModalLabel{{ income.id }}">Edit Income</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form action="{% url 'incomes:income-detail-update' income.id %}" method="post">-->
+<!--                    {% csrf_token %}-->
+<!--                    <input type="hidden" name="_method" value="PATCH">-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="source{{ income.id }}">Source</label>-->
+<!--                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                               id="source{{ income.id }}" name="source" value="{{ income.source }}"-->
+<!--                               placeholder="Enter source">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="category{{ income.id }}">Category</label>-->
+<!--                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                               id="category{{ income.id }}" name="category" value="{{ income.category }}"-->
+<!--                               placeholder="Enter category">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="amount{{ income.id }}">Amount</label>-->
+<!--                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                               id="amount{{ income.id }}" name="amount" value="{{ income.amount }}"-->
+<!--                               placeholder="Enter amount">-->
+<!--                    </div>-->
+<!--                    <div class="form-group">-->
+<!--                        <label for="date{{ income.id }}">Datetime</label>-->
+<!--                        <input type="datetime-local" class="form-control form-control-user text-secondary"-->
+<!--                               id="datetime{{ income.id }}" name="date" value="{{ income.date|date:'Y-m-d\TH:i' }}"-->
+<!--                               placeholder="Enter date">-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>-->
+<!--                        <button type="submit" class="btn btn-outline-primary">Save Changes</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+<!--{% endfor %}-->
+
+<!--&lt;!&ndash; Create Income Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="createIncomeModal" tabindex="-1" role="dialog" aria-labelledby="createIncomeModalLabel"-->
+<!--     aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="createIncomeModalLabel">Create Income</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <form action="{% url 'incomes:income-list-create' %}" method="post">-->
+<!--                    {% csrf_token %}-->
+<!--                    <div class="container">-->
+<!--                        <div class="main-body">-->
+<!--                            <div class="row gutters-sm">-->
+<!--                                <div class="card-body">-->
+<!--                                    <input type="hidden" name="_method" value="PATCH">-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="source">Source</label>-->
+<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                                               id="source" name="source"-->
+<!--                                               placeholder="Enter source">-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="category">Category</label>-->
+<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                                               id="category" name="category"-->
+<!--                                               placeholder="Enter category">-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="amount">Amount</label>-->
+<!--                                        <input type="text" class="form-control form-control-user text-secondary"-->
+<!--                                               id="amount" name="amount"-->
+<!--                                               placeholder="Enter amount">-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="date">Datetime</label>-->
+<!--                                        <input type="datetime-local"-->
+<!--                                               class="form-control form-control-user text-secondary"-->
+<!--                                               id="datetime" name="date"-->
+<!--                                               placeholder="Enter date">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="modal-footer">-->
+<!--                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>-->
+<!--                        <button type="submit" class="btn btn-outline-success">Create</button>-->
+<!--                    </div>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash;Multiple delete by selected incomes&ndash;&gt;-->
+<!--<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"-->
+<!--     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>-->
+<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                Are you sure you want to delete the selected incomes?-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>-->
+<!--                <button type="submit" form="deleteMultipleIncomesForm" class="btn btn-outline-danger">Delete</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<!--<script>-->
+<!--    document.getElementById('selectAll').addEventListener('change', toggleSelectAll);-->
+
+<!--    function toggleSelectAll() {-->
+<!--        const selectAllCheckbox = document.getElementById('selectAll');-->
+<!--        const checkboxes = document.querySelectorAll('.row-checkbox');-->
+<!--        checkboxes.forEach(checkbox => {-->
+<!--            checkbox.checked = selectAllCheckbox.checked;-->
+<!--            toggleActiveClass(checkbox);-->
+<!--        });-->
+<!--    }-->
+
+<!--    function toggleActiveClass(checkbox) {-->
+<!--        if (checkbox.checked) {-->
+<!--            checkbox.closest('.table-row').classList.add('active');-->
+<!--        } else {-->
+<!--            checkbox.closest('.table-row').classList.remove('active');-->
+<!--        }-->
+<!--    }-->
+
+<!--    // Add event listeners to each row checkbox to handle manual checking/unchecking-->
+<!--    document.querySelectorAll('.row-checkbox').forEach(checkbox => {-->
+<!--        checkbox.addEventListener('change', function () {-->
+<!--            toggleActiveClass(this);-->
+<!--        });-->
+<!--    });-->
+
+<!--</script>-->
+<!-- /.container-fluid -->
+{% endblock %}
