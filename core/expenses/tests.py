@@ -1,6 +1,7 @@
 from accounts.factories import CustomUserFactory
 from django.test import TestCase, tag
 from django.urls import reverse_lazy
+from rest_framework import status
 
 from .factories import ExpenseCategoryFactory, ExpenseFactory
 from .models import Expense
@@ -24,5 +25,6 @@ class ExpensesCreateTests(TestCase):
         response = self.client.post(
             reverse_lazy("expenses:expenses-list-create"), data=self.cleaned_data
         )
-        print(response.content)
-        print(Expense.objects.all())
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(Expense.objects.count(), 1)
