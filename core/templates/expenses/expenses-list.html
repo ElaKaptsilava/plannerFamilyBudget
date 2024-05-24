@@ -13,6 +13,10 @@
             <button class="btn btn-outline-success" data-toggle="modal" data-target="#createExpensesModal">
                 <i class="fas fa-plus"></i> Add Expenses
             </button>
+            <button type="button" class="btn btn-outline-info" data-toggle="modal"
+                    data-target="#filterExpensesModal">
+                Filter
+            </button>
             <button class="btn btn-outline-danger" data-toggle="modal"
                     data-target="#confirmDeleteModal">
                 <i class="fas fa-minus"></i> Delete Selected
@@ -21,24 +25,40 @@
 
         <div class="card-body">
             <div class="table-responsive">
-                <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
-                    {% csrf_token %}
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                        <tr>
-                            <th>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="selectAll">
-                                    <label class="form-check-label" for="selectAll"></label>
+                <table class="table table-condensed" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="card-header">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="selectAll">
+                                <label class="form-check-label" for="selectAll">Select ALL</label>
+                            </div>
+                        </th>
+                        <th class="card-header">
+                            <form id="filterExpensesForm" action="{% url 'expenses:expenses-list' %}"
+                                  method="get" class="form-inline">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <label for="categoryFilter" class="mr-2">Category:</label>
+                                    <select id="categoryFilter" name="category" class="form-control-sm "
+                                            onchange="this.form.submit()">
+                                        <option value="" hidden selected></option>
+                                        <option value="all">All</option>
+                                        {% for category in categories %}
+                                        <option value="{{ category.pk }}">{{ category.name }}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
-                            </th>
-                            <th>Category</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
+                            </form>
+                        </th>
+                        <th class="card-header">Amount</th>
+                        <th class="card-header">Date</th>
+                        <th class="card-header">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
+                        {% csrf_token %}
                         {% for expense in expenses %}
                         <tr class="table-row" data-income-id="{{ expense.id }}">
                             <td>
@@ -52,17 +72,29 @@
                             <td>{{ expense.category }}</td>
                             <td>{{ expense.amount }}</td>
                             <td>{{ expense.datetime }}</td>
+                            <!--                            <td>-->
+                            <!--                                <a class="btn btn-outline-primary btn-circle edit-button" href="#" data-toggle="modal"-->
+                            <!--                                   data-target="#editIncomeModal{{ income.id }}">-->
+                            <!--                                    <i class="fas fa-edit"></i>-->
+                            <!--                                </a>-->
+                            <!--                            </td>-->
                             <td>
-                                <a class="btn btn-outline-primary btn-circle edit-button" href="#" data-toggle="modal"
-                                   data-target="#editIncomeModal{{ income.id }}">
-                                    <i class="fas fa-edit"></i>
-                                </a>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
+                                            data-target="#editIncomeModal{{ expense.id }}">
+                                        Edit
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                                            data-target="#deleteIncomeModal{{ expense.id }}">
+                                        Delete
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
-                        </tbody>
-                    </table>
-                </form>
+                    </form>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -146,7 +178,7 @@
                                     <div class="form-group">
                                         <label for="category">Category</label>
                                         <select class="form-control form-control-user text-secondary" id="category"
-                                                name="category">
+                                                name="category" form="filterExpensesModal">
                                             <option value="" disabled selected>Select a category</option>
                                             {% for category in categories %}
                                             <option value="{{ category.id }}">{{ category.name }}</option>
@@ -180,6 +212,25 @@
     </div>
 </div>
 
+<div class="modal fade" id="filterExpensesModal" tabindex="-1" role="dialog" aria-labelledby="filterExpensesModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterExpensesModalLabel">Filter Expenses</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="get" id="modalFilterForm">
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">Filter</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <!--&lt;!&ndash;Multiple delete by selected incomes&ndash;&gt;-->
 <!--<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"-->
 <!--     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">-->

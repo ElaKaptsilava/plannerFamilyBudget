@@ -1,23 +1,45 @@
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView, FormView, ListView
 
-from .forms import ExpenseCategoryForm, ExpenseForm
+from .forms import ExpenseCategoryForm, ExpenseFilterForm, ExpenseForm
 from .models import Expense, ExpenseCategory
 
 
-class ExpenseListView(LoginRequiredMixin, ListView):
+@method_decorator(login_required, name="dispatch")
+class ExpenseListView(ListView):
     model = Expense
     template_name = "expenses/expenses-list.html"
     context_object_name = "expenses"
 
     def get_queryset(self) -> QuerySet[Expense]:
-        return self.model.objects.filter(user=self.request.user)
+        queryset = super().get_queryset().filter(user=self.request.user)
+        print("Request GET data:", self.request.GET)
+        form = ExpenseFilterForm(self.request.GET)
+        if form.is_valid():
+            print("Form cleaned data:", form.cleaned_data)
+            if form.cleaned_data["category"]:
+                queryset = queryset.filter(category=form.cleaned_data["category"])
+                print(queryset)
+            if form.cleaned_data["min_amount"]:
+                queryset = queryset.filter(amount__gte=form.cleaned_data["min_amount"])
+            if form.cleaned_data["max_amount"]:
+                queryset = queryset.filter(amount__lte=form.cleaned_data["max_amount"])
+            if form.cleaned_data["start_date"]:
+                queryset = queryset.filter(
+                    datetime__gte=form.cleaned_data["start_date"]
+                )
+            if form.cleaned_data["end_date"]:
+                queryset = queryset.filter(datetime__lte=form.cleaned_data["end_date"])
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["form"] = ExpenseFilterForm(self.request.GET)
         context["categories"] = ExpenseCategory.objects.all()
         return context
 
