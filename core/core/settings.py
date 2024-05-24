@@ -59,6 +59,7 @@ CUSTOM_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "crispy_forms",
+    "django_filters",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS

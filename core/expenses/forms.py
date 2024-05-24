@@ -16,6 +16,14 @@ class ExpenseCategoryForm(forms.ModelForm):
 
 
 class ExpenseFilterForm(forms.Form):
+    SORT_CHOICES = (
+        ("-datetime", "Newest"),
+        ("datetime", "Oldest"),
+        ("-amount", "Highest Amount"),
+        ("amount", "Lowest Amount"),
+    )
+
+    sort_by = forms.ChoiceField(label="Sort By", choices=SORT_CHOICES, required=False)
     category = forms.ModelChoiceField(
         queryset=ExpenseCategory.objects.all(), required=False, label="Category"
     )

@@ -53,7 +53,22 @@
                         </th>
                         <th class="card-header">Amount</th>
                         <th class="card-header">Date</th>
-                        <th class="card-header"></th>
+                        <th class="card-header">
+                            <form action="{% url 'expenses:expenses-list' %}" method="get" class="form-inline">
+                                {% csrf_token %}
+                                <div class="input-group row">
+                                    <label for="expensesSort" class="mr-2">Sort by:</label>
+                                    <select id="expensesSort" name="sort_by" class="form-control-sm "
+                                            onchange="this.form.submit()">
+                                        <option value="" hidden selected></option>
+                                        <option value="all">All</option>
+                                        {% for choice_value, choice_label in form.sort_by.field.choices %}
+                                        <option value="{{ choice_value }}">{{ choice_label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </form>
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
