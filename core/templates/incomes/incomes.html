@@ -14,7 +14,7 @@
                 <i class="fas fa-plus"></i> Add Income
             </button>
             <button type="button" class="btn btn-outline-info" data-toggle="modal"
-                    data-target="#filterExpensesModal">
+                    data-target="#filterIncomesModal">
                 Filter
             </button>
             <button class="btn btn-outline-danger" data-toggle="modal"
@@ -35,23 +35,7 @@
                             </div>
                         </th>
                         <th class="card-header">Source</th>
-                        <th class="card-header">
-                            <form id="filterExpensesForm" action="{% url 'expenses:expenses-list' %}"
-                                  method="get" class="form-inline">
-                                {% csrf_token %}
-                                <div class="input-group">
-                                    <label for="categoryFilter" class="mr-2">Category:</label>
-                                    <select id="categoryFilter" name="category" class="form-control-sm "
-                                            onchange="this.form.submit()">
-                                        <option value="" hidden selected></option>
-                                        <option value="all">All</option>
-                                        {% for category in categories %}
-                                        <option value="{{ category.pk }}">{{ category.name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
+                        <th class="card-header">Category</th>
                         <th class="card-header">Amount</th>
                         <th class="card-header">Date</th>
                         <th class="card-header">Actions</th>
@@ -229,6 +213,59 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
                 <button type="submit" form="deleteMultipleIncomesForm" class="btn btn-outline-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Filter incomes modal-->
+<div class="modal fade" id="filterIncomesModal" tabindex="-1" role="dialog" aria-labelledby="filterIncomesModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="filterIncomesModalLabel">Filter Incomes</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="get" id="modalFilterForm">
+                    <div class="container">
+                        <div class="main-body">
+                            <div class="form-group">
+                                <label for="min_amount">{{ form.min_amount.label }}</label>
+                                <input type="number" step="0.01"
+                                       class="form-control form-control-user text-secondary"
+                                       id="min_amount" name="min_amount" placeholder="Enter min amount">
+                            </div>
+                            <div class="form-group">
+                                <label for="max_amount">{{ form.max_amount.label }}</label>
+                                <input type="number" step="0.01"
+                                       class="form-control form-control-user text-secondary"
+                                       id="max_amount" name="max_amount" placeholder="Enter max amount">
+                            </div>
+                            <div class="row gutters-sm">
+                                <div class="col">
+                                    <label for="start_date">{{ form.start_date.label }}</label>
+                                    <input type="date" class="form-control form-control-user text-secondary"
+                                           id="start_date"
+                                           name="start_date" placeholder="Enter start date">
+                                </div>
+                                <div class="col">
+                                    <label for="end_date">{{ form.end_date.label }}</label>
+                                    <input type="date" class="form-control form-control-user text-secondary"
+                                           id="end_date"
+                                           name="end_date" placeholder="Enter end date">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer mt-3">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-outline-primary">Filter</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
