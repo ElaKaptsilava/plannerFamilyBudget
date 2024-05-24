@@ -13,6 +13,9 @@ urlpatterns = [
         name="expenses-list-delete",
     ),
     path(
+        "<int:pk>/update/", views.ExpenseView.as_view(), name="expenses-detail-update"
+    ),
+    path(
         "category/create/",
         views.ExpenseCategoryCreateView.as_view(),
         name="expenses-category-list-create",

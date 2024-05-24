@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
@@ -50,9 +51,21 @@ class ExpenseView(LoginRequiredMixin, FormView):
     template_name = "expenses/expenses-list.html"
     success_url = reverse_lazy("expenses:expenses-list")
 
+    def get_object(self, *args, **kwargs):
+        if "pk" in self.kwargs:
+            return get_object_or_404(Expense, pk=self.kwargs["pk"])
+        return None
+
+    def get_form_kwargs(self) -> dict:
+        kwargs = super().get_form_kwargs()
+        if self.request.method in ["POST", "PATCH"] and self.get_object():
+            kwargs["instance"] = self.get_object()
+        return kwargs
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = ExpenseCategory.objects.all()
+        context["expenses"] = Expense.objects.filter(user=self.request.user)
         context["form"] = self.get_form()
         return context
 
