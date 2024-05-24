@@ -43,7 +43,7 @@ class ExpenseFilter(django_filters.FilterSet):
             "end_date",
         ]
 
-    def filter_sort(self, queryset, name, value):
+    def filter_sort(self, queryset, value):
         if value:
             return queryset.order_by(value)
         return queryset

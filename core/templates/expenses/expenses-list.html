@@ -61,7 +61,7 @@
                                     <select id="expensesSort" name="sort_by" class="form-control-sm "
                                             onchange="this.form.submit()">
                                         <option value="" hidden selected></option>
-                                        <option value="all">All</option>
+                                        <option value="">All</option>
                                         {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
                                         <option value="{{ choice_value }}">{{ choice_label }}</option>
                                         {% endfor %}
