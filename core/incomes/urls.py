@@ -6,7 +6,7 @@ app_name = "incomes"
 
 urlpatterns = [
     path("incomes/", IncomesListView.as_view(), name="incomes-list"),
-    path("incomes/", IncomesView.as_view(), name="income-list-create"),
+    path("incomes/create/", IncomesView.as_view(), name="income-list-create"),
     path(
         "incomes/<int:pk>/update/",
         IncomesView.as_view(),

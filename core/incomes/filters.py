@@ -1,12 +1,12 @@
 import django_filters
 
-from .models import Expense, ExpenseCategory
+from .models import Income
 
 
-class ExpenseFilter(django_filters.FilterSet):
+class IncomeFilter(django_filters.FilterSet):
     SORT_CHOICES = (
-        ("-datetime", "Newest"),
-        ("datetime", "Oldest"),
+        ("-date", "Newest"),
+        ("date", "Oldest"),
         ("-amount", "Highest Amount"),
         ("amount", "Lowest Amount"),
     )
@@ -14,10 +14,6 @@ class ExpenseFilter(django_filters.FilterSet):
     sort_by = django_filters.ChoiceFilter(
         label="Sort By", choices=SORT_CHOICES, method="filter_sort"
     )
-    category = django_filters.ModelChoiceFilter(
-        queryset=ExpenseCategory.objects.all(), label="Category"
-    )
-
     min_amount = django_filters.NumberFilter(
         field_name="amount", lookup_expr="gte", label="Min Amount"
     )
@@ -26,22 +22,15 @@ class ExpenseFilter(django_filters.FilterSet):
     )
 
     start_date = django_filters.DateFilter(
-        field_name="datetime", lookup_expr="gte", label="Start Date"
+        field_name="date", lookup_expr="gte", label="Start Date"
     )
     end_date = django_filters.DateFilter(
-        field_name="datetime", lookup_expr="lte", label="End Date"
+        field_name="date", lookup_expr="lte", label="End Date"
     )
 
     class Meta:
-        model = Expense
-        fields = [
-            "sort_by",
-            "category",
-            "min_amount",
-            "max_amount",
-            "start_date",
-            "end_date",
-        ]
+        model = Income
+        fields = ["sort_by", "min_amount", "max_amount", "start_date", "end_date"]
 
     def filter_sort(self, queryset, name, value):
         if value:

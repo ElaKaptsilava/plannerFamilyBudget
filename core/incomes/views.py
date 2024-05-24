@@ -8,35 +8,26 @@ from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.generic import FormView, ListView
-from incomes.forms import IncomeForm, IncomesFilterForm
+from django_filters.views import FilterView
+from incomes.filters import IncomeFilter
+from incomes.forms import IncomeForm
 from incomes.models import Income
 
 
 @method_decorator(login_required, name="dispatch")
-class IncomesListView(LoginRequiredMixin, ListView):
+class IncomesListView(FilterView, ListView):
     template_name: str = "incomes/incomes.html"
     model = Income
     context_object_name = "incomes"
+    filterset_class = IncomeFilter
 
     def get_queryset(self) -> QuerySet[Income]:
         queryset = super().get_queryset().filter(user=self.request.user)
-        form = IncomesFilterForm(self.request.GET)
-        if form.is_valid():
-            if form.cleaned_data["min_amount"]:
-                queryset = queryset.filter(amount__gte=form.cleaned_data["min_amount"])
-            if form.cleaned_data["max_amount"]:
-                queryset = queryset.filter(amount__lte=form.cleaned_data["max_amount"])
-            if form.cleaned_data["start_date"]:
-                queryset = queryset.filter(
-                    datetime__gte=form.cleaned_data["start_date"]
-                )
-            if form.cleaned_data["end_date"]:
-                queryset = queryset.filter(datetime__lte=form.cleaned_data["end_date"])
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = IncomesFilterForm(self.request.GET)
+        # context["form"] = self.filterset_class(self.request.GET)
         return context
 
 

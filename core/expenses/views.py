@@ -11,7 +11,7 @@ from django.views.generic import CreateView, FormView, ListView
 from django_filters.views import FilterView
 
 from .filters import ExpenseFilter
-from .forms import ExpenseCategoryForm, ExpenseFilterForm, ExpenseForm
+from .forms import ExpenseCategoryForm, ExpenseForm
 from .models import Expense, ExpenseCategory
 
 
@@ -28,7 +28,6 @@ class ExpenseListView(FilterView, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["form"] = ExpenseFilterForm(self.request.GET)
         context["categories"] = ExpenseCategory.objects.all()
         return context
 

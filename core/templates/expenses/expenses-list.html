@@ -62,7 +62,7 @@
                                             onchange="this.form.submit()">
                                         <option value="" hidden selected></option>
                                         <option value="all">All</option>
-                                        {% for choice_value, choice_label in form.sort_by.field.choices %}
+                                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
                                         <option value="{{ choice_value }}">{{ choice_label }}</option>
                                         {% endfor %}
                                     </select>
@@ -232,6 +232,7 @@
     </div>
 </div>
 
+<!--Filter Expenses Modal-->
 <div class="modal fade" id="filterExpensesModal" tabindex="-1" role="dialog" aria-labelledby="filterExpensesModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -247,13 +248,13 @@
                     <div class="container">
                         <div class="row gutters-sm">
                             <div class="col">
-                                <label for="min_amount">{{ form.min_amount.label }}</label>
+                                <label for="min_amount">{{ filter.form.min_amount.label }}</label>
                                 <input type="number" step="0.01"
                                        class="form-control form-control-user text-secondary"
                                        id="min_amount" name="min_amount" placeholder="Enter min amount">
                             </div>
                             <div class="col">
-                                <label for="max_amount">{{ form.max_amount.label }}</label>
+                                <label for="max_amount">{{ filter.form.max_amount.label }}</label>
                                 <input type="number" step="0.01"
                                        class="form-control form-control-user text-secondary"
                                        id="max_amount" name="max_amount" placeholder="Enter max amount">
@@ -261,13 +262,13 @@
                         </div>
                         <div class="row gutters-sm">
                             <div class="col">
-                                <label for="start_date">{{ form.start_date.label }}</label>
+                                <label for="start_date">{{ filter.form.start_date.label }}</label>
                                 <input type="date" class="form-control form-control-user text-secondary"
                                        id="start_date"
                                        name="start_date" placeholder="Enter start date">
                             </div>
                             <div class="col">
-                                <label for="end_date">{{ form.end_date.label }}</label>
+                                <label for="end_date">{{ filter.form.end_date.label }}</label>
                                 <input type="date" class="form-control form-control-user text-secondary"
                                        id="end_date"
                                        name="end_date" placeholder="Enter end date">
