@@ -119,8 +119,9 @@
                         <div class="main-body">
                             <div class="row gutters-sm">
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="categoriesFilter" class="mr-2">Category:</label>
+
+                                    <div class="row">
+                                        <label for="categoriesFilter" class="mr-2">Category</label>
                                         <select id="categoriesFilter" name="category" class="form-control-sm ">
                                             <option value="" hidden selected></option>
                                             <option value="{{ expense.category }}">{{ expense.category }}</option>
@@ -129,14 +130,15 @@
                                             {% endfor %}
                                         </select>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="amount{{ expense.id }}">{{ form.amount.label }}</label>
+                                    <div class="row">
+                                        <label for="amount{{ expense.id }}" class="mr-2">Amount</label>
                                         <input type="number" class="form-control form-control-user text-secondary"
-                                               id="amount{{ expense.id }}" name="amount" value="{{ expense.amount }}"
+                                               id="amount{{ expense.id }}" name="amount"
+                                               value="{{ expense.amount }}"
                                                placeholder="Enter amount">
                                     </div>
-                                    <div class="form-group">
-                                        <label for="datetime{{ expense.id }}">{{ form.datetime.label }}</label>
+                                    <div class="row">
+                                        <label for="datetime{{ expense.id }}" class="mr-2">Datetime</label>
                                         <input type="datetime-local"
                                                class="form-control form-control-user text-secondary"
                                                id="datetime{{ expense.id }}" name="datetime"
