@@ -18,13 +18,10 @@ class ExpenseListView(ListView):
 
     def get_queryset(self) -> QuerySet[Expense]:
         queryset = super().get_queryset().filter(user=self.request.user)
-        print("Request GET data:", self.request.GET)
         form = ExpenseFilterForm(self.request.GET)
         if form.is_valid():
-            print("Form cleaned data:", form.cleaned_data)
             if form.cleaned_data["category"]:
                 queryset = queryset.filter(category=form.cleaned_data["category"])
-                print(queryset)
             if form.cleaned_data["min_amount"]:
                 queryset = queryset.filter(amount__gte=form.cleaned_data["min_amount"])
             if form.cleaned_data["max_amount"]:
