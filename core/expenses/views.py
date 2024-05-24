@@ -1,9 +1,11 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.generic import CreateView, FormView, ListView
 
 from .forms import ExpenseCategoryForm, ExpenseFilterForm, ExpenseForm
@@ -59,6 +61,18 @@ class ExpenseView(LoginRequiredMixin, FormView):
         expense.user = self.request.user
         expense.save()
         return super().form_valid(form)
+
+
+@method_decorator(login_required, name="dispatch")
+class DeleteMultipleExpenseView(View):
+    def post(self, request):
+        selected_incomes = request.POST.getlist("selected_incomes")
+        if selected_incomes:
+            Expense.objects.filter(id__in=selected_incomes).delete()
+            messages.success(request, "Selected incomes were deleted successfully.")
+        else:
+            messages.error(request, "No incomes were selected.")
+        return HttpResponseRedirect(reverse_lazy("expenses:expenses-list"))
 
 
 class ExpenseCategoryCreateView(LoginRequiredMixin, CreateView):

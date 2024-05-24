@@ -69,7 +69,8 @@ class IncomesView(LoginRequiredMixin, FormView):
         return super().form_valid(form)
 
 
-class DeleteMultipleIncomesView(LoginRequiredMixin, View):
+@method_decorator(login_required, name="dispatch")
+class DeleteMultipleIncomesView(View):
     def post(self, request):
         selected_incomes = request.POST.getlist("selected_incomes")
         if selected_incomes:

@@ -1,14 +1,20 @@
 from django.urls import path
-from expenses.views import ExpenseCategoryCreateView, ExpenseListView, ExpenseView
+
+from . import views
 
 app_name = "expenses"
 
 urlpatterns = [
-    path("list/", ExpenseListView.as_view(), name="expenses-list"),
-    path("list/create/", ExpenseView.as_view(), name="expenses-list-create"),
+    path("list/", views.ExpenseListView.as_view(), name="expenses-list"),
+    path("list/create/", views.ExpenseView.as_view(), name="expenses-list-create"),
+    path(
+        "list/delete-multiple/",
+        views.DeleteMultipleExpenseView.as_view(),
+        name="expenses-list-delete",
+    ),
     path(
         "category/create/",
-        ExpenseCategoryCreateView.as_view(),
+        views.ExpenseCategoryCreateView.as_view(),
         name="expenses-category-list-create",
     ),
 ]
