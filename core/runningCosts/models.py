@@ -1,5 +1,15 @@
+"""
+To-Do List:
+    1. Implement Monitoring
+
+    2. Track Payment Status
+
+    3. Manage Payment Deadlines
+"""
+
 from accounts.models import CustomUser
 from django.db import models
+from django.utils import timezone
 
 
 class RunningCostCategory(models.Model):
@@ -42,6 +52,13 @@ class RunningCost(models.Model):
         help_text="The number of periods (e.g., 2 for bi-monthly)."
     )
     due_date = models.DateField(help_text="The due date for the next payment.")
+    payment_deadline = models.DateField(
+        default=timezone.now, help_text="The deadline for paying the running cost."
+    )
+    is_paid = models.BooleanField(
+        default=False,
+        help_text="Indicates whether the running cost has been paid or not.",
+    )
 
     def __str__(self) -> str:
         return f"{self.name} - ${self.amount:.2f}"
