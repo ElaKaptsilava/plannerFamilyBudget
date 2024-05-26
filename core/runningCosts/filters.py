@@ -1,7 +1,7 @@
 """
 List todo:
     filter by:
-            - deadline, due_date, payment_deadline, amount, category
+            - due_date, payment_deadline, amount, category
             - this month, this year, this week
 """
 

@@ -25,7 +25,7 @@ class IncomesListView(FilterView, ListView):
         queryset = super().get_queryset().filter(user=self.request.user)
         return queryset
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         return context
 
@@ -61,7 +61,7 @@ class IncomesView(LoginRequiredMixin, FormView):
 
 @method_decorator(login_required, name="dispatch")
 class DeleteMultipleIncomesView(View):
-    def post(self, request):
+    def post(self, request) -> redirect:
         selected_incomes = request.POST.getlist("selected_incomes")
         if selected_incomes:
             Income.objects.filter(id__in=selected_incomes).delete()

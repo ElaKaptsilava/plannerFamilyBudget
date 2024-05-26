@@ -1,25 +1,47 @@
 from django.contrib.auth.decorators import login_required
-from django.db.models import QuerySet
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView
+from django.views.generic import FormView
 from django_filters.views import FilterView
 
 from .filters import RunningCostFilter
-from .models import RunningCost, RunningCostCategory
+from .forms import RunningCostForm
+from .models import RunningCost
 
 
 @method_decorator(login_required, name="dispatch")
-class RunningCostListView(FilterView, ListView):
-    model = RunningCost
+class RunningCostView(FilterView, FormView):
     template_name = "runningCosts/running-costs-list.html"
-    context_object_name = "runningCosts"
+    form_class = RunningCostForm
+    model = RunningCost
+    context_object_name = "runningCost"
+    success_url = reverse_lazy("running-costs:running-costs-list")
     filterset_class = RunningCostFilter
 
-    def get_queryset(self) -> QuerySet[RunningCost]:
-        queryset = super().get_queryset().filter(user=self.request.user)
-        return queryset
+    def get_object(self):
+        if "pk" in self.kwargs:
+            return get_object_or_404(RunningCost, pk=self.kwargs["pk"])
+        return None
 
-    def get_context_data(self, **kwargs):
+    def get_form_kwargs(self) -> dict:
+        kwargs = super().get_form_kwargs()
+        if self.request.method in ["POST", "PATCH"] and self.get_object():
+            kwargs["instance"] = self.get_object()
+        return kwargs
+
+    def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context["categories"] = RunningCostCategory.objects.all()
+        context["runningCosts"] = RunningCost.objects.filter(user=self.request.user)
+        if self.get_object():
+            context["form"] = self.form_class(instance=self.get_object())
+        else:
+            context["form"] = self.get_form()
         return context
+
+    def form_valid(self, form) -> HttpResponse:
+        running_cost = form.save(commit=False)
+        running_cost.user = self.request.user
+        running_cost.save()
+        return super().form_valid(form)
