@@ -1,16 +1,17 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views import View
+from django.views.generic import FormView, UpdateView
 from django_filters.views import FilterView
 
 from .filters import RunningCostFilter
 from .forms import RunningCostForm
-from .models import RunningCost
+from .models import RunningCost, RunningCostCategory
 
 
-class RunningCostView(LoginRequiredMixin, FilterView, FormView):  # ListView
+class RunningCostView(LoginRequiredMixin, FilterView, FormView):
     template_name = "runningCosts/running-costs-list.html"
     form_class = RunningCostForm
     model = RunningCost
@@ -18,21 +19,11 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):  # ListView
     success_url = reverse_lazy("running-costs:running-costs-list")
     filterset_class = RunningCostFilter
 
-    def get_object(self):
-        if "pk" in self.kwargs:
-            return get_object_or_404(RunningCost, pk=self.kwargs["pk"])
-        return None
-
-    def get_form_kwargs(self) -> dict:
-        kwargs = super().get_form_kwargs()
-        if self.request.method in ["POST", "PATCH"] and self.get_object():
-            kwargs["instance"] = self.get_object()
-        return kwargs
-
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["runningCosts"] = RunningCost.objects.filter(user=self.request.user)
         context["form"] = self.get_form()
+        context["categories"] = RunningCostCategory.objects.all()
         return context
 
     def form_valid(self, form) -> HttpResponse:
@@ -40,3 +31,24 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):  # ListView
         running_cost.user = self.request.user
         running_cost.save()
         return super().form_valid(form)
+
+
+class RunningCostDeleteMultipleView(LoginRequiredMixin, View):
+    def post(self, request):
+        selected_costs = request.POST.getlist("selected_costs")
+        if selected_costs:
+            RunningCost.objects.filter(pk__in=selected_costs).delete()
+            messages.success(
+                request, "Selected running costs were deleted successfully."
+            )
+        else:
+            messages.error(request, "No running costs were selected.")
+        return HttpResponseRedirect(reverse_lazy("running-costs:running-costs-list"))
+
+
+class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = RunningCostForm
+    model = RunningCost
+    success_url = reverse_lazy("running-costs:running-costs-list")
+    context_object_name = "runningCost"
+    template_name = "runningCosts/running-costs-list.html"

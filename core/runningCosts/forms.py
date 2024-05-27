@@ -14,6 +14,7 @@ class RunningCostForm(forms.ModelForm):
             "period",
             "due_date",
             "payment_deadline",
+            "is_paid",
         ]
 
 

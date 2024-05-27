@@ -10,7 +10,7 @@ urlpatterns = [
     path(
         "list/delete-multiple/",
         views.DeleteMultipleExpenseView.as_view(),
-        name="expenses-list-delete",
+        name="expenses-list-delete-multiple",
     ),
     path(
         "<int:pk>/update/", views.ExpenseView.as_view(), name="expenses-detail-update"

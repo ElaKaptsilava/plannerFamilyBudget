@@ -72,7 +72,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form id="deleteMultipleExpensesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
+                    <form id="deleteMultipleExpensesForm" method="post" action="{% url 'expenses:expenses-list-delete-multiple' %}">
                         {% csrf_token %}
                         {% for expense in expenses %}
                         <tr class="table-row" data-income-id="{{ expense.id }}">
@@ -93,10 +93,10 @@
                                             data-target="#editExpenseModal{{ expense.id }}">
                                         Edit
                                     </button>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"
-                                            data-target="#deleteExpenseModal{{ expense.id }}">
-                                        Delete
-                                    </button>
+<!--                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"-->
+<!--                                            data-target="#deleteExpenseModal{{ expense.id }}">-->
+<!--                                        Delete-->
+<!--                                    </button>-->
                                 </div>
                             </td>
                         </tr>
@@ -129,12 +129,10 @@
             <div class="modal-body">
                 <form action="{% url 'expenses:expenses-detail-update' expense.id %}" method="post">
                     {% csrf_token %}
-                    <input type="hidden" name="_method" value="PATCH">
                     <div class="container">
                         <div class="main-body">
                             <div class="row gutters-sm">
                                 <div class="card-body">
-
                                     <div class="row">
                                         <label for="categoriesFilter" class="mr-2">Category</label>
                                         <select id="categoriesFilter" name="category" class="form-control-sm ">
@@ -285,6 +283,7 @@
         </div>
     </div>
 </div>
+
 <!--Multiple delete by selected expenses-->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
      aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
