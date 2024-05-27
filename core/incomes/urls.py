@@ -5,14 +5,16 @@ from .views import DeleteMultipleIncomesView, IncomesListView, IncomesView
 app_name = "incomes"
 
 urlpatterns = [
-    path("", IncomesListView.as_view(), name="incomes-list"),
-    path("create/", IncomesView.as_view(), name="income-list-create"),
+    path("incomes/", IncomesListView.as_view(), name="incomes-list"),
+    path("incomes/create/", IncomesView.as_view(), name="income-list-create"),
     path(
-        "<int:pk>/update/",
+        "incomes/<int:pk>/update/",
         IncomesView.as_view(),
         name="income-detail-update",
     ),
     path(
-        "delete-multiple/", DeleteMultipleIncomesView.as_view(), name="delete-multiple"
+        "incomes/delete-multiple/",
+        DeleteMultipleIncomesView.as_view(),
+        name="delete-multiple",
     ),
 ]

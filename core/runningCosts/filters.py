@@ -6,10 +6,26 @@ List todo:
 """
 
 import django_filters
+from django.db.models import QuerySet
 from django.utils import timezone
 
-from .constants import SORT_CHOICES, TIME_PERIOD_CHOICES
 from .models import RunningCost
+
+SORT_CHOICES = (
+    ("-payment_deadline", "Payment deadline Descending"),
+    ("payment_deadline", "Payment deadline Ascending"),
+    ("-amount", "Highest Amount"),
+    ("amount", "Lowest Amount"),
+    ("-due_date", "Due Date Descending"),
+    ("due_date", "Due Date Ascending"),
+)
+
+TIME_PERIOD_CHOICES = (
+    ("this_month", "This Month"),
+    ("this_year", "This Year"),
+    ("this_week", "This Week"),
+    ("this_day", "This Day"),
+)
 
 
 class RunningCostFilter(django_filters.FilterSet):
@@ -24,12 +40,16 @@ class RunningCostFilter(django_filters.FilterSet):
         model = RunningCost
         fields = ["deadline_time", "sort_by"]
 
-    def filter_sort(self, queryset, name, value):
+    def filter_sort(
+        self, queryset: QuerySet[RunningCost], name: str, value: str
+    ) -> QuerySet[RunningCost]:
         if value:
             return queryset.order_by(value)
         return queryset
 
-    def filter_by_time_period(self, queryset, name, value):
+    def filter_by_time_period(
+        self, queryset: QuerySet[RunningCost], name: str, value: str
+    ) -> QuerySet[RunningCost]:
         now = timezone.now()
         filter_queryset_by_values = {
             "this_month": queryset.filter(payment_deadline__month=now.month),

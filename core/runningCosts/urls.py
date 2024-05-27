@@ -1,14 +1,14 @@
 from django.urls import path
 
-from . import views
+from .views import RunningCostView
 
 app_name = "running-costs"
 
 urlpatterns = [
-    path("", views.RunningCostView.as_view(), name="running-costs-list"),
+    path("", RunningCostView.as_view(), name="running-costs-list"),
     path(
         "<int:pk>/update/",
-        views.RunningCostView.as_view(),
+        RunningCostView.as_view(),
         name="running-costs-detail-update",
     ),
 ]

@@ -116,6 +116,7 @@
             <div class="modal-body">
                 <form action="{% url 'incomes:income-detail-update' income.id %}" method="post">
                     {% csrf_token %}
+
                     <input type="hidden" name="_method" value="PATCH">
                     <div class="container">
                         <div class="main-body">

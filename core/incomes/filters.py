@@ -1,4 +1,5 @@
 import django_filters
+from django.db.models import QuerySet
 
 from .models import Income
 
@@ -32,7 +33,9 @@ class IncomeFilter(django_filters.FilterSet):
         model = Income
         fields = ["sort_by", "min_amount", "max_amount", "start_date", "end_date"]
 
-    def filter_sort(self, queryset, name, value):
+    def filter_sort(
+        self, queryset: QuerySet[Income], name: str, value: str
+    ) -> QuerySet[Income]:
         if value:
             return queryset.order_by(value)
         return queryset

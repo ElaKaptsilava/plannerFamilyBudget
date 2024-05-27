@@ -1,8 +1,7 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
-from django.utils.decorators import method_decorator
 from django.views.generic import FormView
 from django_filters.views import FilterView
 
@@ -11,8 +10,7 @@ from .forms import RunningCostForm
 from .models import RunningCost
 
 
-@method_decorator(login_required, name="dispatch")
-class RunningCostView(FilterView, FormView):
+class RunningCostView(LoginRequiredMixin, FilterView, FormView):  # ListView
     template_name = "runningCosts/running-costs-list.html"
     form_class = RunningCostForm
     model = RunningCost
@@ -34,10 +32,7 @@ class RunningCostView(FilterView, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["runningCosts"] = RunningCost.objects.filter(user=self.request.user)
-        if self.get_object():
-            context["form"] = self.form_class(instance=self.get_object())
-        else:
-            context["form"] = self.get_form()
+        context["form"] = self.get_form()
         return context
 
     def form_valid(self, form) -> HttpResponse:
