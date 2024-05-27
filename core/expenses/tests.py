@@ -64,13 +64,15 @@ class ExpensesCreateTests(TestCase):
             "amount": self.expenses_build.amount,
             "datetime": self.expenses_build.datetime,
         }
-        self.expenses_create_url = reverse_lazy("expenses:expenses-list-create")
+        self.expenses_create_url = reverse_lazy("expenses:expenses-list")
 
+    @tag("x")
     def test_user_create_expense_success(self):
         self.client.force_login(self.user)
 
         response = self.client.post(self.expenses_create_url, data=self.cleaned_data)
-
+        print(response)
+        print(Expense.objects.all())
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
         self.assertEqual(Expense.objects.count(), 1)
 

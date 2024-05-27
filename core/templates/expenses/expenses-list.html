@@ -72,14 +72,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form id="deleteMultipleExpensesForm" method="post" action="{% url 'expenses:expenses-list-delete-multiple' %}">
+                    <form id="deleteMultipleExpensesForm" method="post"
+                          action="{% url 'expenses:expenses-list-delete-multiple' %}">
                         {% csrf_token %}
                         {% for expense in expenses %}
                         <tr class="table-row" data-income-id="{{ expense.id }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
-                                           value="{{ expense.id }}" name="selected_incomes"
+                                           value="{{ expense.id }}" name="selected_expenses"
                                            data-income-id="{{ expense.id }}" id="row-checkbox">
                                     <label class="form-check-label" for="markSource{{ expense.id }}"></label>
                                 </div>
@@ -93,10 +94,10 @@
                                             data-target="#editExpenseModal{{ expense.id }}">
                                         Edit
                                     </button>
-<!--                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"-->
-<!--                                            data-target="#deleteExpenseModal{{ expense.id }}">-->
-<!--                                        Delete-->
-<!--                                    </button>-->
+                                    <!--                                    <button type="button" class="btn btn-sm btn-outline-danger" data-toggle="modal"-->
+                                    <!--                                            data-target="#deleteExpenseModal{{ expense.id }}">-->
+                                    <!--                                        Delete-->
+                                    <!--                                    </button>-->
                                 </div>
                             </td>
                         </tr>
@@ -175,7 +176,7 @@
 </div>
 {% endfor %}
 
-<!-- Create Income Modal -->
+<!-- Create Expenses Modal -->
 <div class="modal fade" id="createExpensesModal" tabindex="-1" role="dialog" aria-labelledby="createExpensesModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -187,29 +188,31 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'expenses:expenses-list-create' %}" method="post">
+                <form action="{% url 'expenses:expenses-list' %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">
                             <div class="row gutters-sm">
                                 <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="category">Category</label>
-                                        <select class="form-control form-control-user text-secondary" id="category"
-                                                name="category" form="filterExpensesModal">
-                                            <option value="" disabled selected>Select a category</option>
-                                            {% for category in categories %}
-                                            <option value="{{ category.id }}">{{ category.name }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="row gutters-sm">
+                                        <div class="col">
+                                            <label for="category">Category</label>
+                                            <select class="form-control form-control-user text-secondary" id="category"
+                                                    name="category" form="filterExpensesModal">
+                                                <option value="" selected disabled>---------</option>
+                                                {% for category in categories %}
+                                                <option value="{{ category }}">{{ category.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            <label for="amount">Amount</label>
+                                            <input type="number" class="form-control form-control-user text-secondary"
+                                                   id="amount" name="amount"
+                                                   placeholder="Enter amount" required>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="amount">Amount</label>
-                                        <input type="number" class="form-control form-control-user text-secondary"
-                                               id="amount" name="amount"
-                                               placeholder="Enter amount" required>
-                                    </div>
-                                    <div class="form-group">
+                                    <div class="form-group mt-2">
                                         <label for="datetime">Datetime</label>
                                         <input type="datetime-local"
                                                class="form-control form-control-user text-secondary"

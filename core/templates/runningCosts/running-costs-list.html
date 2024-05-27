@@ -169,9 +169,12 @@
                                     <div class="row gutters-sm mt-2">
                                         <div class="col">
                                             <label for="periodType" class="mr-2">Type</label>
-                                            <input type="text" class="form-control form-control-user text-secondary"
-                                                   id="periodType" name="period_type"
-                                                   placeholder="{{ form.instance.period_type.help_text }}">
+                                            <select id="periodType" name="period_type"
+                                                    class="form-control form-control-user text-secondary">
+                                                {% for key, value in form.fields.period_type.choices %}
+                                                <option value="{{ key }}" {% if key == form.instance.period_type %}selected{% endif %}>{{ value }}</option>
+                                                {% endfor %}
+                                            </select>
                                         </div>
                                         <div class="col">
                                             <label for="period" class="mr-2">Period</label>
