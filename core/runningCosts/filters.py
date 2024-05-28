@@ -1,8 +1,6 @@
 """
-List todo:
-    filter by:
-            - due_date, payment_deadline, amount, category
-            - this month, this year, this week
+    TODO list:
+        1. sort by is_late_payment.
 """
 
 import django_filters
@@ -57,4 +55,7 @@ class RunningCostFilter(django_filters.FilterSet):
             "this_week": queryset.filter(payment_deadline__week=now.isocalendar().week),
             "this_day": queryset.filter(payment_deadline__day=now.day),
         }
+        print(filter_queryset_by_values)
+        print(value)
+        print(filter_queryset_by_values.get(value))
         return filter_queryset_by_values.get(value)

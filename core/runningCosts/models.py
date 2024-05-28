@@ -1,15 +1,28 @@
 """
 TODO  List:
     1. Implement Monitoring
-
     2. Track Payment Status
-
     3. Manage Payment Deadlines
 """
 
 from accounts.models import CustomUser
 from django.db import models
 from django.utils import timezone
+
+
+class RunningCostQuerySet(models.QuerySet):
+    def with_active(self) -> bool:
+        return self.annotate(
+            is_late_payment=models.Case(
+                models.When(
+                    payment_deadline__lte=timezone.now(),
+                    is_paid=False,
+                    then=models.Value(True),
+                ),
+                default=models.Value(False),
+                output_field=models.BooleanField(),
+            )
+        )
 
 
 class RunningCostCategory(models.Model):
@@ -59,6 +72,7 @@ class RunningCost(models.Model):
         default=False,
         help_text="Indicates whether the running cost has been paid or not.",
     )
+    objects = RunningCostQuerySet.as_manager()
 
     def __str__(self) -> str:
         return f"{self.name} - ${self.amount:.2f}"
@@ -68,3 +82,9 @@ class RunningCost(models.Model):
             f"RunningCost(name={self.name!r}, period=({self.period_type!r}, {self.period!r}), "
             f"amount={self.amount!r}, due date={self.due_date})"
         )
+
+    @property
+    def is_late_payment_status(self) -> bool:
+        if hasattr(self, "is_late_payment"):
+            return self.is_late_payment
+        return self.payment_deadline < timezone.now().date() and not self.is_paid

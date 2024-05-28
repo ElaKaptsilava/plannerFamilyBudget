@@ -77,12 +77,12 @@
                         </th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="running-costs-tbody">
                     <form id="deleteMultipleRunningCostsForm" method="post"
                           action="{% url 'running-costs:running-costs-list-delete-multiple' %}">
                         {% csrf_token %}
                         {% for cost in runningCosts %}
-                        <tr class="table-row" data-income-id="{{ cost.id }}">
+                        <tr class="table-row" data-income-id="{{ cost.id }}" data-late="{{ cost.is_late_payment_status }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
@@ -435,13 +435,24 @@
         }
     }
 
-    // Add event listeners to each row checkbox to handle manual checking/unchecking
     document.querySelectorAll('.row-checkbox').forEach(checkbox => {
         checkbox.addEventListener('change', function () {
             toggleActiveClass(this);
         });
+
     });
 
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+    const rows = document.querySelectorAll("#running-costs-tbody tr");
+    rows.forEach(row => {
+        const isLate = row.getAttribute("data-late") === "True";
+        if (isLate) {
+            row.classList.add("late-payment");
+        }
+    });
+});
 </script>
 <!-- /.container-fluid -->
 {% endblock %}

@@ -27,3 +27,11 @@
 .table-row.active {
     background-color: #e0f7fa;
 }
+
+.late-payment {
+    background-color: #ffcccc
+}
+
+a.late-payment:focus, a.late-payment:hover {
+    background-color: #D9534FFF
+}
