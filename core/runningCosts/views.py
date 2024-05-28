@@ -19,6 +19,12 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
     success_url = reverse_lazy("running-costs:running-costs-list")
     filterset_class = RunningCostFilter
 
+    def form_invalid(self, form):
+        """If the form is invalid, render the invalid form."""
+        print(form.fields)
+        print(form.errors)
+        return self.render_to_response(self.get_context_data(form=form))
+
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()

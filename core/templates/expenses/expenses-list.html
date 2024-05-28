@@ -13,14 +13,28 @@
             <button class="btn btn-outline-success" data-toggle="modal" data-target="#createExpensesModal">
                 <i class="fas fa-plus"></i> Add Expenses
             </button>
-            <button type="button" class="btn btn-outline-info" data-toggle="modal"
-                    data-target="#filterExpensesModal">
-                Filter
-            </button>
             <button class="btn btn-outline-danger" data-toggle="modal"
                     data-target="#confirmDeleteModal">
                 <i class="fas fa-minus"></i> Delete Selected
             </button>
+            <button type="button" class="btn btn-outline-info" data-toggle="modal"
+                    data-target="#filterExpensesModal">
+                Filter
+            </button>
+            <form action="{% url 'expenses:expenses-list' %}" method="get" class="form-inline">
+                {% csrf_token %}
+                <div class="input-group row">
+                    <label for="expensesSort" class="mr-2">Sort by:</label>
+                    <select id="expensesSort" name="sort_by" class="form-control-sm "
+                            onchange="this.form.submit()">
+                        <option value="" hidden selected></option>
+                        <option value="">All</option>
+                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                        <option value="{{ choice_value }}">{{ choice_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
         </div>
 
         <div class="card-body">
@@ -53,29 +67,14 @@
                         </th>
                         <th class="card-header">Amount</th>
                         <th class="card-header">Date</th>
-                        <th class="card-header">
-                            <form action="{% url 'expenses:expenses-list' %}" method="get" class="form-inline">
-                                {% csrf_token %}
-                                <div class="input-group row">
-                                    <label for="expensesSort" class="mr-2">Sort by:</label>
-                                    <select id="expensesSort" name="sort_by" class="form-control-sm "
-                                            onchange="this.form.submit()">
-                                        <option value="" hidden selected></option>
-                                        <option value="">All</option>
-                                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                                        <option value="{{ choice_value }}">{{ choice_label }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
+                        <th class="card-header"></th>
                     </tr>
                     </thead>
                     <tbody>
                     <form id="deleteMultipleExpensesForm" method="post"
                           action="{% url 'expenses:expenses-list-delete-multiple' %}">
                         {% csrf_token %}
-                        {% for expense in expenses %}
+                        {% for expense in object_list %}
                         <tr class="table-row" data-income-id="{{ expense.id }}">
                             <td>
                                 <div class="form-check checkbox-container">
@@ -116,7 +115,7 @@
 <!-- Modals-->
 
 <!--Edit expenses by id-->
-{% for expense in expenses %}
+{% for expense in object_list %}
 <div class="modal fade" id="editExpenseModal{{ expense.id }}" tabindex="-1" role="dialog"
      aria-labelledby="editExpenseModalLabel{{ expense.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -134,40 +133,46 @@
                         <div class="main-body">
                             <div class="row gutters-sm">
                                 <div class="card-body">
-                                    <div class="row">
-                                        <label for="categoriesFilter" class="mr-2">Category</label>
-                                        <select id="categoriesFilter" name="category" class="form-control-sm ">
-                                            <option value="" hidden selected></option>
-                                            <option value="{{ expense.category }}">{{ expense.category }}</option>
-                                            {% for category in categories %}
-                                            <option value="{{ category.pk }}">{{ category.name }}</option>
-                                            {% endfor %}
-                                        </select>
+                                    <div class="row gutters-sm">
+                                        <div class="col">
+                                            {{ form.category.label_tag }}
+                                            <select id="categoriesFilter" name="category"
+                                                    class="form-control form-control-user text-secondary">
+                                                {% for category in categories %}
+                                                {% if expense.category and expense.category.pk == category.pk %}
+                                                <option value="{{ category.pk }}" selected>{{ category.name }}</option>
+                                                {% else %}
+                                                <option value="{{ category.pk }}">{{ category.name }}</option>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col">
+                                            {{ form.amount.label_tag }}
+                                            <input type="number" class="form-control form-control-user text-secondary"
+                                                   id="amount{{ expense.id }}" name="amount"
+                                                   value="{{ expense.amount }}" step="0.01"
+                                                   placeholder="Enter amount">
+                                        </div>
                                     </div>
-                                    <div class="row">
-                                        <label for="amount{{ expense.id }}" class="mr-2">Amount</label>
-                                        <input type="number" class="form-control form-control-user text-secondary"
-                                               id="amount{{ expense.id }}" name="amount"
-                                               value="{{ expense.amount }}"
-                                               placeholder="Enter amount">
-                                    </div>
-                                    <div class="row">
-                                        <label for="datetime{{ expense.id }}" class="mr-2">Datetime</label>
+                                    <div class="form-group mt-2">
+                                        {{ form.datetime.label_tag }}
                                         <input type="datetime-local"
                                                class="form-control form-control-user text-secondary"
                                                id="datetime{{ expense.id }}" name="datetime"
                                                value="{{ expense.datetime|date:'Y-m-d\TH:i' }}"
                                                placeholder="Enter date">
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
-                                            Cancel
-                                        </button>
-                                        <button type="submit" class="btn btn-outline-primary">Save Changes</button>
-                                    </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary"
+                                data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-outline-primary">Save Changes</button>
                     </div>
                 </form>
             </div>
@@ -196,24 +201,25 @@
                                 <div class="card-body">
                                     <div class="row gutters-sm">
                                         <div class="col">
-                                            <label for="category">Category</label>
-                                            <select class="form-control form-control-user text-secondary" id="category"
-                                                    name="category" form="filterExpensesModal">
+                                            {{ form.category.label_tag }}
+                                            <select class="form-control form-control-user text-secondary"
+                                                    id="categoryChoice"
+                                                    name="category">
                                                 <option value="" selected disabled>---------</option>
                                                 {% for category in categories %}
-                                                <option value="{{ category }}">{{ category.name }}</option>
+                                                <option value="{{ category.pk }}">{{ category.name }}</option>
                                                 {% endfor %}
                                             </select>
                                         </div>
                                         <div class="col">
-                                            <label for="amount">Amount</label>
+                                            {{ form.amount.label_tag }}
                                             <input type="number" class="form-control form-control-user text-secondary"
                                                    id="amount" name="amount"
                                                    placeholder="Enter amount" required>
                                         </div>
                                     </div>
                                     <div class="form-group mt-2">
-                                        <label for="datetime">Datetime</label>
+                                        {{ form.datetime.label_tag }}
                                         <input type="datetime-local"
                                                class="form-control form-control-user text-secondary"
                                                id="datetime" name="datetime"
@@ -308,33 +314,4 @@
         </div>
     </div>
 </div>
-<script>
-    document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
-
-    function toggleSelectAll() {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.row-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
-            toggleActiveClass(checkbox);
-        });
-    }
-
-    function toggleActiveClass(checkbox) {
-        if (checkbox.checked) {
-            checkbox.closest('.table-row').classList.add('active');
-        } else {
-            checkbox.closest('.table-row').classList.remove('active');
-        }
-    }
-
-    // Add event listeners to each row checkbox to handle manual checking/unchecking
-    document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            toggleActiveClass(this);
-        });
-    });
-
-</script>
-<!-- /.container-fluid -->
 {% endblock %}

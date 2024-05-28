@@ -21,19 +21,17 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
     success_url = reverse_lazy("expenses:expenses-list")
     filterset_class = ExpenseFilter
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["form"] = ExpenseForm
+        context["categories"] = ExpenseCategory.objects.all()
+        return context
+
     def form_valid(self, form) -> HttpResponse:
         expense = form.save(commit=False)
         expense.user = self.request.user
         expense.save()
         return super().form_valid(form)
-
-    def get_context_data(self, **kwargs) -> dict:
-        if "form" not in kwargs:
-            kwargs["form"] = ExpenseForm
-        kwargs["categories"] = ExpenseCategory.objects.all()
-        kwargs["expenses"] = Expense.objects.filter(user=self.request.user)
-        context = super().get_context_data(**kwargs)
-        return context
 
 
 @method_decorator(login_required, name="dispatch")

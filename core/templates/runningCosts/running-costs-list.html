@@ -21,6 +21,21 @@
                     data-target="#confirmDeleteModal">
                 <i class="fas fa-minus"></i> Delete Selected
             </button>
+            <form action="{% url 'running-costs:running-costs-list' %}" method="get"
+                  class="form-inline">
+                {% csrf_token %}
+                <div class="input-group row">
+                    <label for="runningCostsSort" class="mr-2">Sort by:</label>
+                    <select id="runningCostsSort" name="sort_by" class="form-control-sm "
+                            onchange="this.form.submit()">
+                        <option value="" hidden selected></option>
+                        <option value="all">All</option>
+                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                        <option value="{{ choice_value }}">{{ choice_label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
         </div>
 
         <div class="card-body">
@@ -58,23 +73,7 @@
                         <th class="card-header">Period</th>
                         <th class="card-header">Payment deadline</th>
                         <th class="card-header">Due date</th>
-                        <th class="card-header">
-                            <form action="{% url 'running-costs:running-costs-list' %}" method="get"
-                                  class="form-inline">
-                                {% csrf_token %}
-                                <div class="input-group row">
-                                    <label for="runningCostsSort" class="mr-2">Sort by:</label>
-                                    <select id="runningCostsSort" name="sort_by" class="form-control-sm "
-                                            onchange="this.form.submit()">
-                                        <option value="" hidden selected></option>
-                                        <option value="all">All</option>
-                                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                                        <option value="{{ choice_value }}">{{ choice_label }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
-                            </form>
-                        </th>
+                        <th class="card-header"></th>
                     </tr>
                     </thead>
                     <tbody id="running-costs-tbody">
@@ -82,7 +81,8 @@
                           action="{% url 'running-costs:running-costs-list-delete-multiple' %}">
                         {% csrf_token %}
                         {% for cost in object_list %}
-                        <tr class="table-row" data-income-id="{{ cost.id }}" data-late="{{ cost.is_late_payment_status }}">
+                        <tr class="table-row" data-income-id="{{ cost.id }}"
+                            data-late="{{ cost.is_late_payment_status }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
@@ -162,9 +162,9 @@
                                     </div>
                                     <div class="form-group mt-2">
                                         <label for="amount" class="mr-2">Amount</label>
-                                        <input type="text" class="form-control form-control-user text-secondary"
+                                        <input type="number" class="form-control form-control-user text-secondary"
                                                id="amount" name="amount"
-                                               placeholder="{{ form.instance.amount.help_text }}">
+                                               placeholder="{{ form.instance.amount.help_text }}" step="0,01">
                                     </div>
                                     <div class="row gutters-sm mt-2">
                                         <div class="col">
@@ -172,7 +172,8 @@
                                             <select id="periodType" name="period_type"
                                                     class="form-control form-control-user text-secondary">
                                                 {% for key, value in form.fields.period_type.choices %}
-                                                <option value="{{ key }}" {% if key == form.instance.period_type %}selected{% endif %}>{{ value }}</option>
+                                                <option value="{{ key }}" {% if key == form.instance.period_type %}selected{% endif %}>{{ value }}
+                                                </option>
                                                 {% endfor %}
                                             </select>
                                         </div>
@@ -181,7 +182,7 @@
                                             <input type="number"
                                                    class="form-control form-control-user text-secondary"
                                                    id="period" name="period"
-                                                   placeholder="{{ form.instance.period.help_text }}">
+                                                   placeholder="{{ form.instance.period.help_text }}" step="0,01">
                                         </div>
                                     </div>
                                     <div class="row gutters-sm mt-2">
@@ -235,7 +236,7 @@
 </div>
 
 <!--Edit runningCosts by id-->
-{% for cost in runningCosts %}
+{% for cost in object_list %}
 <div class="modal fade" id="updateRunningCostModal{{ cost.id }}" tabindex="-1" role="dialog"
      aria-labelledby="updateRunningCostModalLabel{{ cost.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -275,7 +276,7 @@
                                         <label for="amount{{ cost.id }}" class="mr-2">Amount</label>
                                         <input type="text" class="form-control form-control-user text-secondary"
                                                id="amount{{ cost.id }}" name="amount" value="{{ cost.amount }}"
-                                               placeholder="{{ cost.amount.help_text }}">
+                                               placeholder="{{ cost.amount.help_text }}" step="0,01">
                                     </div>
                                     <div class="row gutters-sm mt-2">
                                         <div class="col">
@@ -416,43 +417,15 @@
     </div>
 </div>
 <script>
-    document.getElementById('selectAll').addEventListener('change', toggleSelectAll);
-
-    function toggleSelectAll() {
-        const selectAllCheckbox = document.getElementById('selectAll');
-        const checkboxes = document.querySelectorAll('.row-checkbox');
-        checkboxes.forEach(checkbox => {
-            checkbox.checked = selectAllCheckbox.checked;
-            toggleActiveClass(checkbox);
+    document.addEventListener("DOMContentLoaded", function () {
+        const rows = document.querySelectorAll("#running-costs-tbody tr");
+        rows.forEach(row => {
+            const isLate = row.getAttribute("data-late") === "True";
+            if (isLate) {
+                row.classList.add("late-payment");
+            }
         });
-    }
-
-    function toggleActiveClass(checkbox) {
-        if (checkbox.checked) {
-            checkbox.closest('.table-row').classList.add('active');
-        } else {
-            checkbox.closest('.table-row').classList.remove('active');
-        }
-    }
-
-    document.querySelectorAll('.row-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            toggleActiveClass(this);
-        });
-
     });
-
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-    const rows = document.querySelectorAll("#running-costs-tbody tr");
-    rows.forEach(row => {
-        const isLate = row.getAttribute("data-late") === "True";
-        if (isLate) {
-            row.classList.add("late-payment");
-        }
-    });
-});
 </script>
 <!-- /.container-fluid -->
 {% endblock %}

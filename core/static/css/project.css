@@ -29,9 +29,9 @@
 }
 
 .late-payment {
-    background-color: #ffcccc
+    background-color: #ffe8a1
 }
 
 a.late-payment:focus, a.late-payment:hover {
-    background-color: #D9534FFF
+    background-color: #ffdf41
 }
