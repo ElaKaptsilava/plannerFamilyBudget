@@ -10,7 +10,7 @@ class IncomeForm(forms.ModelForm):
             "source": forms.TextInput(
                 attrs={"class": "form-control form-control-user text-secondary"}
             ),
-            "category": forms.Select(
+            "category": forms.TextInput(
                 attrs={"class": "form-control form-control-user text-secondary"}
             ),
             "amount": forms.NumberInput(

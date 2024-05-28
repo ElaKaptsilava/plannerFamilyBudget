@@ -1,59 +1,41 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseRedirect
+from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.views import View
-from django.views.generic import FormView, ListView
+from django.views.generic import FormView, UpdateView
 from django_filters.views import FilterView
 from incomes.filters import IncomeFilter
 from incomes.forms import IncomeForm
 from incomes.models import Income
 
 
-class IncomesListView(LoginRequiredMixin, FilterView, ListView):
+class IncomesView(LoginRequiredMixin, FilterView, FormView):
     template_name: str = "incomes/incomes.html"
     model = Income
     context_object_name = "incomes"
     filterset_class = IncomeFilter
-
-    def get_queryset(self) -> QuerySet[Income]:
-        queryset = super().get_queryset().filter(user=self.request.user)
-        return queryset
-
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["form"] = IncomeForm()
-        return context
-
-
-class IncomesView(LoginRequiredMixin, FormView):
-    template_name = "incomes/incomes.html"
     form_class = IncomeForm
-    success_url = reverse_lazy("incomes:incomes-list")
 
-    def get_object(self):
-        if "pk" in self.kwargs:
-            return get_object_or_404(Income, pk=self.kwargs["pk"])
-        return None
-
-    def get_form_kwargs(self) -> dict:
-        kwargs = super().get_form_kwargs()
-        kwargs["instance"] = self.get_object()
-        return kwargs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["incomes"] = Income.objects.filter(user=self.request.user)
-        context["form"] = self.get_form()
-        return context
-
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form) -> HttpResponseRedirect:
         income = form.save(commit=False)
         income.user = self.request.user
         income.save()
-        return super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        return context
+
+
+class IncomeUpdateView(LoginRequiredMixin, UpdateView):
+    form_class = IncomeForm
+    model = Income
+    success_url = reverse_lazy("incomes:incomes-list")
+    context_object_name = "incomes"
+    template_name: str = "incomes/incomes.html"
 
 
 class DeleteMultipleIncomesView(LoginRequiredMixin, View):

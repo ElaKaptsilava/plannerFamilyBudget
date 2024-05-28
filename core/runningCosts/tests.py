@@ -1,5 +1,5 @@
 from accounts.factories import CustomUserFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils import timezone
 
@@ -42,15 +42,3 @@ class RunningCostsTestCase(TestCase):
         self.assertEqual(
             RunningCost.objects.get(name=self.cost_build.name).user, self.user
         )
-
-    @tag("x")
-    def test_user_add_running_cost_with_invalid_data_failed(self):
-        self.client.force_login(self.user)
-
-        invalid_data = {}
-
-        response = self.client.post(
-            reverse_lazy("running-costs:running-costs-list"), invalid_data
-        )
-
-        print(response)

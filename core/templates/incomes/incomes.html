@@ -98,7 +98,7 @@
 <!-- Modals-->
 
 <!--Edit income by id-->
-{% for income in incomes %}
+{% for income in object_list %}
 <div class="modal fade" id="editIncomeModal{{ income.id }}" tabindex="-1" role="dialog"
      aria-labelledby="editIncomeModalLabel{{ income.id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -110,7 +110,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'incomes:income-detail-update' income.id %}" method="post">
+                <form action="{% url 'incomes:incomes-detail-update' income.id %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">
@@ -177,7 +177,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'incomes:income-list-create' %}" method="post">
+                <form action="{% url 'incomes:incomes-list' %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">
