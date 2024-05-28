@@ -202,50 +202,15 @@
                                     <div class="row gutters-sm">
                                         <div class="col">
                                             {{ form.category.label_tag }}
-                                            <select class="form-control form-control-user text-secondary"
-                                                    id="categoryChoice"
-                                                    name="category">
-                                                <option value="" selected disabled>---------</option>
-                                                {% for category in categories %}
-                                                <option value="{{ category.pk }}">{{ category.name }}</option>
-                                                {% endfor %}
-                                            </select>
-                                            {% if form.category.errors %}
-                                            <div class="errorlist text-danger">
-                                                {% for error in form.category.errors %}
-                                                <p>{{ error }}</p>
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
+                                            {{ form.category }}
                                         </div>
                                         <div class="col">
                                             {{ form.amount.label_tag }}
-                                            <input type="number" class="form-control form-control-user text-secondary"
-                                                   id="amount" name="amount"
-                                                   placeholder="Enter amount" required>
-                                            {% if form.amount.errors %}
-                                            <div class="errorlist text-danger">
-                                                {% for error in form.amount.errors %}
-                                                <p>{{ error }}</p>
-                                                {% endfor %}
-                                            </div>
-                                            {% endif %}
+                                            {{ form.amount }}
                                         </div>
                                     </div>
-                                    <div class="form-group mt-2">
-                                        {{ form.datetime.label_tag }}
-                                        <input type="datetime-local"
-                                               class="form-control form-control-user text-secondary"
-                                               id="datetime" name="datetime"
-                                               placeholder="Enter date" required>
-                                        {% if form.datetime.errors %}
-                                        <div class="errorlist text-danger">
-                                            {% for error in form.datetime.errors %}
-                                            <p>{{ error }}</p>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                    </div>
+                                    {{ form.datetime.label_tag }}
+                                    {{ form.datetime }}
                                 </div>
                             </div>
                         </div>
