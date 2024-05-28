@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, UpdateView
@@ -19,23 +19,17 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
     success_url = reverse_lazy("running-costs:running-costs-list")
     filterset_class = RunningCostFilter
 
-    def form_invalid(self, form):
-        """If the form is invalid, render the invalid form."""
-        print(form.fields)
-        print(form.errors)
-        return self.render_to_response(self.get_context_data(form=form))
-
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["categories"] = RunningCostCategory.objects.all()
         return context
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form) -> HttpResponseRedirect:
         running_cost = form.save(commit=False)
         running_cost.user = self.request.user
         running_cost.save()
-        return super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class RunningCostDeleteMultipleView(LoginRequiredMixin, View):

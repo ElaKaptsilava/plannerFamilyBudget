@@ -16,6 +16,41 @@ class RunningCostForm(forms.ModelForm):
             "payment_deadline",
             "is_paid",
         ]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "category": forms.Select(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "amount": forms.NumberInput(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "step": "0,01",
+                }
+            ),
+            "period_type": forms.Select(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "period": forms.NumberInput(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "due_date": forms.DateInput(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "type": "date",
+                }
+            ),
+            "payment_deadline": forms.DateInput(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "type": "date",
+                }
+            ),
+            "is_paid": forms.CheckboxInput(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+        }
 
 
 class RunningCostCategoryForm(forms.ModelForm):

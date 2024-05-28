@@ -210,12 +210,26 @@
                                                 <option value="{{ category.pk }}">{{ category.name }}</option>
                                                 {% endfor %}
                                             </select>
+                                            {% if form.category.errors %}
+                                            <div class="errorlist text-danger">
+                                                {% for error in form.category.errors %}
+                                                <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
                                         </div>
                                         <div class="col">
                                             {{ form.amount.label_tag }}
                                             <input type="number" class="form-control form-control-user text-secondary"
                                                    id="amount" name="amount"
                                                    placeholder="Enter amount" required>
+                                            {% if form.amount.errors %}
+                                            <div class="errorlist text-danger">
+                                                {% for error in form.amount.errors %}
+                                                <p>{{ error }}</p>
+                                                {% endfor %}
+                                            </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="form-group mt-2">
@@ -224,6 +238,13 @@
                                                class="form-control form-control-user text-secondary"
                                                id="datetime" name="datetime"
                                                placeholder="Enter date" required>
+                                        {% if form.datetime.errors %}
+                                        <div class="errorlist text-danger">
+                                            {% for error in form.datetime.errors %}
+                                            <p>{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
                                     </div>
                                 </div>
                             </div>

@@ -40,8 +40,7 @@ class IncomesView(LoginRequiredMixin, FormView):
 
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
-        if self.request.method in ["POST", "PATCH"] and self.get_object():
-            kwargs["instance"] = self.get_object()
+        kwargs["instance"] = self.get_object()
         return kwargs
 
     def get_context_data(self, **kwargs):

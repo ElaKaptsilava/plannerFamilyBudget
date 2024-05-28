@@ -41,13 +41,8 @@ class RunningCostFilter(django_filters.FilterSet):
     def filter_sort(
         self, queryset: QuerySet[RunningCost], name: str, value: str
     ) -> QuerySet[RunningCost]:
-        print(f"Sorting by: {value}")
         if value:
-            print(value)
-            print(queryset)
-            queryset = queryset.order_by(value)
-            print(queryset)
-            return queryset
+            return queryset.order_by(value)
         return queryset
 
     def filter_by_time_period(

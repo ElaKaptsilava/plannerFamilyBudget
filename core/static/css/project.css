@@ -29,9 +29,12 @@
 }
 
 .late-payment {
-    background-color: #ffe8a1
+    /*background-color: #ffe8a1;*/
+    border-color: #ffe8a1;
+    border-style: solid;
+    border-width: 3px;
 }
 
-a.late-payment:focus, a.late-payment:hover {
-    background-color: #ffdf41
-}
+/*a.late-payment:focus, a.late-payment:hover {*/
+/*    background-color: #ffdf41*/
+/*}*/
