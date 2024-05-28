@@ -63,8 +63,8 @@
                                   class="form-inline">
                                 {% csrf_token %}
                                 <div class="input-group row">
-                                    <label for="expensesSort" class="mr-2">Sort by:</label>
-                                    <select id="expensesSort" name="sort_by" class="form-control-sm "
+                                    <label for="runningCostsSort" class="mr-2">Sort by:</label>
+                                    <select id="runningCostsSort" name="sort_by" class="form-control-sm "
                                             onchange="this.form.submit()">
                                         <option value="" hidden selected></option>
                                         <option value="all">All</option>
@@ -81,7 +81,7 @@
                     <form id="deleteMultipleRunningCostsForm" method="post"
                           action="{% url 'running-costs:running-costs-list-delete-multiple' %}">
                         {% csrf_token %}
-                        {% for cost in runningCosts %}
+                        {% for cost in object_list %}
                         <tr class="table-row" data-income-id="{{ cost.id }}" data-late="{{ cost.is_late_payment_status }}">
                             <td>
                                 <div class="form-check checkbox-container">
@@ -395,7 +395,7 @@
                             <div class="row gutters-sm">
                                 <div class="input-group row">
                                     <label for="deadlineFilter" class="mr-2">Deadline:</label>
-                                    <select id="deadlineFilter" name="sort_by" class="form-control-sm">
+                                    <select id="deadlineFilter" name="deadline_time" class="form-control-sm">
                                         <option value="" hidden selected></option>
                                         <option value="all">All</option>
                                         {% for choice_value, choice_label in filter.form.deadline_time.field.choices %}

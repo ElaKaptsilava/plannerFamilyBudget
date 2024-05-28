@@ -21,7 +21,6 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context["runningCosts"] = RunningCost.objects.filter(user=self.request.user)
         context["form"] = self.get_form()
         context["categories"] = RunningCostCategory.objects.all()
         return context

@@ -1,8 +1,7 @@
 """
 TODO  List:
     1. Implement Monitoring
-    2. Track Payment Status
-    3. Manage Payment Deadlines
+    2. Manage Payment Deadlines
 """
 
 from accounts.models import CustomUser
@@ -37,7 +36,7 @@ class RunningCostCategory(models.Model):
         return f"{self.name}"
 
     def __repr__(self) -> str:
-        return f"RunningCostCategory(name={self.name!r}, description={self.description[:10]!r}...)"
+        return f"RunningCostCategory(name={self.name!r}, description={self.description!r}...)"
 
 
 class RunningCost(models.Model):

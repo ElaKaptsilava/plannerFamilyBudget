@@ -41,21 +41,33 @@ class RunningCostFilter(django_filters.FilterSet):
     def filter_sort(
         self, queryset: QuerySet[RunningCost], name: str, value: str
     ) -> QuerySet[RunningCost]:
+        print(f"Sorting by: {value}")
         if value:
-            return queryset.order_by(value)
+            print(value)
+            print(queryset)
+            queryset = queryset.order_by(value)
+            print(queryset)
+            return queryset
         return queryset
 
     def filter_by_time_period(
         self, queryset: QuerySet[RunningCost], name: str, value: str
     ) -> QuerySet[RunningCost]:
+        print(f"Filtering by time period: {value}")
         now = timezone.now()
         filter_queryset_by_values = {
-            "this_month": queryset.filter(payment_deadline__month=now.month),
+            "this_month": queryset.filter(
+                payment_deadline__year=now.year, payment_deadline__month=now.month
+            ),
             "this_year": queryset.filter(payment_deadline__year=now.year),
-            "this_week": queryset.filter(payment_deadline__week=now.isocalendar().week),
-            "this_day": queryset.filter(payment_deadline__day=now.day),
+            "this_week": queryset.filter(
+                payment_deadline__year=now.year,
+                payment_deadline__week=now.isocalendar()[1],
+            ),
+            "this_day": queryset.filter(
+                payment_deadline__year=now.year,
+                payment_deadline__month=now.month,
+                payment_deadline__day=now.day,
+            ),
         }
-        print(filter_queryset_by_values)
-        print(value)
-        print(filter_queryset_by_values.get(value))
-        return filter_queryset_by_values.get(value)
+        return filter_queryset_by_values.get(value, queryset)

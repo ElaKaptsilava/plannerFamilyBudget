@@ -66,7 +66,6 @@ class ExpensesCreateTests(TestCase):
         }
         self.expenses_create_url = reverse_lazy("expenses:expenses-list")
 
-    @tag("x")
     def test_user_create_expense_success(self):
         self.client.force_login(self.user)
 
