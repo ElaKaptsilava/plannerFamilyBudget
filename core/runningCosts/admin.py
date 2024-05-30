@@ -11,6 +11,13 @@ class RunningCostsCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(RunningCost)
 class RunningCostAdmin(admin.ModelAdmin):
-    list_display = ("user", "category", "amount", "period_type", "period", "due_date")
-    list_filter = ("user", "category", "period_type", "period", "due_date")
+    list_display = (
+        "user",
+        "category",
+        "amount",
+        "period_type",
+        "period",
+        "next_payment_date",
+    )
+    list_filter = ("user", "category", "period_type", "period", "next_payment_date")
     search_fields = ("user__username", "category__name")

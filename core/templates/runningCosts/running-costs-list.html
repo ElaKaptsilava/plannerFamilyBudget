@@ -71,7 +71,7 @@
                         <th class="card-header">Period type</th>
                         <th class="card-header">Period</th>
                         <th class="card-header">Payment deadline</th>
-                        <th class="card-header">Due date</th>
+                        <th class="card-header">Next payment date</th>
                         <th class="card-header"></th>
                     </tr>
                     </thead>
@@ -81,7 +81,7 @@
                         {% csrf_token %}
                         {% for cost in object_list %}
                         <tr class="table-row" data-income-id="{{ cost.id }}"
-                            data-late="{{ cost.is_late_payment_status }}">
+                            data-late="{{ cost.has_overdue }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
@@ -96,8 +96,12 @@
                             <td>{{ cost.amount }}</td>
                             <td>{{ cost.period_type }}</td>
                             <td>{{ cost.period }}</td>
-                            <td>{{ cost.payment_deadline }}</td>
-                            <td>{{ cost.due_date }}</td>
+                            <td>
+                                <div id="paymentDeadline{{ cost.id }}">
+                                    {{ cost.payment_deadline }}
+                                </div>
+                            </td>
+                            <td><div id="nextPaymentDate">{{ cost.next_payment_date }}</div></td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Actions">
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
@@ -167,8 +171,8 @@
                                     </div>
                                     <div class="row gutters-sm mt-2">
                                         <div class="col">
-                                            {{ form.due_date.label_tag }}
-                                            {{ form.due_date }}
+                                            {{ form.next_payment_date.label_tag }}
+                                            {{ form.next_payment_date }}
                                         </div>
                                         <div class="col">
                                             {{ form.payment_deadline.label_tag }}
@@ -252,12 +256,12 @@
                                     <div class="row gutters-sm mt-2">
                                         <div class="col">
 
-                                            <label for="due_date{{ cost.id }}">Due</label>
+                                            <label for="next_payment_date{{ cost.id }}">Next payment date</label>
                                             <input type="date"
                                                    class="form-control form-control-user text-secondary"
-                                                   id="due_date{{ cost.id }}" name="due_date"
-                                                   value="{{ cost.due_date|date:'Y-m-d' }}"
-                                                   placeholder="{{ cost.due_date.help_text }}">
+                                                   id="next_payment_date{{ cost.id }}" name="next_payment_date"
+                                                   value="{{ cost.next_payment_date|date:'Y-m-d' }}"
+                                                   placeholder="{{ cost.next_payment_date.help_text }}">
                                         </div>
                                         <div class="col">
 
@@ -370,16 +374,17 @@
         </div>
     </div>
 </div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const rows = document.querySelectorAll("#running-costs-tbody tr");
-        rows.forEach(row => {
-            const isLate = row.getAttribute("data-late") === "True";
-            if (isLate) {
-                row.classList.add("late-payment");
-            }
-        });
-    });
-</script>
+<!--<script>-->
+<!--    document.addEventListener("DOMContentLoaded", function () {-->
+<!--        const rows = document.querySelectorAll("#running-costs-tbody tr");-->
+<!--        rows.forEach(row => {-->
+<!--            const isOverdue = row.getAttribute("data-late") === "True";-->
+<!--            if (isOverdue) {-->
+<!--                const deadlineCell = row.querySelector(`#nextPaymentDate${row.getAttribute("data-income-id")}`);-->
+<!--                deadlineCell.classList.add("late-payment");-->
+<!--            }-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
 <!-- /.container-fluid -->
 {% endblock %}

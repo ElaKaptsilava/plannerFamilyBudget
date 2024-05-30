@@ -12,7 +12,7 @@ class RunningCostForm(forms.ModelForm):
             "amount",
             "period_type",
             "period",
-            "due_date",
+            "next_payment_date",
             "payment_deadline",
             "is_paid",
         ]
@@ -35,7 +35,7 @@ class RunningCostForm(forms.ModelForm):
             "period": forms.NumberInput(
                 attrs={"class": "form-control form-control-user text-secondary"}
             ),
-            "due_date": forms.DateInput(
+            "next_payment_date": forms.DateInput(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
                     "type": "date",
@@ -48,6 +48,9 @@ class RunningCostForm(forms.ModelForm):
                 }
             ),
             "is_paid": forms.CheckboxInput(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "is_overdue": forms.CheckboxInput(
                 attrs={"class": "form-control form-control-user text-secondary"}
             ),
         }

@@ -4,9 +4,21 @@ TODO  List:
     2. Manage Payment Deadlines
 """
 
+from datetime import date, timedelta
+
 from accounts.models import CustomUser
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
+
+
+def validate_day_of_month(value):
+    if value < 1 or value > 28:
+        raise ValidationError("Day of payment must be between 1 and 28.")
+
+
+class DayOfMonthField(models.PositiveSmallIntegerField):
+    default_validators = [validate_day_of_month]
 
 
 class RunningCostQuerySet(models.QuerySet):
@@ -63,13 +75,15 @@ class RunningCost(models.Model):
     period = models.PositiveSmallIntegerField(
         help_text="The number of periods (e.g., 2 for bi-monthly)."
     )
-    due_date = models.DateField(help_text="The due date for the next payment.")
     payment_deadline = models.DateField(
         default=timezone.now, help_text="The deadline for paying the running cost."
     )
     is_paid = models.BooleanField(
         default=False,
         help_text="Indicates whether the running cost has been paid or not.",
+    )
+    next_payment_date = models.DateField(
+        null=True, blank=True, help_text="The next scheduled payment date."
     )
     objects = RunningCostQuerySet.as_manager()
 
@@ -79,11 +93,45 @@ class RunningCost(models.Model):
     def __repr__(self) -> str:
         return (
             f"RunningCost(name={self.name!r}, period=({self.period_type!r}, {self.period!r}), "
-            f"amount={self.amount!r}, due date={self.due_date})"
+            f"amount={self.amount!r}, payment day={self.next_payment_date})"
         )
 
     @property
-    def is_late_payment_status(self) -> bool:
+    def has_overdue(self) -> bool:
         if hasattr(self, "is_late_payment"):
             return self.is_late_payment
-        return self.payment_deadline < timezone.now().date() and not self.is_paid
+        today = timezone.now().date()
+        return today > self.next_payment_date and not self.is_paid
+
+    def save(self, *args, **kwargs):
+        if self.is_paid:
+            self.update_next_payment_date()
+        super().save(*args, **kwargs)
+
+    def update_next_payment_date(self):
+        today = timezone.now().date()
+        if self.period_type == self.PeriodType.DAYS:
+            self.next_payment_date = today + timedelta(days=self.period)
+        elif self.period_type == self.PeriodType.WEEKS:
+            self.next_payment_date = today + timedelta(weeks=self.period)
+        elif self.period_type == self.PeriodType.MONTHS:
+            self.next_payment_date = self.add_months(today, self.period)
+        elif self.period_type == self.PeriodType.YEARS:
+            self.next_payment_date = self.add_years(today, self.period)
+
+    @staticmethod
+    def add_months(source_date, period):
+        month = (source_date.month - 1 + period) % 12 + 1
+        year = source_date.year + month // 12
+        is_leap_year = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
+        day = source_date.day
+        if month == 2 and source_date.day >= 29:
+            day = 29 if is_leap_year else 28
+        return date(year, month, day)
+
+    @staticmethod
+    def add_years(source_date, period):
+        try:
+            return source_date.replace(year=source_date.year + period)
+        except ValueError:
+            return source_date.replace(month=2, day=28, year=source_date.year + period)
