@@ -7,7 +7,7 @@ import django_filters
 from django.db.models import QuerySet
 from django.utils import timezone
 
-from .models import RunningCost
+from .models import RunningCost, RunningCostCategory
 
 SORT_CHOICES = (
     ("-payment_deadline", "Payment deadline Descending"),
@@ -33,10 +33,13 @@ class RunningCostFilter(django_filters.FilterSet):
     deadline_time = django_filters.ChoiceFilter(
         label="Time Period", choices=TIME_PERIOD_CHOICES, method="filter_by_time_period"
     )
+    category = django_filters.ModelChoiceFilter(
+        queryset=RunningCostCategory.objects.all(), label="Category"
+    )
 
     class Meta:
         model = RunningCost
-        fields = ["deadline_time", "sort_by"]
+        fields = ["deadline_time", "sort_by", "category"]
 
     def filter_sort(
         self, queryset: QuerySet[RunningCost], name: str, value: str
@@ -48,7 +51,6 @@ class RunningCostFilter(django_filters.FilterSet):
     def filter_by_time_period(
         self, queryset: QuerySet[RunningCost], name: str, value: str
     ) -> QuerySet[RunningCost]:
-        print(f"Filtering by time period: {value}")
         now = timezone.now()
         filter_queryset_by_values = {
             "this_month": queryset.filter(

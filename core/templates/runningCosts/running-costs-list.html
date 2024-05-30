@@ -59,7 +59,7 @@
                                     <select id="categoryFilter" name="category" class="form-control-sm "
                                             onchange="this.form.submit()">
                                         <option value="" hidden selected></option>
-                                        <option value="all">All</option>
+                                        <option value="">All</option>
                                         {% for category in categories %}
                                         <option value="{{ category.pk }}">{{ category.name }}</option>
                                         {% endfor %}
