@@ -8,19 +8,9 @@ import calendar
 from datetime import date, datetime, timedelta
 
 from accounts.models import CustomUser
-from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
-
-
-def validate_day_of_month(value):
-    if value < 1 or value > 28:
-        raise ValidationError("Day of payment must be between 1 and 28.")
-
-
-class DayOfMonthField(models.PositiveSmallIntegerField):
-    default_validators = [validate_day_of_month]
 
 
 class RunningCostQuerySet(models.QuerySet):
