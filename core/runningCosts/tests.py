@@ -1,3 +1,5 @@
+import datetime
+
 from accounts.factories import CustomUserFactory
 from django.test import TestCase, tag
 from django.urls import reverse_lazy
@@ -29,7 +31,7 @@ class RunningCostsTestCase(TestCase):
             "period_type": "months",
             "period": 1,
             "next_payment_date": timezone.now().date(),
-            "payment_deadline": self.cost_build.payment_deadline,
+            "payment_deadline": self.now + timezone.timedelta(days=700),
             "is_paid": self.cost_build.is_paid,
         }
 
@@ -55,6 +57,51 @@ class RunningCostsTestCase(TestCase):
 
         self.assertTrue(self.cost.is_completed)
 
+    def test_change_next_payment_date_month_period(self):
+        self.client.force_login(self.user)
+
+        self.data_cleaned.update(
+            {
+                "next_payment_date": datetime.date(2024, 5, 31),
+                "period_type": "months",
+                "period": 2,
+            }
+        )
+        response = self.client.post(
+            reverse_lazy("running-costs:running-costs-list"), self.data_cleaned
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        cost = RunningCost.objects.get(name=self.data_cleaned["name"])
+        cost.is_paid = True
+        cost.save()
+
+        required_date = datetime.date(2024, 7, 31)
+
+        self.assertEqual(cost.next_payment_date, required_date)
+
     @tag("x")
-    def test_change_next_payment_date(self):
-        pass
+    def test_change_next_payment_date_year_period(self):
+        self.client.force_login(self.user)
+
+        self.data_cleaned.update(
+            {
+                "next_payment_date": datetime.date(2024, 5, 31),
+                "period_type": "years",
+                "period": 1,
+            }
+        )
+        response = self.client.post(
+            reverse_lazy("running-costs:running-costs-list"), self.data_cleaned
+        )
+
+        self.assertEqual(response.status_code, 302)
+
+        cost = RunningCost.objects.get(name=self.data_cleaned["name"])
+        cost.is_paid = True
+        cost.save()
+
+        required_date = datetime.date(2025, 8, 31)
+
+        self.assertEqual(cost.next_payment_date, required_date)

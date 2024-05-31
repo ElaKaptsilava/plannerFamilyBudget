@@ -9,6 +9,7 @@ from datetime import date, datetime, timedelta
 
 from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
 
@@ -74,7 +75,8 @@ class RunningCost(models.Model):
         help_text="The type of period for the running cost (e.g., months, weeks).",
     )
     period = models.PositiveSmallIntegerField(
-        help_text="The number of periods (e.g., 2 for bi-monthly)."
+        help_text="The number of periods (e.g., 2 for bi-monthly).",
+        validators=[MinValueValidator(1), MaxValueValidator(12)],
     )
     payment_deadline = models.DateField(
         default=timezone.now, help_text="The deadline for paying the running cost."
@@ -137,8 +139,11 @@ class RunningCost(models.Model):
 
     @staticmethod
     def add_months(source_date: date, period: int) -> date:
-        month = source_date.month - 1 + period
-        year = source_date.year + month // 12
+        month = source_date.month + period
+        year = source_date.year
+        if month > 12:
+            month -= 12
+            year += 1
         day = min(source_date.day, calendar.monthrange(year, month)[1])
         return date(year, month, day)
 
