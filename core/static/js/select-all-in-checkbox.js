@@ -23,16 +23,16 @@ document.querySelectorAll('.row-checkbox').forEach(checkbox => {
         toggleActiveClass(this);
     });
 });
-document.addEventListener("DOMContentLoaded", function () {
-    const rows = document.querySelectorAll("#running-costs-tbody tr");
-    rows.forEach(row => {
-        const isOverdue = row.getAttribute("data-late") === "True";
-        if (isOverdue) {
-            const deadlineCell = row.querySelector(`#nextPaymentDate${row.getAttribute("data-income-id")}`);
-            deadlineCell.classList.add("late-payment");
-        }
-    });
-});
+// document.addEventListener("DOMContentLoaded", function () {
+//     const rows = document.querySelectorAll("#running-costs-tbody tr");
+//     rows.forEach(row => {
+//         const isOverdue = row.getAttribute("data-late") === "True";
+//         if (isOverdue) {
+//             const deadlineCell = row.querySelector(`#nextPaymentDate${row.getAttribute("data-income-id")}`);
+//             deadlineCell.classList.add("late-payment");
+//         }
+//     });
+// });
 // document.addEventListener("DOMContentLoaded", function () {
 //     const rows = document.querySelectorAll("#running-costs-tbody tr");
 //     rows.forEach(row => {

@@ -14,8 +14,8 @@ SORT_CHOICES = (
     ("payment_deadline", "Payment deadline Ascending"),
     ("-amount", "Highest Amount"),
     ("amount", "Lowest Amount"),
-    ("-payment_day", "Payment day Descending"),
-    ("payment_day", "Payment day Ascending"),
+    ("-next_payment_date", "Payment day Descending"),
+    ("next_payment_date", "Payment day Ascending"),
 )
 
 TIME_PERIOD_CHOICES = (
