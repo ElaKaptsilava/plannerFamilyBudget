@@ -1,10 +1,13 @@
-from accounts.models import CustomUser
+from accounts.models import CustomUser, get_upload_path
 from django.db import models
 from django.utils import timezone
 
 
 class Target(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    image = models.ImageField(
+        upload_to=get_upload_path, default="static/img/undraw_posting_photo.svg"
+    )
     target = models.CharField(max_length=255, help_text="A name of the target goal.")
     amount = models.FloatField(
         help_text="The amount of money required to achieve the target."
