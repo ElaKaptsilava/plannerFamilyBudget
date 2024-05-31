@@ -27,38 +27,48 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ["3.12"]
+        python-version: [ "3.12" ]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Poetry
-      run: |
-        python -m pip install --upgrade pip
-        pip install poetry
-    - name: Install Dependencies
-      run: |
-        poetry install
-    - name: Run Tests
-      run: |
-        cd core
-        poetry run python manage.py test
-      env:
-        DB_NAME: ${{ vars.DB_NAME }}
-        DB_PASSWORD:  ${{ secrets.DB_PASSWORD }}
-        DB_USER: ${{ vars.DB_USER }}
-        DB_HOST: ${{ vars.DB_HOST }}
-        DB_PORT: ${{ vars.DB_PORT }}
-    - name: Run Bandit
-      run: |
-        poetry run bandit -r core
-    - name: Run Safety
-      run: |
-        poetry run safety check
-      continue-on-error: true
-    - name: Run Ruff
-      run: |
-        poetry run ruff core
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+      - name: Install Dependencies
+        run: |
+          poetry install
+      - name: Install Docker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
+          - name: Build Docker image
+            run: |
+              docker build -t web-app-planner -f .docker/Dockerfile .
+          - name: Run Docker container
+            run: |
+              docker run -d --name web-app -p 8000:8000  web-app-planner
+      - name: Run Tests
+        run: |
+          cd core
+          poetry run python manage.py test
+        env:
+          DB_NAME: ${{ vars.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_USER: ${{ vars.DB_USER }}
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_PORT: ${{ vars.DB_PORT }}
+      - name: Run Bandit
+        run: |
+          poetry run bandit -r core
+      - name: Run Safety
+        run: |
+          poetry run safety check
+        continue-on-error: true
+      - name: Run Ruff
+        run: |
+          poetry run ruff core
