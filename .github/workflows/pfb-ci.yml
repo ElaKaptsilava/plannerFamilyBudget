@@ -13,7 +13,7 @@ jobs:
       postgres:
         image: postgres
         env:
-          POSTGRES_PASSWORD: ${{ secrets.DB_PASSOWRD }}
+          POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_USER: ${{ vars.DB_USER }}
           POSTGRES_NAME: ${{ vars.DB_NAME }}
         options: >-
@@ -48,7 +48,7 @@ jobs:
         poetry run python manage.py test
       env:
         DB_NAME: ${{ vars.DB_NAME }}
-        DB_PASSWORD:  ${{ secrets.DB_PASSOWRD }}
+        DB_PASSWORD:  ${{ secrets.DB_PASSWORD }}
         DB_USER: ${{ vars.DB_USER }}
         DB_HOST: ${{ vars.DB_HOST }}
         DB_PORT: ${{ vars.DB_PORT }}
