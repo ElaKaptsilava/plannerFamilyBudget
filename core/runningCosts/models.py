@@ -4,7 +4,8 @@ TODO  List:
     2. Manage Payment Deadlines
 """
 
-from datetime import date, timedelta
+import calendar
+from datetime import date, datetime, timedelta
 
 from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
@@ -103,34 +104,46 @@ class RunningCost(models.Model):
         today = timezone.now().date()
         return today > self.next_payment_date and not self.is_paid
 
-    def save(self, *args, **kwargs):
+    @property
+    def is_completed(self) -> bool:
+        if self.next_payment_date:
+            return self.next_payment_date >= self.payment_deadline
+        return False
+
+    def save(self, *args, **kwargs) -> None:
         if self.is_paid:
             self.update_next_payment_date()
         super().save(*args, **kwargs)
 
-    def update_next_payment_date(self):
-        today = timezone.now().date()
-        if self.period_type == self.PeriodType.DAYS:
-            self.next_payment_date = today + timedelta(days=self.period)
-        elif self.period_type == self.PeriodType.WEEKS:
-            self.next_payment_date = today + timedelta(weeks=self.period)
-        elif self.period_type == self.PeriodType.MONTHS:
-            self.next_payment_date = self.add_months(today, self.period)
-        elif self.period_type == self.PeriodType.YEARS:
-            self.next_payment_date = self.add_years(today, self.period)
+    def update_next_payment_date(self) -> None:
+        conditions = {
+            self.PeriodType.DAYS: self.next_payment_date + timedelta(days=self.period),
+            self.PeriodType.WEEKS: self.next_payment_date
+            + timedelta(weeks=self.period),
+            self.PeriodType.MONTHS: self.add_months(
+                self.next_payment_date, self.period
+            ),
+            self.PeriodType.YEARS: self.add_years(self.next_payment_date, self.period),
+        }
+        next_payment_date = conditions.get(self.period_type)
+
+        if isinstance(self.payment_deadline, datetime):
+            payment_deadline = self.payment_deadline.date()
+        else:
+            payment_deadline = self.payment_deadline
+
+        if next_payment_date < payment_deadline:
+            self.next_payment_date = next_payment_date
 
     @staticmethod
-    def add_months(source_date, period):
-        month = (source_date.month - 1 + period) % 12 + 1
+    def add_months(source_date: date, period: int) -> date:
+        month = source_date.month - 1 + period
         year = source_date.year + month // 12
-        is_leap_year = year % 4 == 0 and (year % 100 != 0 or year % 400 == 0)
-        day = source_date.day
-        if month == 2 and source_date.day >= 29:
-            day = 29 if is_leap_year else 28
+        day = min(source_date.day, calendar.monthrange(year, month)[1])
         return date(year, month, day)
 
     @staticmethod
-    def add_years(source_date, period):
+    def add_years(source_date: date, period: int) -> date:
         try:
             return source_date.replace(year=source_date.year + period)
         except ValueError:

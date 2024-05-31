@@ -20,6 +20,6 @@ class RunningCostFactory(factory.django.DjangoModelFactory):
     amount = factory.Faker("random_int", min=1000, max=10000)
     period_type = RunningCost.PeriodType.MONTHS
     period = 1
-    due_date = factory.Faker("date")
+    next_payment_date = factory.Faker("date")
     payment_deadline = factory.Faker("date")
     is_paid = False
