@@ -7,7 +7,7 @@ from .forms import TargetForm
 from .models import Target
 
 
-class TargetListView(LoginRequiredMixin, FormView):
+class TargetView(LoginRequiredMixin, FormView):
     model = Target
     template_name = "targets/targets.html"
     context_object_name = "targets"
@@ -17,6 +17,7 @@ class TargetListView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
+        context["object_list"] = Target.objects.filter(user=self.request.user)
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

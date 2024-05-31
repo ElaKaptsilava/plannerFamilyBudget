@@ -6,7 +6,7 @@ from .models import Target, TargetContribution
 class TargetForm(forms.ModelForm):
     class Meta:
         model = Target
-        fields = ["target", "amount", "deadline"]
+        fields = ["target", "amount", "deadline", "image", "description"]
         widgets = {
             "target": forms.TextInput(
                 attrs={"class": "form-control form-control-user text-secondary"}
@@ -22,6 +22,12 @@ class TargetForm(forms.ModelForm):
                     "class": "form-control form-control-user text-secondary",
                     "type": "date",
                 }
+            ),
+            "image": forms.FileInput(
+                attrs={"class": "form-control-user text-secondary"}
+            ),
+            "description": forms.Textarea(
+                attrs={"class": "form-control form-control-user text-secondary"}
             ),
         }
 

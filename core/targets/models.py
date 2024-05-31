@@ -6,7 +6,7 @@ from django.utils import timezone
 class Target(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     image = models.ImageField(
-        upload_to=get_upload_path, default="static/img/undraw_posting_photo.svg"
+        upload_to=get_upload_path, default="/static/img/undraw_posting_photo.svg"
     )
     target = models.CharField(max_length=255, help_text="A name of the target goal.")
     amount = models.FloatField(
@@ -15,6 +15,9 @@ class Target(models.Model):
     deadline = models.DateField(
         default=timezone.now,
         help_text="The deadline for achieving the target. Defaults to one year from now.",
+    )
+    description = models.TextField(
+        help_text="A description of the target.", null=True, blank=True
     )
 
     def __str__(self):
