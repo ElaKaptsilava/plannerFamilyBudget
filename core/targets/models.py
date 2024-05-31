@@ -1,5 +1,3 @@
-import datetime
-
 from accounts.models import CustomUser
 from django.db import models
 from django.utils import timezone
@@ -12,7 +10,7 @@ class Target(models.Model):
         help_text="The amount of money required to achieve the target."
     )
     deadline = models.DateField(
-        default=lambda: timezone.now() + datetime.timedelta(days=365),
+        default=timezone.now,
         help_text="The deadline for achieving the target. Defaults to one year from now.",
     )
 
