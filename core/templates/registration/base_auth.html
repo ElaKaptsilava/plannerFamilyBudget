@@ -42,12 +42,7 @@
         <strong>Error:</strong>
         {{ message }}
     </div>
-    {% else %}
-    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}" role="alert">
-        {{ message }}
-    </div>
     {% endif %}
-
     {% endfor %}
 </div>
 {% endif %}

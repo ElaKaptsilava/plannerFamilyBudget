@@ -29,6 +29,7 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
         running_cost = form.save(commit=False)
         running_cost.user = self.request.user
         running_cost.save()
+        messages.success(self.request, "The running cost added successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
     def form_invalid(self, form):

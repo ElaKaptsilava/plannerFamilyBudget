@@ -26,7 +26,12 @@ class TargetView(LoginRequiredMixin, FormView):
         target = form.save(commit=False)
         target.user = self.request.user
         target.save()
+        messages.success(self.request, "The target added successfully!")
         return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Failed to add target. Please check the form.")
+        return super().form_invalid(form)
 
 
 class TargetUpdateView(LoginRequiredMixin, UpdateView):
@@ -38,9 +43,7 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
 
 class TargetDeleteMultipleView(LoginRequiredMixin, View):
     def post(self, request):
-        print(request.POST)
         selected_targets = request.POST.getlist("selected_targets")
-        print(selected_targets)
         if selected_targets:
             Target.objects.filter(pk__in=selected_targets).delete()
             messages.success(request, "Selected targets were deleted successfully.")
