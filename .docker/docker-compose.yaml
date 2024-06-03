@@ -1,0 +1,42 @@
+services:
+  server:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - static_volume:/app/core/django_static
+      - .:/app/
+    expose:
+      - 8000
+    environment:
+      DEBUG: ${DEBUG}
+      DJANGO_DB: postgres
+      POSTGRES_HOST: ${DB_HOST}
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PORT: ${DB_PORT}
+    depends_on:
+        db:
+          condition: service_healthy
+    db:
+      image: postgres:3.12.3-alpine
+      restart: unless-stopped
+      volumes:
+        - postgres_data:/var/lib/postgresql/data/
+      environment:
+        POSTGRES_DB: ${DB_NAME}
+        POSTGRES_USER: ${DB_USER}
+        POSTGRES_PASSWORD: ${DB_PASSWORD}
+      expose:
+        - 5432
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgrest"]
+      interval: 5s
+      timeout: 30s
+      retries: 6
+volumes:
+  static_volume: {}
+  postgres_data: {}
+
