@@ -74,13 +74,13 @@
 .card-group {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 20px; /* Adjust the gap between the cards */
+    gap: 20px;
     margin: 20px;
 }
 
 /* Card styles */
 .target-card {
-    width: 100%; /* Make sure cards take full width within the grid item */
+    width: 100%;
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -92,17 +92,17 @@
 }
 
 .target-card .card-body {
-    padding: 1.25rem; /* Add padding to the card body */
+    padding: 1.25rem;
 }
 
 .target-card .btn {
-    width: 100%; /* Make the button fill the entire width of the card */
+    width: 100%;
 }
 
 .target-card img {
-    border-top-left-radius: 10px; /* Add border radius to the top left corner */
-    border-top-right-radius: 10px; /* Add border radius to the top right corner */
-    object-fit: cover; /* Ensure the image covers the entire space */
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover;
 }
 
 .custom-file-input {
