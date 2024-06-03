@@ -39,10 +39,20 @@
                         <h5 class="card-title">{{ target.target }}</h5>
                         <p class="card-text">{{ target.description }}</p>
                         <p class="card-text"><small class="text-muted">{{ target.deadline }}</small></p>
-                        <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#updateTargetModal{{ target.pk }}">
-                            View Details
-                        </button>
+                        <div class="row gutters-sm">
+                            <div class="col">
+                                <a href="{% url 'targets:contributions-list' pk=target.pk %}"
+                                   class="btn btn-outline-secondary">
+                                    Contributions
+                                </a>
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                        data-target="#updateTargetModal{{ target.pk }}">
+                                    Details
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}

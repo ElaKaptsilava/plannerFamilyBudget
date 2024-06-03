@@ -6,7 +6,7 @@ app_name = "targets"
 urlpatterns = [
     path("list/", views.TargetView.as_view(), name="targets-list"),
     path(
-        "list/create/<int:pk>/",
+        "list/update/<int:pk>/",
         views.TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
@@ -14,5 +14,15 @@ urlpatterns = [
         "list/delete-multiple/",
         views.TargetDeleteMultipleView.as_view(),
         name="targets-list-delete-multiple",
+    ),
+    path(
+        "<int:pk>/contributions/list/",
+        views.TargetContributionsView.as_view(),
+        name="contributions-list",
+    ),
+    path(
+        "contributions/create/",
+        views.TargetContributionsView.as_view(),
+        name="contributions-list-create",
     ),
 ]

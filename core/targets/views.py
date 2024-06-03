@@ -5,8 +5,8 @@ from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import FormView, UpdateView
 
-from .forms import TargetForm
-from .models import Target
+from .forms import TargetContributionForm, TargetForm
+from .models import Target, TargetContribution
 
 
 class TargetView(LoginRequiredMixin, FormView):
@@ -19,7 +19,7 @@ class TargetView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        context["object_list"] = Target.objects.filter(user=self.request.user)
+        context["object_list"] = self.model.objects.filter(user=self.request.user)
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:
@@ -50,3 +50,43 @@ class TargetDeleteMultipleView(LoginRequiredMixin, View):
         else:
             messages.error(request, "No targets were selected.")
         return HttpResponseRedirect(reverse_lazy("targets:targets-list"))
+
+
+class TargetContributionsView(LoginRequiredMixin, FormView):
+    model = TargetContribution
+    template_name = "targets/contributions.html"
+    context_object_name = "targetContribution"
+    form_class = TargetContributionForm
+
+    def get_success_url(self):
+        target_pk = self.kwargs.get("pk")
+        print(self.kwargs)
+        return reverse_lazy("targets:contributions-list", kwargs={"pk": target_pk})
+
+    def get_context_data(self, **kwargs) -> dict:
+        print(kwargs)
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        context["object_list"] = self.get_queryset()
+        print(context)
+        return context
+
+    def form_valid(self, form) -> HttpResponseRedirect:
+        contribution = form.save(commit=False)
+        contribution.user = self.request.user
+        contribution.save()
+        messages.success(self.request, "The contribution added successfully!")
+        return HttpResponseRedirect(self.get_success_url())
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to add target contribution. Please check the form."
+        )
+        return super().form_invalid(form)
+
+    def get_queryset(self):
+        target_pk = self.kwargs.get("pk")
+        print(self.kwargs)
+        return self.model.objects.filter(
+            target__user=self.request.user, target__pk=target_pk
+        )
