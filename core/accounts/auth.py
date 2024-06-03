@@ -1,9 +1,8 @@
 import os
 
+from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
-from django.http import HttpResponseRedirect, HttpRequest
-from django.urls import reverse
 
 
 class CaseInsensitiveModelBackend(ModelBackend):
@@ -14,7 +13,8 @@ class CaseInsensitiveModelBackend(ModelBackend):
             case_insensitive_user = "{}__iexact".format(get_user_model().USERNAME_FIELD)
             user = get_user_model().objects.get(**{case_insensitive_user: username})
         except get_user_model().DoesNotExist:
-            get_user_model().set_password(password)
+            message = "Username {} does not exist".format(username)
+            messages.error(self, message)
         else:
             if user.check_password(password):
                 return user

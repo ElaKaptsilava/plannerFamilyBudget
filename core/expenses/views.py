@@ -31,7 +31,14 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
         expense = form.save(commit=False)
         expense.user = self.request.user
         expense.save()
+        messages.success(self.request, "The expense added successfully!")
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to add the expense. Please check the form."
+        )
+        return super().form_invalid(form)
 
 
 @method_decorator(login_required, name="dispatch")
@@ -52,3 +59,16 @@ class ExpensesUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "expenses/expenses-list.html"
     context_object_name = "expenses"
     success_url = reverse_lazy("expenses:expenses-list")
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to update the expense. Please check the form."
+        )
+        return HttpResponseRedirect(self.success_url)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        response = super().form_valid(form)
+        messages.success(self.request, "The expense updated successfully!")
+        return response

@@ -24,7 +24,10 @@ class CustomLoginView(View):
         context: dict = {}
         user: CustomUser = request.user
         if user.is_authenticated:
+            messages.info(request, f"You are already logged in as {user.email}.")
             return redirect(reverse_lazy("home", kwargs={"user_id": user.pk}))
+        else:
+            messages.info(request, "Please log in to continue.")
         form = AccountAuthenticationForm()
         context["login_form"] = form
         return render(request, template_name=self.template_name, context=context)
@@ -38,7 +41,14 @@ class CustomLoginView(View):
             user: authenticate = authenticate(email=email, password=password)
             if user:
                 login(request, user)
+                messages.success(request, f"Welcome back, {user.email}!")
                 return redirect(reverse_lazy("home", kwargs={"user_id": user.id}))
+            else:
+                messages.error(request, "Invalid email or password.")
+        else:
+            messages.error(
+                request, "Invalid form submission. Please check the entered data."
+            )
         context["login_form"] = form
         return render(request, template_name=self.template_name, context=context)
 

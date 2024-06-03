@@ -15,35 +15,42 @@
         <button type="button" class="btn btn-outline-info" data-toggle="modal"
                 data-target="#filterRunningCostsModal"> Filter
         </button>
+        <button class="btn btn-outline-danger" data-toggle="modal"
+                data-target="#confirmDeleteModal">
+            <i class="fas fa-minus"></i> Delete Selected
+        </button>
     </div>
 
     <div class="card-body justify-content-between align-items-center">
-        <div class="card-group">
+        <form id="deleteMultipleTargetsForm" method="post"
+              action="{% url 'targets:targets-list-delete-multiple' %}">
             {% csrf_token %}
-            {% for target in object_list %}
-
             <div class="card-group">
-                <div class="card target-card">
+                {% for target in object_list %}
+
+                <div class="card target-card position-relative mb-3">
+                    <div class="form-check custom-checkbox position-absolute">
+                        <input class="form-check-input row-checkbox" type="checkbox" value="{{ target.id }}"
+                               name="selected_targets" id="checkbox{{ target.id }}">
+                        <label class="form-check-label" for="checkbox{{ target.id }}"></label>
+                    </div>
                     <img class="card-img-top" src="{{ target.image }}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ target.target }}</h5>
                         <p class="card-text">{{ target.description }}</p>
                         <p class="card-text"><small class="text-muted">{{ target.deadline }}</small></p>
-                        <input type="hidden" name="target" value="{{ target.target }}">
-                        <input type="hidden" name="description" value="{{ target.description }}">
-                        <input type="hidden" name="deadline" value="{{ target.deadline }}">
                         <button type="button" class="btn btn-primary" data-toggle="modal"
-                                data-target="#updateTargetModal{{ target.pk }}">View Details
+                                data-target="#updateTargetModal{{ target.pk }}">
+                            View Details
                         </button>
-
                     </div>
                 </div>
+                {% endfor %}
+
             </div>
-            {% endfor %}
-
-        </div>
-
+        </form>
     </div>
+
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </div>
@@ -132,14 +139,16 @@
                                         <div class="col">
                                             <label for="target{{ target.id }}" class="mr-2">Target</label>
                                             <input type="text" class="form-control form-control-user text-secondary"
-                                                   id="target{{ target.id }}" name="target" value="{{ target.target }}"
+                                                   id="target{{ target.id }}" name="target"
+                                                   value="{{ target.target }}"
                                                    placeholder="Enter name">
                                         </div>
                                         <div class="col">
                                             <label for="amount{{ target.id }}" class="mr-2">Amount</label>
                                             <input type="number"
                                                    class="form-control form-control-user text-secondary"
-                                                   id="amount{{ target.id }}" name="amount" value="{{ target.amount }}"
+                                                   id="amount{{ target.id }}" name="amount"
+                                                   value="{{ target.amount }}"
                                                    placeholder="{{ target.amount.help_text }}" step="0,01">
 
                                         </div>
@@ -188,4 +197,27 @@
 </div>
 
 {% endfor %}
+
+<!--Multiple delete by selected targets-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the selected targets?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="deleteMultipleTargetsForm" class="btn btn-outline-danger">Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

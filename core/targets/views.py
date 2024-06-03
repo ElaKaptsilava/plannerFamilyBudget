@@ -1,6 +1,8 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
+from django.views import View
 from django.views.generic import FormView, UpdateView
 
 from .forms import TargetForm
@@ -33,7 +35,15 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("targets:targets-list")
     template_name = "targets/targets.html"
 
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["form"] = self.get_form()
-        return context
+
+class TargetDeleteMultipleView(LoginRequiredMixin, View):
+    def post(self, request):
+        print(request.POST)
+        selected_targets = request.POST.getlist("selected_targets")
+        print(selected_targets)
+        if selected_targets:
+            Target.objects.filter(pk__in=selected_targets).delete()
+            messages.success(request, "Selected targets were deleted successfully.")
+        else:
+            messages.error(request, "No targets were selected.")
+        return HttpResponseRedirect(reverse_lazy("targets:targets-list"))

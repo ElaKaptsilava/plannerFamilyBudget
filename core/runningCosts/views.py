@@ -31,6 +31,12 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
         running_cost.save()
         return HttpResponseRedirect(self.get_success_url())
 
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to add the running cost. Please check the form."
+        )
+        return super().form_invalid(form)
+
 
 class RunningCostDeleteMultipleView(LoginRequiredMixin, View):
     def post(self, request):
@@ -51,3 +57,15 @@ class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("running-costs:running-costs-list")
     context_object_name = "runningCost"
     template_name = "runningCosts/running-costs-list.html"
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to update running cost. Please check the form."
+        )
+        return HttpResponseRedirect(self.success_url)
+
+    def form_valid(self, form):
+        self.object = form.save()
+        response = super().form_valid(form)
+        messages.success(self.request, "Running cost updated successfully!")
+        return response

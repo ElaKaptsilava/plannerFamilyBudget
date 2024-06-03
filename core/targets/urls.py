@@ -10,4 +10,9 @@ urlpatterns = [
         views.TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
+    path(
+        "list/delete-multiple/",
+        views.TargetDeleteMultipleView.as_view(),
+        name="targets-list-delete-multiple",
+    ),
 ]

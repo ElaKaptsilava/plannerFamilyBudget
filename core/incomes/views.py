@@ -22,12 +22,17 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
         income = form.save(commit=False)
         income.user = self.request.user
         income.save()
+        messages.success(self.request, "The income added successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         return context
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Failed to add income. Please check the form.")
+        return super().form_invalid(form)
 
 
 class IncomeUpdateView(LoginRequiredMixin, UpdateView):
@@ -36,6 +41,19 @@ class IncomeUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("incomes:incomes-list")
     context_object_name = "incomes"
     template_name: str = "incomes/incomes.html"
+
+    def form_invalid(self, form):
+        messages.error(
+            self.request, "Failed to update the income. Please check the form."
+        )
+        return HttpResponseRedirect(self.success_url)
+
+    def form_valid(self, form):
+        """If the form is valid, save the associated model."""
+        self.object = form.save()
+        response = super().form_valid(form)
+        messages.success(self.request, "The income updated successfully!")
+        return response
 
 
 class DeleteMultipleIncomesView(LoginRequiredMixin, View):
