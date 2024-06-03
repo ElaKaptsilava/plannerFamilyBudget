@@ -70,9 +70,17 @@
     background-color: var(--glow-color);
 }
 
-.target-card {
-    width: 300px; /* Set the width of each card */
+/* Container for cards */
+.card-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px; /* Adjust the gap between the cards */
     margin: 20px;
+}
+
+/* Card styles */
+.target-card {
+    width: 100%; /* Make sure cards take full width within the grid item */
     border: none;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -95,4 +103,17 @@
     border-top-left-radius: 10px; /* Add border radius to the top left corner */
     border-top-right-radius: 10px; /* Add border radius to the top right corner */
     object-fit: cover; /* Ensure the image covers the entire space */
+}
+
+.custom-file-input {
+    display: none;
+}
+
+.custom-file-label {
+    display: block;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
 }
