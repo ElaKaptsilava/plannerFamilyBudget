@@ -46,12 +46,14 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-          - name: Build Docker image
-            run: |
-              docker build -t web-app-planner -f .docker/Dockerfile .
-          - name: Run Docker container
-            run: |
-              docker run -d --name web-app -p 8000:8000  web-app-planner
+
+      - name: Build Docker image
+        run: |
+          docker build -t web-app-planner -f .docker/Dockerfile .
+
+      - name: Run Docker container
+        run: |
+          docker run -d --name web-app -p 8000:8000 web-app-planner
       - name: Run Tests
         run: |
           cd core
