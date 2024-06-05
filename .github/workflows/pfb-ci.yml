@@ -57,12 +57,7 @@ jobs:
       - name: Run Tests
         run: |
           cd core
-          python manage.py test
-#      - name: Run Tests
-#        run: |
-#          cd core
-#          docker exec web-app python manage.py test
-#          poetry run python manage.py test
+          poetry run python manage.py test
         env:
           DB_NAME: ${{ vars.DB_NAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
