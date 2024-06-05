@@ -20,7 +20,7 @@ class Target(models.Model):
         help_text="A description of the target.", null=True, blank=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.username}'s target: {self.target}"
 
 

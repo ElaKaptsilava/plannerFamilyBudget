@@ -21,7 +21,7 @@ urlpatterns = [
         name="contributions-list",
     ),
     path(
-        "contributions/create/",
+        "<int:pk>/contributions/create/",
         views.TargetContributionsView.as_view(),
         name="contributions-list-create",
     ),

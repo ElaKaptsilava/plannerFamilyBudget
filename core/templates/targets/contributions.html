@@ -3,7 +3,6 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-<!-- Begin Page Content -->
 <div class="container-fluid">
     <div class="card shadow mb-4">
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -74,6 +73,7 @@
                             </div>
                         </td>
                     </tr>
+
                     {% endfor %}
                     <!--                    </form>-->
 
@@ -100,7 +100,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'targets:contributions-list-create' %}" method="post">
+                <form action="{% url 'targets:contributions-list-create' pk=target.pk %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">

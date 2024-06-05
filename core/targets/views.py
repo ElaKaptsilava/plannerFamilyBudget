@@ -64,11 +64,11 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         return reverse_lazy("targets:contributions-list", kwargs={"pk": target_pk})
 
     def get_context_data(self, **kwargs) -> dict:
-        print(kwargs)
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        context["object_list"] = self.get_queryset()
-        print(context)
+        queryset = self.get_queryset()
+        context["object_list"] = queryset
+        context["target"] = queryset.last().target
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:
