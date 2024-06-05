@@ -54,10 +54,16 @@ jobs:
       - name: Run Docker container
         run: |
           docker run -d --name web-app -p 8000:8000 web-app-planner
+      - name: Run migrations
+        run: |
+          docker exec web-app python manage.py migrate
       - name: Run Tests
         run: |
-          cd core
           docker exec web-app python manage.py test
+#      - name: Run Tests
+#        run: |
+#          cd core
+#          docker exec web-app python manage.py test
 #          poetry run python manage.py test
         env:
           DB_NAME: ${{ vars.DB_NAME }}
