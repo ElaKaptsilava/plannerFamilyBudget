@@ -54,13 +54,10 @@ jobs:
       - name: Run Docker container
         run: |
           docker run -d --name web-app -p 8000:8000 web-app-planner
-      - name: Run migrations
-        run: |
-          poetry run python /core/manage.py migrate
       - name: Run Tests
         run: |
           cd core
-          docker exec web-app python manage.py test
+          python manage.py test
 #      - name: Run Tests
 #        run: |
 #          cd core
