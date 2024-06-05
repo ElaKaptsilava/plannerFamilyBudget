@@ -56,7 +56,7 @@ jobs:
           docker run -d --name web-app -p 8000:8000 web-app-planner
       - name: Run migrations
         run: |
-          poetry run python /app/core/manage.py migrate
+          poetry run python /core/manage.py migrate
       - name: Run Tests
         run: |
           cd core
