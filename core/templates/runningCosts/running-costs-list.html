@@ -6,36 +6,38 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Messages -->
-    <h1 class="h3 mb-4 text-gray-800">Running costs</h1>
 
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createRunningCostsModal">
-                <i class="fas fa-plus"></i> Add running cost
-            </button>
-            <button class="btn btn-outline-danger" data-toggle="modal"
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#createRunningCostsModal">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div>
+            <button class="btn btn-outline-danger" type="button" data-toggle="modal"
                     data-target="#confirmDeleteModal">
-                <i class="fas fa-minus"></i> Delete Selected
+                Delete Selected
             </button>
             <button type="button" class="btn btn-outline-info" data-toggle="modal"
                     data-target="#filterRunningCostsModal"> Filter
             </button>
-            <form action="{% url 'running-costs:running-costs-list' %}" method="get"
-                  class="form-inline">
-                {% csrf_token %}
-                <div class="input-group row">
-                    <label for="runningCostsSort" class="mr-2">Sort by:</label>
-                    <select id="runningCostsSort" name="sort_by" class="form-control-sm "
-                            onchange="this.form.submit()">
-                        <option value="" hidden selected></option>
-                        <option value="all">All</option>
-                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                        <option value="{{ choice_value }}">{{ choice_label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </form>
         </div>
+        <form action="{% url 'running-costs:running-costs-list' %}" method="get"
+              class="form-inline">
+            {% csrf_token %}
+            <div class="input-group row">
+                <label for="runningCostsSort" class="mr-2">Sort by:</label>
+                <select id="runningCostsSort" name="sort_by" class="form-control-sm "
+                        onchange="this.form.submit()">
+                    <option value="" hidden selected></option>
+                    <option value="all">All</option>
+                    {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                    <option value="{{ choice_value }}">{{ choice_label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow mb-4">
 
         <div class="card-body">
             <div class="table-responsive">
@@ -49,7 +51,7 @@
                                 <label class="form-check-label" for="selectAll">ALL</label>
                             </div>
                         </th>
-<!--                        <th class="card-header">Status</th>-->
+                        <!--                        <th class="card-header">Status</th>-->
                         <th class="card-header">Name</th>
                         <th class="card-header">
                             <form id="filterRunningCostsForm" action="{% url 'running-costs:running-costs-list' %}"

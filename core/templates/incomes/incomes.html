@@ -6,37 +6,35 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Messages -->
-    <h1 class="h3 mb-4 text-gray-800">Incomes</h1>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createIncomeModal">
-                <i class="fas fa-plus"></i> Add Income
-            </button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#createIncomeModal">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div>
             <button class="btn btn-outline-danger" data-toggle="modal"
-                    data-target="#confirmDeleteModal">
-                <i class="fas fa-minus"></i> Delete Selected
+                    data-target="#confirmDeleteModal">Delete Selected
             </button>
             <button type="button" class="btn btn-outline-info" data-toggle="modal"
                     data-target="#filterIncomesModal">
                 Filter
             </button>
-            <form action="{% url 'incomes:incomes-list' %}" method="get" class="form-inline">
-                {% csrf_token %}
-                <div class="input-group row">
-                    <label for="expensesSort" class="mr-2">Sort by:</label>
-                    <select id="expensesSort" name="sort_by" class="form-control-sm "
-                            onchange="this.form.submit()">
-                        <option value="" hidden selected></option>
-                        <option value="all">All</option>
-                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                        <option value="{{ choice_value }}">{{ choice_label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </form>
         </div>
-
+        <form action="{% url 'incomes:incomes-list' %}" method="get" class="form-inline">
+            {% csrf_token %}
+            <div class="input-group row">
+                <label for="expensesSort" class="mr-2">Sort by:</label>
+                <select id="expensesSort" name="sort_by" class="form-control-sm "
+                        onchange="this.form.submit()">
+                    <option value="" hidden selected></option>
+                    <option value="all">All</option>
+                    {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                    <option value="{{ choice_value }}">{{ choice_label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+    <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive">
                 <table class="table table-condensed" id="dataTable" width="100%" cellspacing="0">
@@ -120,7 +118,8 @@
                                         <div class="col">
                                             <label for="source{{ income.id }}">Source</label>
                                             <input type="text" class="form-control form-control-user text-secondary"
-                                                   id="source{{ income.id }}" name="source" value="{{ income.source }}"
+                                                   id="source{{ income.id }}" name="source"
+                                                   value="{{ income.source }}"
                                                    placeholder="Enter source">
                                         </div>
                                         <div class="col">
@@ -231,14 +230,16 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" form="deleteMultipleIncomesForm" class="btn btn-outline-danger">Delete</button>
+                <button type="submit" form="deleteMultipleIncomesForm" class="btn btn-outline-danger">Delete
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <!--Filter incomes modal-->
-<div class="modal fade" id="filterIncomesModal" tabindex="-1" role="dialog" aria-labelledby="filterIncomesModalLabel"
+<div class="modal fade" id="filterIncomesModal" tabindex="-1" role="dialog"
+     aria-labelledby="filterIncomesModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">

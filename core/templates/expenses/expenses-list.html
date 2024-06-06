@@ -6,35 +6,36 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Messages -->
-    <h1 class="h3 mb-4 text-gray-800">Expenses</h1>
-
-    <div class="card shadow mb-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <button class="btn btn-outline-success" data-toggle="modal" data-target="#createExpensesModal">
-                <i class="fas fa-plus"></i> Add Expenses
-            </button>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <button class="btn btn-outline-success" data-toggle="modal" data-target="#createExpensesModal">
+            <i class="fas fa-plus"></i>
+        </button>
+        <div>
             <button class="btn btn-outline-danger" data-toggle="modal"
-                    data-target="#confirmDeleteModal">
-                <i class="fas fa-minus"></i> Delete Selected
+                    data-target="#confirmDeleteModal">Delete Selected
             </button>
             <button type="button" class="btn btn-outline-info" data-toggle="modal"
                     data-target="#filterExpensesModal">
                 Filter
             </button>
-            <form action="{% url 'expenses:expenses-list' %}" method="get" class="form-inline">
-                {% csrf_token %}
-                <div class="input-group row">
-                    <label for="expensesSort" class="mr-2">Sort by:</label>
-                    <select id="expensesSort" name="sort_by" class="form-control-sm "
-                            onchange="this.form.submit()">
-                        <option value="">All</option>
-                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                        <option value="{{ choice_value }}">{{ choice_label }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </form>
         </div>
+        <form action="{% url 'expenses:expenses-list' %}" method="get" class="form-inline">
+            {% csrf_token %}
+            <div class="input-group row">
+                <label for="expensesSort" class="mr-2">Sort by:</label>
+                <select id="expensesSort" name="sort_by" class="form-control-sm "
+                        onchange="this.form.submit()">
+                    <option value="">All</option>
+                    {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                    <option value="{{ choice_value }}">{{ choice_label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="card shadow mb-4">
+
 
         <div class="card-body">
             <div class="table-responsive">

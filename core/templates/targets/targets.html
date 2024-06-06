@@ -8,18 +8,21 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Messages -->
-    <div class="d-flex justify-content-lg-start align-items-center">
+    <div class="d-flex justify-content-between align-items-center mb-3">
         <button class="btn btn-outline-success" data-toggle="modal" data-target="#createTargetModal">
-            <i class="fas fa-plus"></i> Add target
+            <i class="fas fa-plus me-1"></i>
         </button>
-        <button type="button" class="btn btn-outline-info" data-toggle="modal"
-                data-target="#filterRunningCostsModal"> Filter
-        </button>
-        <button class="btn btn-outline-danger" data-toggle="modal"
-                data-target="#confirmDeleteModal">
-            <i class="fas fa-minus"></i> Delete Selected
-        </button>
+        <div>
+            <button type="button" class="btn btn-outline-info me-2" data-toggle="modal"
+                    data-target="#filterRunningCostsModal">Filter
+            </button>
+            <button class="btn btn-outline-danger" data-toggle="modal"
+                    data-target="#confirmDeleteModal">
+                <i class="fas fa-minus me-1"></i> Delete Selected
+            </button>
+        </div>
     </div>
+
 
     <div class="card-body justify-content-between align-items-center">
         <form id="deleteMultipleTargetsForm" method="post"
@@ -27,46 +30,38 @@
             {% csrf_token %}
             <div class="card-group">
                 {% for target in object_list %}
-
-                <div class="card target-card position-relative mb-3" style="padding: 0 5px 5px 5px">
-                    <div class="form-check custom-checkbox position-absolute">
-                        <input class="form-check-input row-checkbox" type="checkbox" value="{{ target.id }}"
-                               name="selected_targets" id="checkbox{{ target.id }}">
-                        <label class="form-check-label" for="checkbox{{ target.id }}"></label>
+                <div class="card target-card shadow-sm mb-4">
+                    <div class="position-relative">
+                        <div class="form-check custom-checkbox position-absolute top-0 start-0 mt-3 ms-3">
+                            <input class="form-check-input row-checkbox" type="checkbox" value="{{ target.id }}"
+                                   name="selected_targets" id="checkbox{{ target.id }}">
+                            <label class="form-check-label" for="checkbox{{ target.id }}"></label>
+                        </div>
+                        <img class="card-img-top" src="{{ target.image }}" alt="Card image cap">
                     </div>
-                    <img class="card-img-top" src="{{ target.image }}" alt="Card image cap">
                     <div class="card-body">
                         <h5 class="card-title">{{ target.target }}</h5>
-                        <p class="card-text">{{ target.description }}</p>
-                        <div class="progress bg-light">
-                            <div class="progress-bar-striped bg-gradient-success progress-bar-animated"
-                                 role="progressbar" style="width: {{ target.progress_percentage }}%;"
-                                 aria-valuenow="{{ target.total_contributions }}" aria-valuemin="0" aria-valuemax="{{
-                            target.amount }}">
-                                <span class="progress-text" id="total">{{ target.total_contributions }}</span>
-                                <span class="progress-text" id="target-amount">{{ target.amount }}</span>
-                            </div>
+                        <p class="card-text" style="white-space: pre-line;">{{ target.description }}</p>
+                        <h4 class="small font-weight-bold">Payout Details <span
+                                class="float-end">{{ target.progress_percentage }}%</span></h4>
+                        <div class="progress mt-3">
+                            <div class="progress-bar bg-info" role="progressbar"
+                                 style="width: {{ target.progress_percentage }}%"
+                                 aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
+                                 aria-valuemax="100"></div>
                         </div>
-                        <p class="card-text"><small class="text-muted">{{ target.deadline }}</small></p>
-                    </div>
-                    <div class="row gutters-sm">
-                        <div class="col">
+                        <div class="d-flex justify-content-between align-items-center mt-3">
                             <a href="{% url 'targets:contributions-list' pk=target.pk %}"
-                               class="btn btn-outline-secondary">
-                                Contributions
-                            </a>
-                        </div>
-                        <div class="col">
+                               class="btn btn-outline-secondary">Contributions</a>
                             <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                    data-target="#updateTargetModal{{ target.pk }}">
-                                Details
+                                    data-target="#updateTargetModal{{ target.pk }}">Details
                             </button>
                         </div>
+                        <p class="card-text mt-3 text-end"><small class="text-muted">{{ target.deadline }}</small></p>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
-
         </form>
     </div>
 
