@@ -1,3 +1,5 @@
+from typing import Union
+
 from accounts.models import CustomUser, get_upload_path
 from django.db import models
 from django.utils import timezone
@@ -23,6 +25,17 @@ class Target(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username}'s target: {self.target}"
 
+    @property
+    def total_contributions(self):
+        return (
+            self.targetcontribution_set.aggregate(total=models.Sum("amount"))["total"]
+            or 0
+        )
+
+    @property
+    def progress_percentage(self) -> Union[int, float]:
+        return int(self.total_contributions * 100 / self.amount)
+
 
 class TargetContribution(models.Model):
     target = models.ForeignKey(
@@ -38,5 +51,8 @@ class TargetContribution(models.Model):
         help_text="The date when the contribution was made. Automatically set to the current date.",
     )
 
-    def __str__(self):
+    class Meta:
+        ordering = ("-date",)
+
+    def __str__(self) -> str:
         return f"Income for {self.target} on {self.date}"

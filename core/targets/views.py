@@ -29,7 +29,7 @@ class TargetView(LoginRequiredMixin, FormView):
         messages.success(self.request, "The target added successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponseRedirect:
         messages.error(self.request, "Failed to add target. Please check the form.")
         return super().form_invalid(form)
 
@@ -42,7 +42,7 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
 
 
 class TargetDeleteMultipleView(LoginRequiredMixin, View):
-    def post(self, request):
+    def post(self, request) -> HttpResponseRedirect:
         selected_targets = request.POST.getlist("selected_targets")
         if selected_targets:
             Target.objects.filter(pk__in=selected_targets).delete()
@@ -58,9 +58,8 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
     context_object_name = "targetContribution"
     form_class = TargetContributionForm
 
-    def get_success_url(self):
+    def get_success_url(self) -> HttpResponseRedirect:
         target_pk = self.kwargs.get("pk")
-        print(self.kwargs)
         return reverse_lazy("targets:contributions-list", kwargs={"pk": target_pk})
 
     def get_context_data(self, **kwargs) -> dict:
@@ -78,7 +77,7 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         messages.success(self.request, "The contribution added successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form):
+    def form_invalid(self, form) -> HttpResponseRedirect:
         messages.error(
             self.request, "Failed to add target contribution. Please check the form."
         )
@@ -93,7 +92,7 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
 
 
 class TargetContributionsDeleteMultipleView(LoginRequiredMixin, View):
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
         target_pk = kwargs.get("pk")
         selected_contributions = request.POST.getlist("selected_contributions")
         if target_pk:

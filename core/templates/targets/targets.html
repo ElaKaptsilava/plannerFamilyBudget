@@ -28,7 +28,7 @@
             <div class="card-group">
                 {% for target in object_list %}
 
-                <div class="card target-card position-relative mb-3">
+                <div class="card target-card position-relative mb-3" style="padding: 0 5px 5px 5px">
                     <div class="form-check custom-checkbox position-absolute">
                         <input class="form-check-input row-checkbox" type="checkbox" value="{{ target.id }}"
                                name="selected_targets" id="checkbox{{ target.id }}">
@@ -38,31 +38,41 @@
                     <div class="card-body">
                         <h5 class="card-title">{{ target.target }}</h5>
                         <p class="card-text">{{ target.description }}</p>
+                        <div class="progress bg-light">
+                            <div class="progress-bar-striped bg-gradient-success progress-bar-animated"
+                                 role="progressbar" style="width: {{ target.progress_percentage }}%;"
+                                 aria-valuenow="{{ target.total_contributions }}" aria-valuemin="0" aria-valuemax="{{
+                            target.amount }}">
+                                <span class="progress-text" id="total">{{ target.total_contributions }}</span>
+                                <span class="progress-text" id="target-amount">{{ target.amount }}</span>
+                            </div>
+                        </div>
                         <p class="card-text"><small class="text-muted">{{ target.deadline }}</small></p>
-                        <div class="row gutters-sm">
-                            <div class="col">
-                                <a href="{% url 'targets:contributions-list' pk=target.pk %}"
-                                   class="btn btn-outline-secondary">
-                                    Contributions
-                                </a>
-                            </div>
-                            <div class="col">
-                                <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                        data-target="#updateTargetModal{{ target.pk }}">
-                                    Details
-                                </button>
-                            </div>
+                    </div>
+                    <div class="row gutters-sm">
+                        <div class="col">
+                            <a href="{% url 'targets:contributions-list' pk=target.pk %}"
+                               class="btn btn-outline-secondary">
+                                Contributions
+                            </a>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                    data-target="#updateTargetModal{{ target.pk }}">
+                                Details
+                            </button>
                         </div>
                     </div>
                 </div>
-                {% endfor %}
-
             </div>
+            {% endfor %}
+
         </form>
     </div>
 
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </div>
 
 
