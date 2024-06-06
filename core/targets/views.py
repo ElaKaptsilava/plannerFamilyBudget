@@ -65,9 +65,8 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        queryset = self.get_queryset()
-        context["object_list"] = queryset
-        context["target"] = queryset.last().target
+        context["object_list"] = self.get_queryset()
+        context["target_pk"] = self.kwargs["pk"]
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:
@@ -85,7 +84,6 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
 
     def get_queryset(self):
         target_pk = self.kwargs.get("pk")
-
         return self.model.objects.filter(
             target__user=self.request.user, target__pk=target_pk
         )

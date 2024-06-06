@@ -4,9 +4,9 @@ from . import views
 
 app_name = "targets"
 urlpatterns = [
-    path("list/", views.TargetView.as_view(), name="targets-list"),
+    path("targets/list/", views.TargetView.as_view(), name="targets-list"),
     path(
-        "list/update/<int:pk>/",
+        "targets/list/update/<int:pk>/",
         views.TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
