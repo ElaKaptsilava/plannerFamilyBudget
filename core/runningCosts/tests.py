@@ -1,7 +1,7 @@
 import datetime
 
 from accounts.factories import CustomUserFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils import timezone
 
@@ -81,7 +81,6 @@ class RunningCostsTestCase(TestCase):
 
         self.assertEqual(cost.next_payment_date, required_date)
 
-    @tag("x")
     def test_change_next_payment_date_year_period(self):
         self.client.force_login(self.user)
 
