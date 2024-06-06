@@ -86,7 +86,23 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
 
     def get_queryset(self):
         target_pk = self.kwargs.get("pk")
-        print(self.kwargs)
+
         return self.model.objects.filter(
             target__user=self.request.user, target__pk=target_pk
+        )
+
+
+class TargetContributionsDeleteMultipleView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        target_pk = kwargs.get("pk")
+        selected_contributions = request.POST.getlist("selected_contributions")
+        if target_pk:
+            TargetContribution.objects.filter(
+                target__pk=target_pk, pk__in=selected_contributions
+            ).delete()
+            messages.success(request, "Target Contributions were deleted successfully.")
+        else:
+            messages.error(request, "No target contributions were selected.")
+        return HttpResponseRedirect(
+            reverse_lazy("targets:contributions-list", kwargs={"pk": target_pk})
         )

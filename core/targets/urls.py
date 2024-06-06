@@ -25,4 +25,9 @@ urlpatterns = [
         views.TargetContributionsView.as_view(),
         name="contributions-list-create",
     ),
+    path(
+        "<int:pk>/contributions/delete-multiple/",
+        views.TargetContributionsDeleteMultipleView.as_view(),
+        name="contributions-list-delete-multiple",
+    ),
 ]
