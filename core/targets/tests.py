@@ -137,7 +137,6 @@ class TargetTestCase(TestCase):
         self.assertEqual(messages[0].message, "The target updated successfully!")
         self.assertEqual(Target.objects.count(), 1)
 
-    @tag("x")
     def test_user_update_target_with_invalid_data(self):
         self.client.force_login(self.user)
         target = TargetFactory.create(
@@ -165,6 +164,7 @@ class TargetContributionTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory()
 
+    @tag("x")
     def test_user_add_contribution_success(self):
         self.client.force_login(self.user)
 
@@ -177,14 +177,12 @@ class TargetContributionTestCase(TestCase):
         )
 
         contribution_clean_data = {
-            "target": target.pk,
-            "date": timezone.now().date(),
             "amount": 1000.0,
         }
 
         response = self.client.post(
             reverse_lazy("targets:contributions-list-create", kwargs={"pk": target.pk}),
-            data=contribution_clean_data,
+            data={"amount": 1000.0},
         )
 
         messages = list(get_messages(response.wsgi_request))
@@ -218,7 +216,6 @@ class TargetContributionTestCase(TestCase):
             "Failed to add target contribution. Please check the form.",
         )
         self.assertFalse(form.is_valid())
-        self.assertEqual(form.errors["target"][0], "This field is required.")
         self.assertEqual(form.errors["amount"][0], "This field is required.")
 
     def test_user_multiple_delete_target_contributions_with_empty_data(self):

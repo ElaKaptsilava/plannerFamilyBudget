@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -40,6 +41,7 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("targets:targets-list")
     template_name = "targets/targets.html"
 
+    @transaction.atomic
     def form_valid(self, form) -> HttpResponseRedirect:
         self.object = form.save()
         messages.success(self.request, "The target updated successfully!")
@@ -78,9 +80,13 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         context["target_pk"] = self.kwargs["pk"]
         return context
 
+    @transaction.atomic
     def form_valid(self, form) -> HttpResponseRedirect:
+        target_pk = self.kwargs.get("pk")
+        target = Target.objects.get(pk=target_pk)
         contribution = form.save(commit=False)
         contribution.user = self.request.user
+        contribution.target = target
         contribution.save()
         messages.success(self.request, "The contribution added successfully!")
         return HttpResponseRedirect(self.get_success_url())

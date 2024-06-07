@@ -35,11 +35,8 @@ class TargetForm(forms.ModelForm):
 class TargetContributionForm(forms.ModelForm):
     class Meta:
         model = TargetContribution
-        fields = ["target", "amount"]
+        fields = ["amount"]
         widgets = {
-            "target": forms.Select(
-                attrs={"class": "form-control form-control-user text-secondary"}
-            ),
             "amount": forms.NumberInput(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
