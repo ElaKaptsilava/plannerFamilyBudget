@@ -19,5 +19,6 @@ class TargetContributionFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = TargetContribution
 
+    user = factory.SubFactory(CustomUserFactory)
     target = factory.SubFactory(TargetFactory)
     amount = factory.Faker("random_int", min=1000, max=10000)

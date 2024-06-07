@@ -1,12 +1,11 @@
 from typing import Union
 
-from accounts.models import CustomUser, get_upload_path
+from accounts.models import UserAbstractModel, get_upload_path
 from django.db import models
 from django.utils import timezone
 
 
-class Target(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+class Target(UserAbstractModel):
     image = models.ImageField(
         upload_to=get_upload_path, default="/static/img/undraw_posting_photo.svg"
     )
@@ -37,7 +36,7 @@ class Target(models.Model):
         return int(self.total_contributions * 100 / self.amount)
 
 
-class TargetContribution(models.Model):
+class TargetContribution(UserAbstractModel):
     target = models.ForeignKey(
         Target,
         on_delete=models.CASCADE,

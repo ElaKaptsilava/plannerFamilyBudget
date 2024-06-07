@@ -172,7 +172,7 @@ class TargetContributionTestCase(TestCase):
         )
 
         contribution = TargetContributionFactory.create(
-            target=target, date=timezone.now().date(), amount=2050
+            user=self.user, target=target, date=timezone.now().date(), amount=2050
         )
 
         contribution_clean_data = {
