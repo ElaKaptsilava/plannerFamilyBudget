@@ -111,6 +111,55 @@ class TargetTestCase(TestCase):
         self.assertEqual(Target.objects.count(), 1)
         self.assertEqual(Target.objects.first().pk, target.pk)
 
+    def test_user_update_target_success(self):
+        self.client.force_login(self.user)
+
+        target = TargetFactory.create(
+            user=self.user, deadline=datetime.date(3000, 1, 1)
+        )
+        cleaned_data = {
+            "pk": target.pk,
+            "user": self.user.id,
+            "target": "updated-target",
+            "amount": 10,
+            "description": target.description,
+            "deadline": target.deadline,
+        }
+
+        response = self.client.post(
+            reverse_lazy("targets:targets-list-create", kwargs={"pk": target.pk}),
+            data=cleaned_data,
+        )
+
+        messages = list(get_messages(response.wsgi_request))
+
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].message, "The target updated successfully!")
+        self.assertEqual(Target.objects.count(), 1)
+
+    @tag("x")
+    def test_user_update_target_with_invalid_data(self):
+        self.client.force_login(self.user)
+        target = TargetFactory.create(
+            user=self.user, deadline=datetime.date(3000, 1, 1)
+        )
+
+        response = self.client.post(
+            reverse_lazy("targets:targets-list-create", kwargs={"pk": target.pk}),
+            data={},
+        )
+
+        message = list(get_messages(response.wsgi_request))
+        form = response.context["form"]
+
+        self.assertEqual(len(message), 1)
+        self.assertEqual(
+            message[0].message, "Failed to update target. Please check the form."
+        )
+        self.assertEqual(Target.objects.count(), 1)
+        self.assertEqual(form.errors["target"][0], "This field is required.")
+        self.assertEqual(form.errors["amount"][0], "This field is required.")
+
 
 class TargetContributionTestCase(TestCase):
     def setUp(self):
@@ -172,7 +221,6 @@ class TargetContributionTestCase(TestCase):
         self.assertEqual(form.errors["target"][0], "This field is required.")
         self.assertEqual(form.errors["amount"][0], "This field is required.")
 
-    @tag("x")
     def test_user_multiple_delete_target_contributions_with_empty_data(self):
         self.client.force_login(self.user)
 

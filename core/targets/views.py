@@ -40,6 +40,15 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("targets:targets-list")
     template_name = "targets/targets.html"
 
+    def form_valid(self, form):
+        self.object = form.save()
+        messages.success(self.request, "The target updated successfully!")
+        return super().form_valid(form)
+
+    def form_invalid(self, form) -> HttpResponseRedirect:
+        messages.error(self.request, "Failed to update target. Please check the form.")
+        return super().form_invalid(form)
+
 
 class TargetDeleteMultipleView(LoginRequiredMixin, View):
     def post(self, request) -> HttpResponseRedirect:
