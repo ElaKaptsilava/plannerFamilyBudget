@@ -2,7 +2,7 @@ import datetime
 
 from accounts.factories import CustomUserFactory
 from django.contrib.messages import get_messages
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils import timezone
 
@@ -164,7 +164,6 @@ class TargetContributionTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory()
 
-    @tag("x")
     def test_user_add_contribution_success(self):
         self.client.force_login(self.user)
 

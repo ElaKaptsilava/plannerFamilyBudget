@@ -7,14 +7,13 @@ class RunningCostCategoryFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = RunningCostCategory
 
-    name = factory.Sequence(lambda n: f"Category {n}")
+    name = factory.Faker("word")
 
 
 class RunningCostFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = RunningCost
 
-    pk = factory.Sequence(lambda n: n)
     category = factory.SubFactory(RunningCostCategoryFactory)
     name = factory.Sequence(lambda n: f"Cost {n}")
     amount = factory.Faker("random_int", min=1000, max=10000)

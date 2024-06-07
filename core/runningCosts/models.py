@@ -80,6 +80,9 @@ class RunningCost(models.Model):
     )
     objects = RunningCostQuerySet.as_manager()
 
+    class Meta:
+        ordering = ["next_payment_date"]
+
     def __str__(self) -> str:
         return f"{self.name} - ${self.amount:.2f}"
 
@@ -98,8 +101,8 @@ class RunningCost(models.Model):
 
     @property
     def is_completed(self) -> bool:
-        if self.next_payment_date:
-            return self.next_payment_date >= self.payment_deadline
+        if not self.next_payment_date:
+            return True
         return False
 
     def save(self, *args, **kwargs) -> None:
@@ -126,6 +129,8 @@ class RunningCost(models.Model):
 
         if next_payment_date < payment_deadline:
             self.next_payment_date = next_payment_date
+        else:
+            self.next_payment_date = None
 
     @staticmethod
     def add_months(source_date: date, period: int) -> date:

@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views import View
@@ -36,7 +37,7 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
         messages.error(
             self.request, "Failed to add the running cost. Please check the form."
         )
-        return super().form_invalid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
 class RunningCostDeleteMultipleView(LoginRequiredMixin, View):
@@ -61,12 +62,13 @@ class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form):
         messages.error(
-            self.request, "Failed to update running cost. Please check the form."
+            self.request, "Failed to update the running cost. Please check the form."
         )
         return HttpResponseRedirect(self.success_url)
 
+    @transaction.atomic
     def form_valid(self, form):
         self.object = form.save()
         response = super().form_valid(form)
-        messages.success(self.request, "Running cost updated successfully!")
+        messages.success(self.request, "The running cost updated successfully!")
         return response

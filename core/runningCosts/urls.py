@@ -5,14 +5,14 @@ from .views import RunningCostDeleteMultipleView, RunningCostUpdateView, Running
 app_name = "running-costs"
 
 urlpatterns = [
-    path("", RunningCostView.as_view(), name="running-costs-list"),
+    path("list/", RunningCostView.as_view(), name="running-costs-list"),
     path(
-        "<int:pk>/update/",
+        "list/<int:pk>/update/",
         RunningCostUpdateView.as_view(),
         name="running-costs-detail-update",
     ),
     path(
-        "delete-multiple/",
+        "list/delete-multiple/",
         RunningCostDeleteMultipleView.as_view(),
         name="running-costs-list-delete-multiple",
     ),
