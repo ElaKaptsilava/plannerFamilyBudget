@@ -40,7 +40,7 @@ class TargetUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy("targets:targets-list")
     template_name = "targets/targets.html"
 
-    def form_valid(self, form):
+    def form_valid(self, form) -> HttpResponseRedirect:
         self.object = form.save()
         messages.success(self.request, "The target updated successfully!")
         return super().form_valid(form)
@@ -91,7 +91,7 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         )
         return super().form_invalid(form)
 
-    def get_queryset(self):
+    def get_queryset(self) -> Target:
         target_pk = self.kwargs.get("pk")
         return self.model.objects.filter(
             target__user=self.request.user, target__pk=target_pk
