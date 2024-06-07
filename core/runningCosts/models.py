@@ -7,7 +7,7 @@ TODO  List:
 import calendar
 from datetime import date, datetime, timedelta
 
-from accounts.models import CustomUser
+from accounts.models import UserAbstractModel
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -28,7 +28,7 @@ class RunningCostQuerySet(models.QuerySet):
         )
 
 
-class RunningCostCategory(models.Model):
+class RunningCostCategory(UserAbstractModel):
     name = models.CharField(
         max_length=256, help_text="Enter the category of the running coast."
     )
@@ -43,16 +43,13 @@ class RunningCostCategory(models.Model):
         return f"RunningCostCategory(name={self.name!r}, description={self.description!r}...)"
 
 
-class RunningCost(models.Model):
+class RunningCost(UserAbstractModel):
     class PeriodType(models.TextChoices):
         DAYS = ("days", "Days")
         WEEKS = ("weeks", "Weeks")
         MONTHS = ("months", "Months")
         YEARS = ("years", "Years")
 
-    user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name="running_costs"
-    )
     name = models.CharField(max_length=256)
     category = models.ForeignKey(
         RunningCostCategory, on_delete=models.CASCADE, related_name="running_costs"

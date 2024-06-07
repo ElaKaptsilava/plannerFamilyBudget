@@ -12,7 +12,7 @@ from .models import RunningCost
 class RunningCostsTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
-        self.category = RunningCostCategoryFactory.create()
+        self.category = RunningCostCategoryFactory.create(user=self.user)
         self.cost_build = RunningCostFactory.build(
             category=self.category,
             next_payment_date=datetime.date(3024, 1, 1),
@@ -154,7 +154,7 @@ class TestNextPaymentDateUpdate(TestCase):
 
     def setUp(self):
         self.user = CustomUserFactory.create()
-        self.category = RunningCostCategoryFactory.create()
+        self.category = RunningCostCategoryFactory.create(user=self.user)
 
     def test_next_payment_date_is_updated_correctly_when_paid_and_period_is_month(self):
         current_payment_date = datetime.date(3024, 1, 1)
