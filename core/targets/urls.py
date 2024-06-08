@@ -4,9 +4,9 @@ from . import views
 
 app_name = "targets"
 urlpatterns = [
-    path("targets/list/", views.TargetView.as_view(), name="targets-list"),
+    path("list/", views.TargetView.as_view(), name="targets-list"),
     path(
-        "targets/list/update/<int:pk>/",
+        "list/update/<int:pk>/",
         views.TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
@@ -16,17 +16,17 @@ urlpatterns = [
         name="targets-list-delete-multiple",
     ),
     path(
-        "<int:pk>/contributions/list/",
+        "detail/<int:pk>/contributions/list/",
         views.TargetContributionsView.as_view(),
         name="contributions-list",
     ),
     path(
-        "<int:pk>/contributions/create/",
+        "detail/<int:pk>/contributions/create/",
         views.TargetContributionsView.as_view(),
         name="contributions-list-create",
     ),
     path(
-        "<int:pk>/contributions/delete-multiple/",
+        "detail/<int:pk>/contributions/delete-multiple/",
         views.TargetContributionsDeleteMultipleView.as_view(),
         name="contributions-list-delete-multiple",
     ),
