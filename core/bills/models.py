@@ -7,12 +7,13 @@ class Bill(UserAbstractModel):
     amount = models.DecimalField(
         max_digits=10, decimal_places=2, help_text="The total amount of the bill"
     )
+    start_date = models.DateField(auto_now_add=True)
     deadline = models.DateField(help_text="The due date of the bill")
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Bill from {self.creditor} - Amount: {self.amount}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"<Bill(id={self.id}, user={self.user}, creditor='{self.creditor}', "
             f"amount={self.amount}, deadline={self.deadline})>"
@@ -37,10 +38,10 @@ class Transaction(UserAbstractModel):
         auto_now_add=True, help_text="The date the transaction was made"
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Transaction of {self.amount} on {self.date}"
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return (
             f"<Transaction(id={self.id}, bill_id={self.bill.id}, amount={self.amount}, "
             f"date={self.date})>"

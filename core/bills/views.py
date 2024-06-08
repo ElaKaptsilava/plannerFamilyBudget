@@ -22,12 +22,12 @@ class BillFormView(LoginRequiredMixin, FormView):
         messages.success(self.request, "The bill added successfully!")
         return HttpResponseRedirect(self.get_success_url())
 
-    def form_invalid(self, form):
-        messages.success(self.request, "TFailed to add bills. Please check the form.")
-        return HttpResponseRedirect(self.get_success_url())
+    def form_invalid(self, form) -> HttpResponseRedirect:
+        messages.error(self.request, "TFailed to add bills. Please check the form.")
+        return super().form_invalid(form)
 
-    def get_context_data(self, **kwargs):
-        if "form" not in kwargs:
-            kwargs["form"] = self.get_form()
-            kwargs["object_list"] = self.model.objects.filter(user=self.request.user)
-        return super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["form"] = self.get_form()
+        context["object_list"] = self.model.objects.filter(user=self.request.user)
+        return context
