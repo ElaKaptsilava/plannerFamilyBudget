@@ -64,7 +64,7 @@ class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
         messages.error(
             self.request, "Failed to update the running cost. Please check the form."
         )
-        return HttpResponseRedirect(self.success_url)
+        return super().form_invalid(form)
 
     @transaction.atomic
     def form_valid(self, form):

@@ -34,6 +34,7 @@ urlpatterns = [
     path("running-costs/", include("runningCosts.urls"), name="running-costs"),
     path("targets/", include("targets.urls"), name="target"),
     path("bills/", include("bills.urls"), name="bills"),
+    path("manager/", include("budgetManager.urls"), name="manager"),
 ]
 
 if settings.DEBUG:
