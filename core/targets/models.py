@@ -5,6 +5,22 @@ from django.db import models
 from django.utils import timezone
 
 
+class Saving(UserAbstractModel):
+    amount = models.DecimalField(
+        max_digits=20, decimal_places=2, help_text="Amount saved."
+    )
+    date = models.DateField(help_text="Date of the saving entry.")
+
+    def __str__(self) -> str:
+        return f"{self.user.username} - Saving: {self.amount} on {self.date}"
+
+    def __repr__(self) -> str:
+        return (
+            f"Saving(user={self.user.username!r}, amount={self.amount!r}, "
+            f"date={self.date!r})"
+        )
+
+
 class Target(UserAbstractModel):
     image = models.ImageField(
         upload_to=get_upload_path, default="/static/img/undraw_posting_photo.svg"

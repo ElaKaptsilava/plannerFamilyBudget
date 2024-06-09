@@ -1,9 +1,3 @@
-"""
-TODO  List:
-    1. Implement Monitoring
-    2. Manage Payment Deadlines
-"""
-
 import calendar
 from datetime import date, datetime, timedelta
 

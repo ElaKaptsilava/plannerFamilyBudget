@@ -1,4 +1,5 @@
 import datetime
+from http import HTTPStatus
 
 from accounts.factories import CustomUserFactory
 from django.contrib.messages import get_messages
@@ -21,22 +22,22 @@ class TargetTestCase(TestCase):
             target=self.target_build
         )
 
-        self.target_cleand_data = self.target_build.__dict__
+        self.target_cleaned_data = self.target_build.__dict__
 
-        del self.target_cleand_data["id"]
+        del self.target_cleaned_data["id"]
 
     def test_user_create_target_success(self):
         self.client.force_login(self.user)
 
         response = self.client.post(
-            reverse_lazy("targets:targets-list"), data=self.target_cleand_data
+            reverse_lazy("targets:targets-list"), data=self.target_cleaned_data
         )
 
         get_targets_by_user = Target.objects.filter(user=self.user)
         messages = list(get_messages(response.wsgi_request))
         get_target = Target.objects.get(pk=get_targets_by_user[0].id)
 
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(len(get_targets_by_user), 1)
         self.assertEqual(len(messages), 1)
         self.assertEqual(messages[0].message, "The target added successfully!")
