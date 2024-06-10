@@ -6685,7 +6685,7 @@ eye:
       - seen
       - show
       - sight
-      - views
+      - planer_views
       - visible
   styles:
     - solid
@@ -6723,7 +6723,7 @@ eye-slash:
       - show
       - toggle
       - unseen
-      - views
+      - planer_views
       - visible
       - visiblity
   styles:
