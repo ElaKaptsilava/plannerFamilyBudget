@@ -1,0 +1,17 @@
+{% extends "registration/base_auth.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="h4 text-gray-900 mb-4">Set an Budget!</h1>
+</div>
+<form class="user" method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+        {{ field }}
+    </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-outline-primary btn-user btn-block">Create</button>
+</form>
+{% endblock %}

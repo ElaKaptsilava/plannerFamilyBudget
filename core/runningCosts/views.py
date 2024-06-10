@@ -24,6 +24,7 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["categories"] = RunningCostCategory.objects.all()
+        context["object_list"] = self.model.objects.filter(user=self.request.user)
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

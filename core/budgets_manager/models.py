@@ -1,7 +1,6 @@
 from decimal import Decimal
 
-from accounts.models import UserAbstractModel
-from django.conf import settings
+from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory
@@ -11,7 +10,7 @@ from targets.models import Target
 
 class BudgetManager(models.Model):
     user = models.OneToOneField(
-        settings.AUTH_USER_MODEL,
+        CustomUser,
         on_delete=models.CASCADE,
         help_text="The user this budget is associated with.",
     )
@@ -61,13 +60,17 @@ class BudgetManager(models.Model):
         )
 
 
-class Planer(UserAbstractModel):
+class Planer(models.Model):
     BUDGET_TYPE_CHOICES = [
         ("wants", "Wants"),
         ("needs", "Needs"),
         ("save", "Save"),
     ]
-
+    user = models.OneToOneField(
+        CustomUser,
+        on_delete=models.CASCADE,
+        help_text="The user this budget is associated with.",
+    )
     budget_manager = models.ForeignKey(BudgetManager, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=10, choices=BUDGET_TYPE_CHOICES, help_text="Type of budget category."

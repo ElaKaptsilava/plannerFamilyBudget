@@ -56,7 +56,7 @@
                     <tbody>
                     <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
                         {% csrf_token %}
-                        {% for income in incomes %}
+                        {% for income in object_list %}
 
                         <tr class="table-row" data-income-id="{{ income.id }}">
                             <td>

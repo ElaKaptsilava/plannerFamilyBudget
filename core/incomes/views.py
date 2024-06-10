@@ -28,6 +28,7 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
+        context["object_list"] = self.model.objects.filter(user=self.request.user)
         return context
 
     def form_invalid(self, form):

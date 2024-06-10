@@ -4,6 +4,7 @@ from django.utils import timezone
 
 
 class ExpenseCategory(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
 

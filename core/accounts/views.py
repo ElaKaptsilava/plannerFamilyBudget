@@ -82,7 +82,10 @@ class CustomRegisterView(View):
             if user_authenticate:
                 login(request, user_authenticate)
                 return redirect(
-                    reverse_lazy("home", kwargs={"user_id": user_authenticate.id})
+                    reverse_lazy(
+                        "manager:budget-list-create",
+                        kwargs={"user_id": user_authenticate.pk},
+                    )
                 )
         return render(
             request,

@@ -24,7 +24,8 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = ExpenseForm
-        context["categories"] = ExpenseCategory.objects.all()
+        context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
+        context["object_list"] = self.model.objects.filter(user=self.request.user)
         return context
 
     def form_valid(self, form) -> HttpResponse:
