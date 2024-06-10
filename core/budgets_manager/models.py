@@ -1,23 +1,8 @@
-"""
-    TODO list:
-        1. Budget model(UserAbstractModel):
-            -fields
-                type:
-                1. wants --> targets app
-                2. needs --> expenses, running costs apps
-                3 saves --> targets app ???
-                category: choice Category from expensesCategory end running cost
-                amount: DecimalField
-                date: DataField
-                    if wants --> set amount to targets apps
-                    if needs --> set amount to expenses, running costs apps
-                    if save -->
-"""
-
 from decimal import Decimal
 
 from accounts.models import UserAbstractModel
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory
 from runningCosts.models import RunningCostCategory
@@ -60,7 +45,7 @@ class BudgetManager(models.Model):
             + Decimal(self.needs_percentage)
         )
         if total_allocation != 100:
-            raise ValueError(
+            raise ValidationError(
                 "The total allocation for saves, wants, and needs must equal 100."
             )
         super().save(*args, **kwargs)
@@ -118,12 +103,12 @@ class Planer(UserAbstractModel):
     def save(self, *args, **kwargs) -> None:
         if self.type == "needs":
             if not self.category_expense or not self.category_running_cost:
-                raise ValueError(
+                raise ValidationError(
                     "For 'needs' type, either category_expense or category_running_cost must be set."
                 )
         elif self.type == "wants":
             if not self.target:
-                raise ValueError("For 'wants' type, target must be set.")
+                raise ValidationError("For 'wants' type, target must be set.")
 
         super().save(*args, **kwargs)
 
