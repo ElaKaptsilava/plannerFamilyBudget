@@ -55,7 +55,7 @@ CUSTOM_APPS = [
     "expenses.apps.ExpensesConfig",
     "runningCosts.apps.RunningcostsConfig",
     "targets.apps.TargetsConfig",
-    "budgetManager.apps.BudgetmanagerConfig",
+    "budgets_manager.apps.BudgetsManagerConfig",
 ]
 
 THIRD_PARTY_APPS = [
