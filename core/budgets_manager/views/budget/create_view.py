@@ -11,11 +11,14 @@ class BudgetManagerFormView(CreateView):
     context_object_name = "budget"
     model = BudgetManager
 
-    def get_success_url(self):
-        return reverse_lazy("home", {"user_pk": self.request.user.pk})
+    # def get_success_url(self):
+    #     return reverse_lazy("home", {"user_id": self.request.user.pk})
 
     def form_valid(self, form) -> HttpResponse:
         budget = form.save(commit=False)
         budget.user = self.request.user
         budget.save()
-        return HttpResponseRedirect(self.get_success_url())
+        print("Budget: ", budget)
+        return HttpResponseRedirect(
+            reverse_lazy("home", kwargs={"user_id": self.request.user.pk})
+        )
