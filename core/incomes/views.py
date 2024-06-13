@@ -17,13 +17,14 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
     context_object_name = "incomes"
     filterset_class = IncomeFilter
     form_class = IncomeForm
+    success_url = reverse_lazy("incomes:incomes-list")
 
     def form_valid(self, form) -> HttpResponseRedirect:
         income = form.save(commit=False)
         income.user = self.request.user
         income.save()
         messages.success(self.request, "The income added successfully!")
-        return HttpResponseRedirect(self.get_success_url())
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)

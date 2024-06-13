@@ -1,9 +1,12 @@
 from decimal import Decimal
 
+from django.utils import timezone
+
 from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory
+from incomes.models import Income
 from runningCosts.models import RunningCostCategory
 from targets.models import Target
 
@@ -13,13 +16,6 @@ class BudgetManager(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         help_text="The user this budget is associated with.",
-    )
-    monthly_income = models.DecimalField(
-        max_digits=10,
-        decimal_places=1,
-        help_text="Total monthly income.",
-        null=True,
-        blank=True,
     )
     savings_percentage = models.DecimalField(
         max_digits=5,
@@ -49,8 +45,21 @@ class BudgetManager(models.Model):
             )
         super().save(*args, **kwargs)
 
+    @property
+    def calculate_monthly_income(self):
+        current_month = timezone.now().month
+        current_year = timezone.now().year
+        total_income = Income.objects.filter(
+            user=self.user, date__month=current_month, date__year=current_year
+        ).aggregate(total_income=models.Sum("amount"))["total_income"] or Decimal("0.0")
+        return total_income
+
+    def update_monthly_income(self):
+        self.monthly_income = self.calculate_monthly_income()
+        self.save()
+
     def __str__(self) -> str:
-        return f"{self.user.username}'s Budget Manager"
+        return f"{self.user.first_name.upper()}'s Budget Plan"
 
     def __repr__(self) -> str:
         return (

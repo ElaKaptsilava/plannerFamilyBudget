@@ -184,30 +184,16 @@
                                 <div class="card-body">
                                     <div class="row gutters-sm">
                                         <div class="col">
-                                            {{ form.source.label_tag }}
-                                            {{ form.source }}
+                                            {{ form.as_p }}
                                         </div>
-                                        <div class="col">
-                                            {{ form.category.label_tag }}
-                                            {{ form.category }}
-                                        </div>
-                                    </div>
-                                    <div class="mt-2">
-                                        {{ form.amount.label_tag }}
-                                        {{ form.amount }}
-                                    </div>
-                                    <div class="mt-2">
-                                        {{ form.date.label_tag }}
-                                        {{ form.date }}
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel
-                            </button>
-                            <button type="submit" class="btn btn-outline-success">Create</button>
-                        </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel
+                                </button>
+                                <button type="submit" class="btn btn-outline-success">Create</button>
+                            </div>
                 </form>
             </div>
         </div>

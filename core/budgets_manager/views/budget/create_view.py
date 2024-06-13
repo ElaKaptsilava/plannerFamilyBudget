@@ -3,9 +3,10 @@ from budgets_manager.models import BudgetManager
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class BudgetManagerFormView(CreateView):
+class BudgetManagerFormView(LoginRequiredMixin, CreateView):
     form_class = BudgetManagerForm
     template_name = "budgets_manager/budget/budget-create.html"
     context_object_name = "budget"
