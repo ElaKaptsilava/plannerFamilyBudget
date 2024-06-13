@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -188,3 +188,21 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 SESSION_COOKIE_AGE = 3600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = True
+
+if DEBUG:
+    INTERNAL_IPS = [
+        "127.0.0.1",
+    ]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+    ]
+    INSTALLED_APPS += [
+        "debug_toolbar",
+    ]
+    import mimetypes
+
+    mimetypes.add_type("application/javascript", ".js", True)
+
+    DEBUG_TOOLBAR_CONFIG = {
+        "INTERCEPT_REDIRECTS": False,
+    }
