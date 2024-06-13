@@ -14,7 +14,7 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="planer",
+            model_name="planner",
             name="user",
             field=models.OneToOneField(
                 help_text="The user this budget is associated with.",

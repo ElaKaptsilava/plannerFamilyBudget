@@ -10169,7 +10169,7 @@ a:focus {
 }
 
 .topbar {
-  height: 4.375rem;
+  height: 10.375rem;
 }
 
 .topbar #sidebarToggleTop {
@@ -10510,7 +10510,7 @@ a:focus {
 
 @media (min-width: 768px) {
   .sidebar {
-    width: 14rem !important;
+    width: 6rem !important;
   }
   .sidebar .nav-item .collapse {
     position: relative;

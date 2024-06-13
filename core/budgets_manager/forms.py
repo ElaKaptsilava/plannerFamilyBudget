@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import BudgetManager
+from .models import BudgetManager, Planer
 
 
 class BudgetManagerForm(forms.ModelForm):
@@ -27,6 +27,46 @@ class BudgetManagerForm(forms.ModelForm):
                     "class": "form-control form-control-user",
                     "value": 40.0,
                     "step": 1.0,
+                }
+            ),
+        }
+
+
+class PlannerForm(forms.ModelForm):
+    class Meta:
+        model = Planer
+        fields = [
+            "type",
+            "category_expense",
+            "category_running_cost",
+            "target",
+            "amount",
+        ]
+        widgets = {
+            "type": forms.Select(
+                attrs={
+                    "class": "form-control form-control-user",
+                    "onchange": "showFields()",
+                }
+            ),
+            "category_expense": forms.Select(
+                attrs={
+                    "class": "form-control form-control-user hidden",
+                }
+            ),
+            "category_running_cost": forms.Select(
+                attrs={
+                    "class": "form-control form-control-user hidden",
+                }
+            ),
+            "target": forms.Select(
+                attrs={
+                    "class": "form-control form-control-user hidden",
+                }
+            ),
+            "amount": forms.NumberInput(
+                attrs={
+                    "class": "form-control form-control-user hidden",
                 }
             ),
         }

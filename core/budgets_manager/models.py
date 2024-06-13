@@ -73,7 +73,6 @@ class Planer(models.Model):
     BUDGET_TYPE_CHOICES = [
         ("wants", "Wants"),
         ("needs", "Needs"),
-        ("save", "Save"),
     ]
     user = models.OneToOneField(
         CustomUser,
@@ -84,21 +83,21 @@ class Planer(models.Model):
     type = models.CharField(
         max_length=10, choices=BUDGET_TYPE_CHOICES, help_text="Type of budget category."
     )
-    category_expense = models.ForeignKey(
+    category_expense = models.OneToOneField(
         ExpenseCategory,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         help_text="Expense category for 'needs' type budget.",
     )
-    category_running_cost = models.ForeignKey(
+    category_running_cost = models.OneToOneField(
         RunningCostCategory,
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         help_text="Running cost category for 'needs' type budget.",
     )
-    target = models.ForeignKey(
+    target = models.OneToOneField(
         Target,
         on_delete=models.CASCADE,
         null=True,
