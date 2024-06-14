@@ -2,6 +2,10 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% block appname %}
+<p class="nav-item dropdown no-arrow appname">Contributions</p>
+{% endblock %}
+
 {% block back %}
 <button type='button' class="btn btn-outline-light text-gray-600"
         onclick="window.location.href='{% url 'targets:targets-list' %}'">

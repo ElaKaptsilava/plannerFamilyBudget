@@ -2,6 +2,10 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+{% block appname %}
+<p class="nav-item dropdown no-arrow appname">Running costs</p>
+{% endblock %}
+
 {% block actions %}
 <li class="nav-item dropdown no-arrow">
     <a class="nav-link dropdown-toggle" href="#" id="actionDropdown" role="button"
@@ -32,8 +36,9 @@
 {% block content %}
 <!-- Begin Page Content -->
 <div class="container-fluid">
-    {% if object_list %}
     <!-- Messages -->
+    {% if object_list %}
+
     <div class="card shadow mb-4">
 
         <div class="card-body">

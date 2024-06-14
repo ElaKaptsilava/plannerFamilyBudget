@@ -28,6 +28,9 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
         context["form"] = ExpenseForm
         context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
         context["object_list"] = self.get_queryset()
+        context["custom_message"] = (
+            "You haven't added any costs yet. Start by adding one!"
+        )
         return context
 
     def form_valid(self, form) -> HttpResponse:
