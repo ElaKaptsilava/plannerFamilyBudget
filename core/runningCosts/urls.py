@@ -1,19 +1,23 @@
 from django.urls import path
 
-from .views import RunningCostDeleteMultipleView, RunningCostUpdateView, RunningCostView
+from runningCosts.views.running_cost import (
+    cost_update,
+    cost_formview,
+    cost_delete_multiple,
+)
 
 app_name = "running-costs"
 
 urlpatterns = [
-    path("list/", RunningCostView.as_view(), name="running-costs-list"),
+    path("list/", cost_formview.RunningCostView.as_view(), name="running-costs-list"),
     path(
         "list/<int:pk>/update/",
-        RunningCostUpdateView.as_view(),
+        cost_update.RunningCostUpdateView.as_view(),
         name="running-costs-detail-update",
     ),
     path(
         "list/delete-multiple/",
-        RunningCostDeleteMultipleView.as_view(),
+        cost_delete_multiple.RunningCostDeleteMultipleView.as_view(),
         name="running-costs-list-delete-multiple",
     ),
 ]
