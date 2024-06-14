@@ -13,7 +13,7 @@ from .models import RunningCost, RunningCostCategory
 
 
 class RunningCostView(LoginRequiredMixin, FilterView, FormView):
-    template_name = "runningCosts/running-costs-list.html"
+    template_name = "runningCosts/running-costs-planner-list.html"
     form_class = RunningCostForm
     model = RunningCost
     context_object_name = "runningCost"
@@ -59,7 +59,7 @@ class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
     model = RunningCost
     success_url = reverse_lazy("running-costs:running-costs-list")
     context_object_name = "runningCost"
-    template_name = "runningCosts/running-costs-list.html"
+    template_name = "runningCosts/running-costs-planner-list.html"
 
     def form_invalid(self, form):
         messages.error(

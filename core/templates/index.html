@@ -21,6 +21,11 @@
     <!-- Custom styles for this template-->
     <link href="{% static 'css/sb-admin-2.min.css' %}" rel="stylesheet">
     <link href="{% static 'css/project.css' %}" rel="stylesheet">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 
 </head>
 <body id="page-top">
@@ -64,7 +69,8 @@
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Custom Components:</h6>
-                    <a class="collapse-item" href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}">Budget</a>
+                    <a class="collapse-item"
+                       href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}">Budget</a>
                     <a class="collapse-item" href="{% url 'manager:planner-list' user_id=request.user.pk %}">Planner</a>
                 </div>
             </div>
@@ -152,7 +158,8 @@
             <img class="sidebar-card-illustration mb-2" src="/static/img/undraw_rocket.svg" alt="...">
             <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components, and
                 more!</p>
-            <a class="btn btn-outline-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
+            <a class="btn btn-outline-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to
+                Pro!</a>
         </div>
 
     </ul>
@@ -386,13 +393,13 @@
         <!-- End of Main Content -->
 
         <!-- Footer -->
-<!--        <footer class="sticky-footer bg-white">-->
-<!--            <div class="container my-auto">-->
-<!--                <div class="copyright text-center my-auto">-->
-<!--                    <span>Copyright &copy; Your Website 2021</span>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </footer>-->
+        <!--        <footer class="sticky-footer bg-white">-->
+        <!--            <div class="container my-auto">-->
+        <!--                <div class="copyright text-center my-auto">-->
+        <!--                    <span>Copyright &copy; Your Website 2021</span>-->
+        <!--                </div>-->
+        <!--            </div>-->
+        <!--        </footer>-->
         <!-- End of Footer -->
 
         <!-- Toast Notification -->

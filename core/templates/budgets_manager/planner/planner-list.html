@@ -8,7 +8,8 @@
     <!-- Messages -->
 
     <div class="d-flex justify-content-between align-items-center mb-3">
-        <button class="btn btn-outline-success" data-toggle="modal" data-target="#createRunningCostsModal">
+        <button class="btn btn-outline-success" type="button" data-toggle="modal"
+                    data-target="#createPlanModal">
             <i class="fas fa-plus"></i>
         </button>
         <div>
@@ -86,8 +87,6 @@
                         </td>
                     </tr>
                     {% endfor %}
-                    </form>
-
                     </tbody>
                 </table>
             </div>
@@ -95,30 +94,66 @@
     </div>
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function showFields() {
+            var type = document.getElementById('id_type').value;
+            var expenseDiv = document.getElementById('div_id_category_expense');
+            var runningCostDiv = document.getElementById('div_id_category_running_cost');
+            var targetDiv = document.getElementById('div_id_target');
+            var amountDiv = document.getElementById('div_id_amount');
+
+            if (type === 'needs') {
+                expenseDiv.classList.remove('hidden');
+                runningCostDiv.classList.remove('hidden');
+                targetDiv.classList.add('hidden');
+                amountDiv.classList.remove('hidden')
+            } else if (type === 'wants') {
+                expenseDiv.classList.add('hidden');
+                runningCostDiv.classList.add('hidden');
+                targetDiv.classList.remove('hidden');
+                amountDiv.classList.remove('hidden')
+            } else {
+                expenseDiv.classList.add('hidden');
+                runningCostDiv.classList.add('hidden');
+                targetDiv.classList.add('hidden');
+                amountDiv.classList.add('hidden')
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            showFields();
+        });
+
+        document.getElementById('id_type').addEventListener('change', showFields);
+    </script>
 </div>
 
 
 <!-- Modals-->
 
 <!-- Create RunningCosts Modal -->
-<div class="modal fade" id="createPlannerModal" tabindex="-1" role="dialog"
-     aria-labelledby="createPlannerModalLabel"
+<div class="modal fade" id="createPlanModal" tabindex="-1" role="dialog"
+     aria-labelledby="createPlanModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <!--                <h5 class="modal-title" id="createPlannerModalLabel"></h5>-->
+                <h5 class="modal-title" id="createPlanModalLabel">Create</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'running-costs:running-costs-list' %}" method="post">
+                <form action="{% url 'manager:planner-list-create' user_id=request.user.pk %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">
                             <div class="row gutters-sm">
-                                {{ form.as_p }}
+                                {% for field in form %}
+                                <div class="card-body">
+                                    {{ field }}
+                                </div>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>

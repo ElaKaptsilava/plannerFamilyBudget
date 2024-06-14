@@ -6,7 +6,7 @@ from django.views.generic import CreateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class BudgetManagerFormView(LoginRequiredMixin, CreateView):
+class BudgetManagerCreateView(LoginRequiredMixin, CreateView):
     form_class = BudgetManagerForm
     template_name = "budgets_manager/budget/budget-create.html"
     context_object_name = "budget"

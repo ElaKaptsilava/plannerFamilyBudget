@@ -1,22 +1,27 @@
-from budgets_manager.views.budget import create_view, update_view
-from budgets_manager.views.planner import list_view
+from budgets_manager.views.planner import planner_create, planner_list
+from budgets_manager.views.budget import budget_create, budget_update
 from django.urls import path
 
 app_name = "manager"
 urlpatterns = [
     path(
         "<int:user_id>/budget/create/",
-        create_view.BudgetManagerFormView.as_view(),
+        budget_create.BudgetManagerCreateView.as_view(),
         name="budget-list-create",
     ),
     path(
         "budget/detail/<int:pk>/update/",
-        update_view.UpdateBudgetView.as_view(),
+        budget_update.UpdateBudgetView.as_view(),
         name="budget-detail-update",
     ),
     path(
         "<int:user_id>/planner/list/",
-        list_view.PlanerListView.as_view(),
+        planner_list.PlannerListView.as_view(),
         name="planner-list",
+    ),
+    path(
+        "<int:user_id>/budget/list/create/",
+        planner_create.PlannerCreateView.as_view(),
+        name="planner-list-create",
     ),
 ]

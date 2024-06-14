@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import BudgetManager, Planer
+from .models import BudgetManager, PlannerManager
 
 
 class BudgetManagerForm(forms.ModelForm):
@@ -34,7 +34,7 @@ class BudgetManagerForm(forms.ModelForm):
 
 class PlannerForm(forms.ModelForm):
     class Meta:
-        model = Planer
+        model = PlannerManager
         fields = [
             "type",
             "category_expense",
@@ -46,27 +46,31 @@ class PlannerForm(forms.ModelForm):
             "type": forms.Select(
                 attrs={
                     "class": "form-control form-control-user",
+                    "id": "id_type",
                     "onchange": "showFields()",
                 }
             ),
             "category_expense": forms.Select(
                 attrs={
-                    "class": "form-control form-control-user hidden",
+                    "class": "form-control form-control-user",
+                    "id": "div_id_category_expense",
                 }
             ),
             "category_running_cost": forms.Select(
                 attrs={
-                    "class": "form-control form-control-user hidden",
+                    "class": "form-control form-control-user",
+                    "id": "div_id_category_running_cost",
                 }
             ),
             "target": forms.Select(
                 attrs={
-                    "class": "form-control form-control-user hidden",
+                    "class": "form-control form-control-user",
+                    "id": "div_id_target",
                 }
             ),
             "amount": forms.NumberInput(
                 attrs={
-                    "class": "form-control form-control-user hidden",
+                    "class": "form-control form-control-user",
                 }
             ),
         }

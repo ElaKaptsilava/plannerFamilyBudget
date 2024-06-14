@@ -69,7 +69,7 @@ class BudgetManager(models.Model):
         )
 
 
-class Planer(models.Model):
+class PlannerManager(models.Model):
     BUDGET_TYPE_CHOICES = [
         ("wants", "Wants"),
         ("needs", "Needs"),

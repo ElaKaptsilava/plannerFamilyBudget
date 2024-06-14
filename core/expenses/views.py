@@ -16,7 +16,7 @@ from .models import Expense, ExpenseCategory
 class ExpenseView(LoginRequiredMixin, FilterView, FormView):
     model = Expense
     form_class = ExpenseForm
-    template_name = "expenses/expenses-list.html"
+    template_name = "expenses/expenses-planner-list.html"
     context_object_name = "expenses"
     success_url = reverse_lazy("expenses:expenses-list")
     filterset_class = ExpenseFilter
@@ -57,7 +57,7 @@ class DeleteMultipleExpenseView(View):
 class ExpensesUpdateView(LoginRequiredMixin, UpdateView):
     form_class = ExpenseForm
     model = Expense
-    template_name = "expenses/expenses-list.html"
+    template_name = "expenses/expenses-planner-list.html"
     context_object_name = "expenses"
     success_url = reverse_lazy("expenses:expenses-list")
 
