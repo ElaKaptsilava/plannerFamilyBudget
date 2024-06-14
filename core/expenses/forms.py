@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Expense
+from .models import Expense, ExpenseCategory
 
 
 class ExpenseForm(forms.ModelForm):
@@ -23,4 +23,22 @@ class ExpenseForm(forms.ModelForm):
                     "type": "date",
                 }
             ),
+        }
+
+
+class ExpenseCategoryForm(forms.ModelForm):
+    class Meta:
+        model = ExpenseCategory
+        fields = ["name", "description"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "form-control form-control-user text-secondary",
+                       "placeholder": "Enter category name",}
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "rows": 3,
+                    "placeholder": "Enter description...",
+                })
         }

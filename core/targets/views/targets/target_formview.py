@@ -22,6 +22,9 @@ class TargetView(LoginRequiredMixin, FormView):
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["object_list"] = self.get_queryset()
+        context["custom_message"] = (
+            "You haven't added any contributions yet. Start by adding one!"
+        )
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

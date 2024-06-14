@@ -4,6 +4,7 @@ from expenses.views.expence import (
     expense_update,
     expense_multiple_delete,
 )
+from expenses.views.category_expense import category_create
 
 app_name = "expenses"
 
@@ -19,4 +20,7 @@ urlpatterns = [
         expense_multiple_delete.DeleteMultipleExpenseView.as_view(),
         name="expenses-list-delete-multiple",
     ),
+    path("category/create/",
+         category_create.CategoryCreateView.as_view(),
+         name="category-list-create"),
 ]
