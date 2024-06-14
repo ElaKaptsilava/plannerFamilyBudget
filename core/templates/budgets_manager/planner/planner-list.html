@@ -130,65 +130,7 @@
 
 
 <!-- Modals-->
+{% include 'expenses/planner-create-modal.html' %}
+{% include 'expenses/planner-multiple-delete-modal.html' %}
 
-<!-- Create RunningCosts Modal -->
-<div class="modal fade" id="createPlanModal" tabindex="-1" role="dialog"
-     aria-labelledby="createPlanModalLabel"
-     aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="createPlanModalLabel">Create</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{% url 'manager:planner-list-create' user_id=request.user.pk %}" method="post">
-                    {% csrf_token %}
-                    <div class="container">
-                        <div class="main-body">
-                            <div class="row gutters-sm">
-                                {% for field in form %}
-                                <div class="card-body">
-                                    {{ field }}
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-outline-success">Create</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--Multiple delete by selected incomes-->
-<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
-     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Are you sure you want to delete the selected incomes?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
-                <button type="submit" form="deleteMultiplePlanerForm" class="btn btn-outline-danger">Delete
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
 {% endblock %}
