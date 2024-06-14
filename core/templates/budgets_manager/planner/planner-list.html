@@ -9,7 +9,7 @@
 
     <div class="d-flex justify-content-between align-items-center mb-3">
         <button class="btn btn-outline-success" type="button" data-toggle="modal"
-                    data-target="#createPlanModal">
+                data-target="#createPlanModal">
             <i class="fas fa-plus"></i>
         </button>
         <div>
@@ -17,25 +17,10 @@
                     data-target="#confirmDeleteModal">
                 Delete Selected
             </button>
-            <button type="button" class="btn btn-outline-info" data-toggle="modal"
-                    data-target="#filterRunningCostsModal"> Filter
-            </button>
+            <!--            <button type="button" class="btn btn-outline-info" data-toggle="modal"-->
+            <!--                    data-target="#filterRunningCostsModal"> Filter-->
+            <!--            </button>-->
         </div>
-        <form action="{% url 'running-costs:running-costs-list' %}" method="get"
-              class="form-inline">
-            {% csrf_token %}
-            <div class="input-group row">
-                <label for="runningCostsSort" class="mr-2">Sort by:</label>
-                <select id="runningCostsSort" name="sort_by" class="form-control-sm "
-                        onchange="this.form.submit()">
-                    <option value="" hidden selected></option>
-                    <option value="all">All</option>
-                    {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                    <option value="{{ choice_value }}">{{ choice_label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </form>
     </div>
 
     <div class="card shadow mb-4">
@@ -62,31 +47,36 @@
                     </tr>
                     </thead>
                     <tbody id="running-costs-tbody">
-                    {% for plan in object_list %}
-                    <tr class="table-row" data-income-id="{{ cost.id }}">
-                        <td>
-                            <div class="form-check checkbox-container">
-                                <input class="form-check-input row-checkbox" type="checkbox"
-                                       value="{{ plan.id }}" name="selected_plans"
-                                       data-income-id="{{ plan.id }}" id="row-checkbox">
-                                <label class="form-check-label" for="markSource{{ plan.id }}"></label>
-                            </div>
-                        </td>
-                        <td>{{ plan.type }}</td>
-                        <td>{{ plan.category_expense }}</td>
-                        <td>{{ plan.category_running_cost }}</td>
-                        <td>{{ plan.target }}</td>
-                        <td>{{ plan.amount }}</td>
-                        <td>
-                            <div class="btn-group" role="group" aria-label="Actions">
-                                <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
-                                        data-target="#updateRunningCostModal{{ plan.id }}">
-                                    Edit
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
+                    <form id="deleteMultiplePlanerForm"
+                          action="{% url 'manager:planner-delete-multiple' user_id=request.user.pk %}"
+                          method="post">
+                        {% csrf_token %}
+                        {% for plan in object_list %}
+                        <tr class="table-row" data-income-id="{{ plan.id }}">
+                            <td>
+                                <div class="form-check checkbox-container">
+                                    <input class="form-check-input row-checkbox" type="checkbox"
+                                           value="{{ plan.id }}" name="planners_selected"
+                                           data-income-id="{{ plan.id }}" id="row-checkbox">
+                                    <label class="form-check-label" for="markSource{{ plan.id }}"></label>
+                                </div>
+                            </td>
+                            <td>{{ plan.type }}</td>
+                            <td>{{ plan.category_expense }}</td>
+                            <td>{{ plan.category_running_cost }}</td>
+                            <td>{{ plan.target }}</td>
+                            <td>{{ plan.amount }}</td>
+                            <td>
+                                <div class="btn-group" role="group" aria-label="Actions">
+                                    <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
+                                            data-target="#updateRunningCostModal{{ plan.id }}">
+                                        Edit
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </form>
                     </tbody>
                 </table>
             </div>
@@ -117,6 +107,16 @@
                 runningCostDiv.classList.add('hidden');
                 targetDiv.classList.add('hidden');
                 amountDiv.classList.add('hidden')
+            }
+            toggleLabelVisibility('id_category_expense', type !== 'wants');
+            toggleLabelVisibility('id_category_running_cost', type !== 'wants');
+            toggleLabelVisibility('id_target', type !== 'needs');
+        }
+
+        function toggleLabelVisibility(inputId, show) {
+            var label = document.querySelector('label[for="' + inputId + '"]');
+            if (label) {
+                label.style.display = show ? 'block' : 'none';
             }
         }
 
@@ -167,28 +167,28 @@
     </div>
 </div>
 
-<!--&lt;!&ndash;Multiple delete by selected incomes&ndash;&gt;-->
-<!--<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"-->
-<!--     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>-->
-<!--                <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--                    <span aria-hidden="true">&times;</span>-->
-<!--                </button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                Are you sure you want to delete the selected incomes?-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>-->
-<!--                <button type="submit" form="deleteMultipleRunningCostsForm" class="btn btn-outline-danger">Delete-->
-<!--                </button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+<!--Multiple delete by selected incomes-->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" role="dialog"
+     aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Confirm Deletion</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete the selected incomes?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                <button type="submit" form="deleteMultiplePlanerForm" class="btn btn-outline-danger">Delete
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 </div>
 {% endblock %}

@@ -60,6 +60,7 @@ class PlannerForm(forms.ModelForm):
                 attrs={
                     "class": "form-control form-control-user",
                     "id": "div_id_category_running_cost",
+                    "placeholder": "Select running cost category",
                 }
             ),
             "target": forms.Select(
@@ -71,6 +72,7 @@ class PlannerForm(forms.ModelForm):
             "amount": forms.NumberInput(
                 attrs={
                     "class": "form-control form-control-user",
+                    "placeholder": "Enter amount limit",
                 }
             ),
         }
