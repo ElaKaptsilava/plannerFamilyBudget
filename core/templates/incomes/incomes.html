@@ -54,7 +54,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:delete-multiple' %}">
+                    <form id="deleteMultipleIncomesForm" method="post" action="{% url 'incomes:incomes-delete-multiple' %}">
                         {% csrf_token %}
                         {% for income in object_list %}
 
