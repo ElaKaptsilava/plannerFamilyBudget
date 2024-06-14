@@ -25,12 +25,12 @@
 }
 
 .table-row.active {
-    background-color: #e0f7fa;
+    background-color: #fff7a2;
 }
 
 .late-payment {
     /*background-color: #ffe8a1;*/
-    border-color: #ffe8a1;
+    border-color: #fda052;
     border-style: solid;
     border-width: 3px;
 }
