@@ -1,40 +1,43 @@
 {% extends "index.html" %}
 {% load static %}
-{% block content %}
 {% load crispy_forms_tags %}
 
+{% block back %}
+<button type='button' class="btn btn-outline-light text-gray-600"
+        onclick="window.location.href='{% url 'targets:targets-list' %}'">
+    <i class="fas fa-fast-backward"></i>
+</button>
+{% endblock %}
+
+{% block actions %}
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="actionDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span class="mr-2 d-none d-lg-inline text-gray-600 medium">Actions</span>
+    </a>
+    <!-- Dropdown - Actions -->
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow animated--grow-in"
+         aria-labelledby="actionDropdown">
+        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createContributionsModal">
+            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Add contributions
+        </button>
+        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#confirmDeleteModal">
+            <i class="fas fa-minus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Delete Selected
+        </button>
+    </div>
+</li>
+{% endblock %}
+
+{% block content %}
 <div class="container-fluid">
-    <button type='button' class="btn btn-outline-info" onclick="window.location.href='{% url 'targets:targets-list' %}'">
-        <i class="fas fa-fast-backward"></i>
-    </button>
+    {% if object_list %}
+
     <div class="card shadow mb-4 mt-4">
-        <div class="card-header py-3 d-flex justify-content-between align-items-center">
-            <button type='button' class="btn btn-outline-success" data-toggle="modal" data-target="#createContributionsModal">
-                <i class="fas fa-plus"></i>
-            </button>
-
-            <button class="btn btn-outline-danger" data-toggle="modal"
-                    data-target="#confirmDeleteModal">
-                <i class="fas fa-minus"></i> Delete Selected
-            </button>
-            <!--            <button type="button" class="btn btn-outline-info" data-toggle="modal"-->
-            <!--                    data-target="#filteContributionsModal">-->
-            <!--                Filter-->
-            <!--            </button>-->
-            <!--                <div class="input-group row">-->
-            <!--                    <label for="expensesSort" class="mr-2">Sort by:</label>-->
-            <!--                    <select id="expensesSort" name="sort_by" class="form-control-sm "-->
-            <!--                            onchange="this.form.submit()">-->
-            <!--                        <option value="" hidden selected></option>-->
-            <!--                        <option value="all">All</option>-->
-            <!--                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}-->
-            <!--                        <option value="{{ choice_value }}">{{ choice_label }}</option>-->
-            <!--                        {% endfor %}-->
-            <!--                    </select>-->
-            <!--                </div>-->
-        </div>
-
         <div class="card-body">
+
             <div class="table-responsive">
                 <table class="table table-condensed" id="dataTable" width="100%" cellspacing="0">
                     <thead>
@@ -52,8 +55,10 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <form id="deleteMultipleContributionsForm" method="post" action="{% url 'targets:contributions-list-delete-multiple' pk=target_pk %}">
+                    <form id="deleteMultipleContributionsForm" method="post"
+                          action="{% url 'targets:contributions-list-delete-multiple' pk=target_pk %}">
                         {% csrf_token %}
+
                         {% for contribution in object_list %}
 
                         <tr class="table-row" data-income-id="{{ contribution.id }}">
@@ -71,12 +76,17 @@
                         </tr>
 
                         {% endfor %}
+
                     </form>
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
+    {% else %}
+    <p class="customMessage">
+        {{ custom_message }}</p>
+    {% endif %}
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </div>

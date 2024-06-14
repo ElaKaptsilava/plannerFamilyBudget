@@ -11,18 +11,26 @@ from runningCosts.models import RunningCost, RunningCostCategory
 
 
 class RunningCostView(LoginRequiredMixin, FilterView, FormView):
-    template_name = "runningCosts/running-costs-planner-list.html"
+    template_name = "runningCosts/running-costs-list.html"
     form_class = RunningCostForm
     model = RunningCost
     context_object_name = "runningCost"
     success_url = reverse_lazy("running-costs:running-costs-list")
     filterset_class = RunningCostFilter
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
         context["categories"] = RunningCostCategory.objects.all()
-        context["object_list"] = self.model.objects.filter(user=self.request.user)
+        context["object_list"] = self.get_queryset()
+        context["custom_message"] = (
+            "You haven't added any costs yet. Start by adding one!"
+        )
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

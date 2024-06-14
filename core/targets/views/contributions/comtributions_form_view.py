@@ -14,6 +14,9 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
     context_object_name = "targetContribution"
     form_class = TargetContributionForm
 
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
     def get_success_url(self) -> HttpResponseRedirect:
         target_pk = self.kwargs.get("pk")
         return reverse_lazy("targets:contributions-list", kwargs={"pk": target_pk})
@@ -23,6 +26,9 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         context["form"] = self.get_form()
         context["object_list"] = self.get_queryset()
         context["target_pk"] = self.kwargs["pk"]
+        context["custom_message"] = (
+            "You haven't added any contributions yet. Start by adding one!"
+        )
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

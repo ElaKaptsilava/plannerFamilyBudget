@@ -36,6 +36,11 @@ class IncomeFilter(django_filters.FilterSet):
     def filter_sort(
         self, queryset: QuerySet[Income], name: str, value: str
     ) -> QuerySet[Income]:
+        print(value)
+        print(queryset)
+        print(name)
+        print(self.request)
         if value:
+            print(queryset.order_by(value))
             return queryset.order_by(value)
         return queryset

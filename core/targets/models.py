@@ -22,9 +22,7 @@ class Saving(UserAbstractModel):
 
 
 class Target(UserAbstractModel):
-    image = models.ImageField(
-        upload_to=get_upload_path, default="/static/img/undraw_posting_photo.svg"
-    )
+    image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     target = models.CharField(max_length=255, help_text="A name of the target goal.")
     amount = models.FloatField(
         help_text="The amount of money required to achieve the target."

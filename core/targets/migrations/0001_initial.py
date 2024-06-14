@@ -62,7 +62,8 @@ class Migration(migrations.Migration):
                 (
                     "image",
                     models.ImageField(
-                        default="/static/img/undraw_posting_photo.svg",
+                        null=True,
+                        blank=True,
                         upload_to=accounts.models.get_upload_path,
                     ),
                 ),

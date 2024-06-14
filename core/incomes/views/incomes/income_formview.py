@@ -17,6 +17,11 @@ class IncomeView(LoginRequiredMixin, FilterView, FormView):
     form_class = IncomeForm
     success_url = reverse_lazy("incomes:incomes-list")
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.filter(user=self.request.user)
+
     def form_valid(self, form) -> HttpResponseRedirect:
         income = form.save(commit=False)
         income.user = self.request.user
@@ -27,7 +32,10 @@ class IncomeView(LoginRequiredMixin, FilterView, FormView):
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        context["object_list"] = self.model.objects.filter(user=self.request.user)
+        context["object_list"] = self.get_queryset()
+        context["custom_message"] = (
+            "You haven't added any incomes yet. Start by adding one!"
+        )
         return context
 
     def form_invalid(self, form):

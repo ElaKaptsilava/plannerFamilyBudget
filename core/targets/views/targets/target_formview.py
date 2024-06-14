@@ -15,10 +15,13 @@ class TargetView(LoginRequiredMixin, FormView):
     form_class = TargetForm
     success_url = reverse_lazy("targets:targets-list")
 
+    def get_queryset(self):
+        return self.model.objects.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = self.get_form()
-        context["object_list"] = self.model.objects.filter(user=self.request.user)
+        context["object_list"] = self.get_queryset()
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

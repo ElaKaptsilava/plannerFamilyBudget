@@ -18,11 +18,16 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
     success_url = reverse_lazy("expenses:expenses-list")
     filterset_class = ExpenseFilter
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
+        return self.filterset.qs.filter(user=self.request.user)
+
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
         context["form"] = ExpenseForm
         context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
-        context["object_list"] = self.model.objects.filter(user=self.request.user)
+        context["object_list"] = self.get_queryset()
         return context
 
     def form_valid(self, form) -> HttpResponse:

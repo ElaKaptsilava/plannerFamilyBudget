@@ -1,42 +1,39 @@
 {% extends "index.html" %}
 {% load static %}
-{% block content %}
 {% load crispy_forms_tags %}
 
+{% block actions %}
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="actionDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span class="mr-2 d-none d-lg-inline text-gray-600 medium">Actions</span>
+    </a>
+    <!-- Dropdown - Actions -->
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow animated--grow-in"
+         aria-labelledby="actionDropdown">
+        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createRunningCostsModal">
+            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Add cost
+        </button>
+        <button class="dropdown-item" type="button" data-toggle="modal"
+                data-target="#filterRunningCostsModal">
+            <i class="fas fa-filter fa-sm fa-fw mr-2 text-gray-400"></i>
+            Filter
+        </button>
+        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#confirmDeleteModal">
+            <i class="fas fa-minus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Delete Selected
+        </button>
+    </div>
+</li>
+{% endblock %}
+
+{% block content %}
 <!-- Begin Page Content -->
 <div class="container-fluid">
+    {% if object_list %}
     <!-- Messages -->
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <button class="btn btn-outline-success" data-toggle="modal" data-target="#createRunningCostsModal">
-            <i class="fas fa-plus"></i>
-        </button>
-        <div>
-            <button class="btn btn-outline-danger" type="button" data-toggle="modal"
-                    data-target="#confirmDeleteModal">
-                Delete Selected
-            </button>
-            <button type="button" class="btn btn-outline-info" data-toggle="modal"
-                    data-target="#filterRunningCostsModal"> Filter
-            </button>
-        </div>
-        <form action="{% url 'running-costs:running-costs-list' %}" method="get"
-              class="form-inline">
-            {% csrf_token %}
-            <div class="input-group row">
-                <label for="runningCostsSort" class="mr-2">Sort by:</label>
-                <select id="runningCostsSort" name="sort_by" class="form-control-sm "
-                        onchange="this.form.submit()">
-                    <option value="" hidden selected></option>
-                    <option value="all">All</option>
-                    {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
-                    <option value="{{ choice_value }}">{{ choice_label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-        </form>
-    </div>
-
     <div class="card shadow mb-4">
 
         <div class="card-body">
@@ -55,13 +52,13 @@
                         <th class="card-header">Name</th>
                         <th class="card-header">
                             <form id="filterRunningCostsForm" action="{% url 'running-costs:running-costs-list' %}"
-                                  method="get" class="form-inline">
+                                  method="get"
+                                  class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-0 my-md-0 mw-100">
                                 {% csrf_token %}
-                                <div class="input-group row">
-                                    <label for="categoryFilter" class="mr-2">Category:</label>
-                                    <select id="categoryFilter" name="category" class="form-control-sm "
+                                <div class="input-group">
+                                    <select id="categoryFilter" name="category" class="form-control form-control-sm"
                                             onchange="this.form.submit()">
-                                        <option value="" hidden selected></option>
+                                        <option value="" class="mr-2" hidden selected>Choice category</option>
                                         <option value="">All</option>
                                         {% for category in categories %}
                                         <option value="{{ category.pk }}">{{ category.name }}</option>
@@ -75,7 +72,25 @@
                         <th class="card-header">Period</th>
                         <th class="card-header">Payment deadline</th>
                         <th class="card-header">Next payment date</th>
-                        <th class="card-header"></th>
+                        <th class="card-header">
+                            <form action="{% url 'running-costs:running-costs-list' %}" method="get"
+                                  class="d-none d-sm-inline-block form-inline mr-auto ml-md-0 my-0 my-md-0 mw-100">
+                                {% csrf_token %}
+                                <div class="input-group">
+                                    <select id="runningCostsSort" name="sort_by" class="form-control form-control-sm"
+                                            style="font-size: 12px;"
+                                            onchange="this.form.submit()">
+                                        <option value="" hidden selected>Sort by</option>
+                                        <option value="all">All</option>
+                                        {% for choice_value, choice_label in filter.form.sort_by.field.choices %}
+                                        {% if choice_value %}
+                                        <option value="{{ choice_value }}">{{ choice_label }}</option>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </form>
+                        </th>
                     </tr>
                     </thead>
                     <tbody id="running-costs-tbody">
@@ -131,6 +146,10 @@
             </div>
         </div>
     </div>
+    {% else %}
+    <p class="customMessage">
+        {{ custom_message }}</p>
+    {% endif %}
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </div>
