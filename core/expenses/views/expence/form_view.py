@@ -9,7 +9,7 @@ from expenses.forms import ExpenseForm
 from expenses.models import Expense, ExpenseCategory
 
 
-class ExpenseView(LoginRequiredMixin, FilterView, FormView):
+class ExpensesView(LoginRequiredMixin, FilterView, FormView):
     model = Expense
     form_class = ExpenseForm
     template_name = "expenses/expenses-list.html"
