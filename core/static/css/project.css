@@ -1,4 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap'); /* CSS for modern table row styling */
+.munich {
+    font-family: Munich, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+}
 .table-row {
     transition: background-color 0.3s;
 }
@@ -210,8 +214,4 @@
 .appname:hover {
     color: #090d1b;
     font-size: 20px;
-}
-
-.card-body:hover {
-    background-color: #fff7a2;
 }

@@ -1,6 +1,7 @@
 from django.urls import path
 from expenses.views.category_expense import (
     category_create,
+    category_delete,
     category_list,
     category_update,
 )
@@ -36,5 +37,10 @@ urlpatterns = [
         "category/update/<int:pk>/",
         category_update.CategoryExpenseUpdateView.as_view(),
         name="category-detail-update",
+    ),
+    path(
+        "category/<int:pk>/delete/",
+        category_delete.CategoryExpenseDeleteView.as_view(),
+        name="category-detail-delete",
     ),
 ]

@@ -11,7 +11,7 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
     form_class = ExpenseCategoryForm
     model = ExpenseCategory
     template_name = "expenses/category-create-modal.html"
-    success_url = reverse_lazy("expenses:expenses-list")
+    success_url = reverse_lazy("expenses:category-list")
 
     def form_valid(self, form) -> HttpResponse:
         category = form.save(commit=False)
