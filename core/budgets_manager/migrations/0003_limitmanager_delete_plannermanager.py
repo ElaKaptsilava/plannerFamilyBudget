@@ -87,7 +87,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "user",
-                    models.OneToOneField(
+                    models.ForeignKey(
                         help_text="The user this budget is associated with.",
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,

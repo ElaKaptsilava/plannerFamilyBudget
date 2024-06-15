@@ -74,7 +74,7 @@ class LimitManager(models.Model):
         ("wants", "Wants"),
         ("needs", "Needs"),
     ]
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         help_text="The user this budget is associated with.",
