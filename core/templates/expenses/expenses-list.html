@@ -20,10 +20,14 @@
             <i class="fas fa-plus fa-sm fa-fw mr-2 text-success"></i>
             Add expenses
         </button>
-        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createCategoryModal">
+        <!--        <button class="dropdown-item" type="button" data-toggle="modal" data-target="#createCategoryModal">-->
+        <!--            <i class="fas fa-plus fa-sm fa-fw mr-2 text-success"></i>-->
+        <!--            Add category-->
+        <!--        </button>-->
+        <a class="dropdown-item" href="{% url 'expenses:category-list' %}">
             <i class="fas fa-plus fa-sm fa-fw mr-2 text-success"></i>
-            Add category
-        </button>
+            Categories list
+        </a>
         <button type="button" class="dropdown-item" data-toggle="modal"
                 data-target="#filterExpensesModal">
             <i class="fas fa-filter fa-sm fa-fw mr-2 text-primary"></i>

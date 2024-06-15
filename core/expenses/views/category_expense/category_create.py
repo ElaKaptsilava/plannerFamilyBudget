@@ -8,16 +8,16 @@ from expenses.models import ExpenseCategory
 
 
 class CategoryCreateView(LoginRequiredMixin, CreateView):
-    form = ExpenseCategoryForm
+    form_class = ExpenseCategoryForm
     model = ExpenseCategory
-    template_name = 'expenses/expenses-create-modal.html'
-    success_url = reverse_lazy('expenses:expenses-list')
+    template_name = "expenses/expenses-create-modal.html"
+    success_url = reverse_lazy("expenses:expenses-list")
 
     def form_valid(self, form) -> HttpResponse:
         category = form.save(commit=False)
         category.user = self.request.user
         category.save()
-        messages.success(self.request, "The category added successfully!")
+        messages.success(self.request, "The category was added successfully!")
         return super().form_valid(form)
 
     def form_invalid(self, form):

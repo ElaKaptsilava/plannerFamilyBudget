@@ -211,3 +211,7 @@
     color: #090d1b;
     font-size: 20px;
 }
+
+.card-body:hover {
+    background-color: #fff7a2;
+}

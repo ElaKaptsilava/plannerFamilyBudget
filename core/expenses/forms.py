@@ -32,13 +32,16 @@ class ExpenseCategoryForm(forms.ModelForm):
         fields = ["name", "description"]
         widgets = {
             "name": forms.TextInput(
-                attrs={"class": "form-control form-control-user text-secondary",
-                       "placeholder": "Enter category name",}
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "placeholder": "Enter category name",
+                }
             ),
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
                     "rows": 3,
                     "placeholder": "Enter description...",
-                })
+                }
+            ),
         }
