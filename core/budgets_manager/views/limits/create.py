@@ -1,18 +1,17 @@
+from budgets_manager.forms import LimitForm
+from budgets_manager.models import LimitManager
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from budgets_manager.models import PlannerManager
-from budgets_manager.forms import PlannerForm
 
-
-class PlannerCreateView(LoginRequiredMixin, CreateView):
-    model = PlannerManager
-    template_name = "budgets_manager/planner/planner-list.html"
-    context_object_name = "planner"
-    form_class = PlannerForm
-    success_url = reverse_lazy("manager:planner-list")
+class LimitCreateView(LoginRequiredMixin, CreateView):
+    model = LimitManager
+    template_name = "budgets_manager/limits/list.html"
+    context_object_name = "limit"
+    form_class = LimitForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -25,7 +24,10 @@ class PlannerCreateView(LoginRequiredMixin, CreateView):
         plan.budget_manager = self.request.user.budgetmanager
         plan.save()
         messages.success(self.request, "The plan added successfully!")
-        return super().form_valid(form)
+        success_url = reverse_lazy(
+            "manager:limits-list", kwargs={"user_id": self.request.user.id}
+        )
+        return HttpResponseRedirect(success_url)
 
     def form_invalid(self, form):
         messages.error(self.request, "Failed to add plan. Please check the form.")

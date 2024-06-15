@@ -1,27 +1,39 @@
 {% extends "index.html" %}
 {% load static %}
-{% block content %}
 {% load crispy_forms_tags %}
 
+{% block appname %}
+<p class="nav-item dropdown no-arrow appname">Limits</p>
+{% endblock %}
+
+{% block actions %}
+<li class="nav-item dropdown no-arrow">
+    <a class="nav-link dropdown-toggle" href="#" id="actionDropdown" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <i class="fas fa-fw fa-wrench"></i>
+        <span class="mr-2 d-none d-lg-inline text-gray-600 medium">Actions</span>
+    </a>
+    <!-- Dropdown - Actions -->
+    <div class="dropdown-menu dropdown-menu-right dropdown-menu-lg-left shadow animated--grow-in"
+         aria-labelledby="actionDropdown">
+        <button class="dropdown-item" type="button" data-toggle="modal"
+                data-target="#createLimitModal">
+            <i class="fas fa-plus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Add limit
+        </button>
+        <button class="dropdown-item" type="button" data-toggle="modal"
+                data-target="#confirmDeleteModal">
+            <i class="fas fa-minus fa-sm fa-fw mr-2 text-gray-400"></i>
+            Delete Selected
+        </button>
+    </div>
+</li>
+{% endblock %}
+
+{% block content %}
 <!-- Begin Page Content -->
 <div class="container-fluid">
     <!-- Messages -->
-
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <button class="btn btn-outline-success" type="button" data-toggle="modal"
-                data-target="#createPlanModal">
-            <i class="fas fa-plus"></i>
-        </button>
-        <div>
-            <button class="btn btn-outline-danger" type="button" data-toggle="modal"
-                    data-target="#confirmDeleteModal">
-                Delete Selected
-            </button>
-            <!--            <button type="button" class="btn btn-outline-info" data-toggle="modal"-->
-            <!--                    data-target="#filterRunningCostsModal"> Filter-->
-            <!--            </button>-->
-        </div>
-    </div>
 
     <div class="card shadow mb-4">
 
@@ -37,7 +49,6 @@
                                 <label class="form-check-label" for="selectAll">ALL</label>
                             </div>
                         </th>
-                        <!--                        <th class="card-header">Status</th>-->
                         <th class="card-header">Type</th>
                         <th class="card-header">Expense category</th>
                         <th class="card-header">Running cost category</th>
@@ -47,29 +58,29 @@
                     </tr>
                     </thead>
                     <tbody id="running-costs-tbody">
-                    <form id="deleteMultiplePlanerForm"
-                          action="{% url 'manager:planner-delete-multiple' user_id=request.user.pk %}"
+                    <form id="deleteMultipleLimitForm"
+                          action="{% url 'manager:limits-delete-multiple' user_id=request.user.pk %}"
                           method="post">
                         {% csrf_token %}
-                        {% for plan in object_list %}
-                        <tr class="table-row" data-income-id="{{ plan.id }}">
+                        {% for limit in object_list %}
+                        <tr class="table-row" data-income-id="{{ limit.id }}">
                             <td>
                                 <div class="form-check checkbox-container">
                                     <input class="form-check-input row-checkbox" type="checkbox"
-                                           value="{{ plan.id }}" name="planners_selected"
-                                           data-income-id="{{ plan.id }}" id="row-checkbox">
-                                    <label class="form-check-label" for="markSource{{ plan.id }}"></label>
+                                           value="{{ limit.id }}" name="selected"
+                                           data-income-id="{{ limit.id }}" id="row-checkbox">
+                                    <label class="form-check-label" for="markSource{{ limit.id }}"></label>
                                 </div>
                             </td>
-                            <td>{{ plan.type }}</td>
-                            <td>{{ plan.category_expense }}</td>
-                            <td>{{ plan.category_running_cost }}</td>
-                            <td>{{ plan.target }}</td>
-                            <td>{{ plan.amount }}</td>
+                            <td>{{ limit.type }}</td>
+                            <td>{{ limit.category_expense }}</td>
+                            <td>{{ limit.category_running_cost }}</td>
+                            <td>{{ limit.target }}</td>
+                            <td>{{ limit.amount }}</td>
                             <td>
                                 <div class="btn-group" role="group" aria-label="Actions">
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
-                                            data-target="#updateRunningCostModal{{ plan.id }}">
+                                            data-target="#updateRunningCostModal{{ limit.id }}">
                                         Edit
                                     </button>
                                 </div>
@@ -130,7 +141,7 @@
 
 
 <!-- Modals-->
-{% include 'planner/planner-create-modal.html' %}
-{% include 'planner/planner-multiple-delete-modal.html' %}
+{% include 'budgets_manager/limits/create-modal.html' %}
+{% include 'budgets_manager/limits/multiple-delete-modal.html' %}
 
 {% endblock %}

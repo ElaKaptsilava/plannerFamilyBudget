@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from .models import BudgetManager, PlannerManager
+from .models import BudgetManager, LimitManager
 
 
-@admin.register(PlannerManager)
+@admin.register(LimitManager)
 class PlanerAdmin(admin.ModelAdmin):
     pass
 

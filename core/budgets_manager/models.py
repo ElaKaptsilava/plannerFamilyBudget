@@ -1,10 +1,9 @@
 from decimal import Decimal
 
-from django.utils import timezone
-
 from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from expenses.models import ExpenseCategory
 from incomes.models import Income
 from runningCosts.models import RunningCostCategory
@@ -69,7 +68,7 @@ class BudgetManager(models.Model):
         )
 
 
-class PlannerManager(models.Model):
+class LimitManager(models.Model):
     BUDGET_TYPE_CHOICES = [
         ("", "Select Type"),
         ("wants", "Wants"),
@@ -125,7 +124,7 @@ class PlannerManager(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self) -> str:
-        return f"{self.user.username}'s Planer - {self.type} - {self.amount}"
+        return f"{self.user.username}'s Limit - {self.type} - {self.amount}"
 
     def __repr__(self) -> str:
-        return f"Planer(user={self.user.username!r}, save={self.type!r}, amount={self.amount!r})"
+        return f"Limit(user={self.user.username!r}, save={self.type!r}, amount={self.amount!r})"

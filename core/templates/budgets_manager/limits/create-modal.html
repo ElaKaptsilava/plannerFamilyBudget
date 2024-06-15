@@ -1,16 +1,16 @@
-<div class="modal fade" id="createPlanModal" tabindex="-1" role="dialog"
-     aria-labelledby="createPlanModalLabel"
+<div class="modal fade" id="createLimitModal" tabindex="-1" role="dialog"
+     aria-labelledby="createLimitModalLabel"
      aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createPlanModalLabel">Create</h5>
+                <h5 class="modal-title" id="createLimitModalLabel">Create</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'manager:planner-list-create' user_id=request.user.pk %}" method="post">
+                <form action="{% url 'manager:limits-list-create' user_id=request.user.pk %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">

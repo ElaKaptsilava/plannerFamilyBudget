@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import BudgetManager, PlannerManager
+from .models import BudgetManager, LimitManager
 
 
 class BudgetManagerForm(forms.ModelForm):
@@ -32,9 +32,9 @@ class BudgetManagerForm(forms.ModelForm):
         }
 
 
-class PlannerForm(forms.ModelForm):
+class LimitForm(forms.ModelForm):
     class Meta:
-        model = PlannerManager
+        model = LimitManager
         fields = [
             "type",
             "category_expense",

@@ -2,7 +2,6 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
-
 from runningCosts.forms import RunningCostForm
 from runningCosts.models import RunningCost
 
@@ -12,7 +11,7 @@ class RunningCostUpdateView(LoginRequiredMixin, UpdateView):
     model = RunningCost
     success_url = reverse_lazy("running-costs:running-costs-list")
     context_object_name = "runningCost"
-    template_name = "runningCosts/running-costs-planner-list.html"
+    template_name = "runningCosts/running-costs-list.html"
 
     def form_invalid(self, form):
         messages.error(
