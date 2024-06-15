@@ -1,36 +1,38 @@
 from django.urls import path
-from targets.views.targets import target_update, target_formview, target_delete_multiple
-from targets.views.contributions import (
-    comtributions_form_view,
-    contributions_delete_multiple,
+from targets.views.contributions.delete_multiple import (
+    TargetContributionsDeleteMultipleView,
 )
+from targets.views.contributions.form_view import TargetContributionsView
+from targets.views.targets.delete_multiple import TargetDeleteMultipleView
+from targets.views.targets.form_view import TargetsView
+from targets.views.targets.update import TargetUpdateView
 
 app_name = "targets"
 urlpatterns = [
-    path("list/", target_formview.TargetView.as_view(), name="targets-list"),
+    path("list/", TargetsView.as_view(), name="targets-list"),
     path(
         "list/update/<int:pk>/",
-        target_update.TargetUpdateView.as_view(),
+        TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
     path(
         "list/delete-multiple/",
-        target_delete_multiple.TargetDeleteMultipleView.as_view(),
+        TargetDeleteMultipleView.as_view(),
         name="targets-list-delete-multiple",
     ),
     path(
         "detail/<int:pk>/contributions/list/",
-        comtributions_form_view.TargetContributionsView.as_view(),
+        TargetContributionsView.as_view(),
         name="contributions-list",
     ),
     path(
         "detail/<int:pk>/contributions/create/",
-        comtributions_form_view.TargetContributionsView.as_view(),
+        TargetContributionsView.as_view(),
         name="contributions-list-create",
     ),
     path(
         "detail/<int:pk>/contributions/delete-multiple/",
-        contributions_delete_multiple.TargetContributionsDeleteMultipleView.as_view(),
+        TargetContributionsDeleteMultipleView.as_view(),
         name="contributions-list-delete-multiple",
     ),
 ]
