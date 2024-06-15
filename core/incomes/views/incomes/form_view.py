@@ -9,7 +9,7 @@ from incomes.forms import IncomeForm
 from incomes.models import Income
 
 
-class IncomeView(LoginRequiredMixin, FilterView, FormView):
+class IncomesView(LoginRequiredMixin, FilterView, FormView):
     template_name: str = "incomes/list.html"
     model = Income
     context_object_name = "incomes"
