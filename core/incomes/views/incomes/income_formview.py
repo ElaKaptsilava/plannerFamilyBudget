@@ -10,7 +10,7 @@ from incomes.models import Income
 
 
 class IncomeView(LoginRequiredMixin, FilterView, FormView):
-    template_name: str = "incomes/incomes.html"
+    template_name: str = "incomes/list.html"
     model = Income
     context_object_name = "incomes"
     filterset_class = IncomeFilter

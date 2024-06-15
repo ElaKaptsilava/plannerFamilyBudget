@@ -3,7 +3,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
-
 from incomes.forms import IncomeForm
 from incomes.models import Income
 
@@ -13,7 +12,7 @@ class IncomeUpdateView(LoginRequiredMixin, UpdateView):
     model = Income
     success_url = reverse_lazy("incomes:incomes-list")
     context_object_name = "incomes"
-    template_name: str = "incomes/incomes.html"
+    template_name: str = "incomes/list.html"
 
     def form_invalid(self, form):
         messages.error(
