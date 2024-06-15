@@ -1,5 +1,9 @@
 from django.urls import path
-from expenses.views.category_expense import category_create, category_list
+from expenses.views.category_expense import (
+    category_create,
+    category_list,
+    category_update,
+)
 from expenses.views.expence import (
     expense_formview,
     expense_multiple_delete,
@@ -27,5 +31,10 @@ urlpatterns = [
         "category/create/",
         category_create.CategoryCreateView.as_view(),
         name="category-list-create",
+    ),
+    path(
+        "category/update/<int:pk>/",
+        category_update.CategoryExpenseUpdateView.as_view(),
+        name="category-detail-update",
     ),
 ]

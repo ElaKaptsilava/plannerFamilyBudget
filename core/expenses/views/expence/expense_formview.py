@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django_filters.views import FilterView
 from expenses.filters import ExpenseFilter
-from expenses.forms import ExpenseCategoryForm, ExpenseForm
+from expenses.forms import ExpenseForm
 from expenses.models import Expense, ExpenseCategory
 
 
@@ -24,9 +24,8 @@ class ExpenseView(LoginRequiredMixin, FilterView, FormView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context["form"] = ExpenseForm
+        context["form"] = self.form_class
         context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
-        context["form_category"] = ExpenseCategoryForm
         context["object_list"] = self.get_queryset()
         context["custom_message"] = (
             "You haven't added any costs yet. Start by adding one!"

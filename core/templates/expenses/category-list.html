@@ -38,7 +38,9 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title text-primary">{{ category.name }}</h5>
                     <p class="card-text flex-grow-1">{{ category.description }}</p>
-                    <a href="#" class="btn btn-outline-primary mt-auto">View More</a>
+                    <button class="btn btn-outline-primary mt-auto" type="button" data-toggle="modal"
+                            data-target="#updateCategoryModal">View More
+                    </button>
                 </div>
             </div>
         </div>
@@ -48,5 +50,6 @@
 
 <!-- Modals-->
 {% include 'expenses/category-create-modal.html' %}
+{% include 'expenses/category-update-modal.html' %}
 
 {% endblock %}

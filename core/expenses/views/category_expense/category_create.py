@@ -10,7 +10,7 @@ from expenses.models import ExpenseCategory
 class CategoryCreateView(LoginRequiredMixin, CreateView):
     form_class = ExpenseCategoryForm
     model = ExpenseCategory
-    template_name = "expenses/expenses-create-modal.html"
+    template_name = "expenses/category-create-modal.html"
     success_url = reverse_lazy("expenses:expenses-list")
 
     def form_valid(self, form) -> HttpResponse:
