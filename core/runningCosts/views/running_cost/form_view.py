@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import FormView
 from django_filters.views import FilterView
-
 from runningCosts.filters import RunningCostFilter
 from runningCosts.forms import RunningCostForm
 from runningCosts.models import RunningCost, RunningCostCategory
