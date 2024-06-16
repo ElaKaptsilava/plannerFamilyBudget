@@ -2,10 +2,9 @@ from accounts.factories import CustomUserFactory
 from django.test import TestCase, tag
 from django.urls import reverse_lazy
 from django.utils.http import urlencode
+from expenses.models import Expense
+from expenses.tests.factories import ExpenseCategoryFactory, ExpenseFactory
 from rest_framework import status
-
-from .factories import ExpenseCategoryFactory, ExpenseFactory
-from .models import Expense
 
 
 class ExpenseListTestCase(TestCase):

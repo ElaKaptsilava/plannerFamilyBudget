@@ -2,7 +2,7 @@ from accounts.factories import CustomUserFactory
 from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase, tag
 from django.utils import timezone
-from expenses.factories import ExpenseCategoryFactory
+from expenses.tests.factories import ExpenseCategoryFactory
 from incomes.tests.factories import IncomeFactory
 
 

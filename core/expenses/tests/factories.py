@@ -1,6 +1,5 @@
 import factory
-
-from .models import Expense, ExpenseCategory
+from expenses.models import Expense, ExpenseCategory
 
 
 class ExpenseCategoryFactory(factory.django.DjangoModelFactory):
