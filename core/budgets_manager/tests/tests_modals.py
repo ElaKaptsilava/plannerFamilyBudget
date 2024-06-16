@@ -7,7 +7,7 @@ from incomes.tests.factories import IncomeFactory
 from runningCosts.tests.factories import RunningCostCategoryFactory, RunningCostFactory
 
 
-class BudgetManagerExpensesTestCase(TestCase):
+class NeedsLimitTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory()
         self.manager_budget = BudgetManagerFactory(user=self.user)
