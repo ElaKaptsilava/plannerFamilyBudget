@@ -1,5 +1,6 @@
 import factory
 from accounts.factories import CustomUserFactory
+from django.utils import timezone
 from targets.models import Target, TargetContribution
 
 
@@ -11,7 +12,7 @@ class TargetFactory(factory.django.DjangoModelFactory):
     target = factory.Faker("word")
     amount = factory.Faker("random_int", min=1000, max=10000)
     description = factory.Faker("text")
-    deadline = factory.Faker("date")
+    deadline = timezone.now() + timezone.timedelta(days=365)
 
 
 class TargetContributionFactory(factory.django.DjangoModelFactory):

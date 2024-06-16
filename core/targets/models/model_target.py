@@ -43,7 +43,17 @@ class Target(models.Model):
         self.deadline += timezone.timedelta(days=30)
         self.save()
 
-    # @property
-    # def saving_amount_in_month(self) -> int:
-    #     amount_of_month = self.deadline - timezone.now().date()
-    #     return
+    def calculate_months(self, today) -> int:
+        months = (
+            (self.deadline.year - today.year) * 12 + self.deadline.month - today.month
+        )
+        return int(months)
+
+    @property
+    def monthly_payment(self) -> float:
+        today = timezone.now().date()
+        months = self.calculate_months(today)
+        if months > 0:
+            remaining_amount = self.amount - self.total_contributions
+            return round(remaining_amount / months, 2)
+        return 0.0
