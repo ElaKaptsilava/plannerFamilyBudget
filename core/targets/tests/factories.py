@@ -1,7 +1,6 @@
 import factory
 from accounts.factories import CustomUserFactory
-
-from .models import Target, TargetContribution
+from targets.models import Target, TargetContribution
 
 
 class TargetFactory(factory.django.DjangoModelFactory):

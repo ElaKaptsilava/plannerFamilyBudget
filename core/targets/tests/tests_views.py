@@ -6,9 +6,8 @@ from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils import timezone
-
-from .factories import TargetContributionFactory, TargetFactory
-from .models import Target
+from targets.models import Target
+from targets.tests.factories import TargetContributionFactory, TargetFactory
 
 
 class TargetTestCase(TestCase):
