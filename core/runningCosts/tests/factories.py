@@ -1,6 +1,5 @@
 import factory
-
-from .models import RunningCost, RunningCostCategory
+from runningCosts.models import RunningCost, RunningCostCategory
 
 
 class RunningCostCategoryFactory(factory.django.DjangoModelFactory):
