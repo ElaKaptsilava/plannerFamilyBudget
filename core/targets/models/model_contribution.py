@@ -1,12 +1,11 @@
 from django.conf import settings
 from django.db import models
-from targets.models import Target
 
 
 class TargetContribution(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     target = models.ForeignKey(
-        Target,
+        "targets.Target",
         on_delete=models.CASCADE,
         help_text="The target this contribution is associated with.",
     )

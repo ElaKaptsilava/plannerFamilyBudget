@@ -19,7 +19,7 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1"]
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -57,7 +57,6 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS
 
-
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -78,7 +77,6 @@ if "test" not in sys.argv and DEBUG:
     INTERNAL_IPS = [
         "127.0.0.1",
     ]
-
 
 ROOT_URLCONF = "core.urls"
 
@@ -193,3 +191,8 @@ MESSAGE_TAGS = {
     messages.WARNING: "alert-warning",
     messages.ERROR: "alert-danger",
 }
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
+CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/0")
