@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from expenses.models import ExpenseCategory
 from incomes.models import Income
-from runningCosts.models import RunningCostCategory
+from runningCosts.models import RunningCost, RunningCostCategory
 from targets.models import Target
 
 
@@ -34,10 +34,9 @@ class BudgetManager(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         total_allocation = (
-            Decimal(self.savings_percentage)
-            + Decimal(self.wants_percentage)
-            + Decimal(self.needs_percentage)
+            self.savings_percentage + self.wants_percentage + self.needs_percentage
         )
+
         if total_allocation != 100:
             raise ValidationError(
                 "The total allocation for saves, wants, and needs must equal 100."
@@ -57,12 +56,33 @@ class BudgetManager(models.Model):
         self.monthly_income = self.calculate_monthly_income()
         self.save()
 
+    @property
+    def get_needs_limit(self):
+        return self.calculate_monthly_income * (self.needs_percentage / 100)
+
+    @property
+    def total_needs_expenses(self):
+        current_month = timezone.now().month
+        current_year = timezone.now().year
+
+        filtered_running_costs = RunningCost.objects.filter(
+            user=self.user,
+            next_payment_date__month=current_month,
+            next_payment_date__year=current_year,
+        )
+        total_cost = sum(map(lambda item: item.total_in_month, filtered_running_costs))
+
+        return total_cost
+
+    def is_within_needs_budget(self):
+        return self.total_needs_expenses <= self.get_needs_limit
+
     def __str__(self) -> str:
         return f"{self.user.first_name.upper()}'s Budget Plan"
 
     def __repr__(self) -> str:
         return (
-            f"Budget(user={self.user.username!r}, monthly_income={self.monthly_income!r}, "
+            f"Budget(user={self.user.username!r},"
             f"savings_percentage={self.savings_percentage!r}, wants_percentage={self.wants_percentage!r}, "
             f"needs_percentage={self.needs_percentage!r})"
         )
