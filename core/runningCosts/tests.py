@@ -2,7 +2,7 @@ import datetime
 
 from accounts.factories import CustomUserFactory
 from django.contrib.messages import get_messages
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 
 from .factories import RunningCostCategoryFactory, RunningCostFactory
@@ -194,7 +194,6 @@ class TestNextPaymentDateUpdate(TestCase):
 
         self.assertTrue(cost.is_completed)
 
-    @tag("x")
     def test_next_payment_date_is_updated_correctly_when_year_is_leap_and_paid_and_period_is_years(
         self,
     ):

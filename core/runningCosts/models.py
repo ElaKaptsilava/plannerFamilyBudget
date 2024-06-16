@@ -1,5 +1,5 @@
 import calendar
-from datetime import date, datetime, timedelta
+from datetime import date, datetime
 
 from accounts.models import UserAbstractModel
 from django.core.validators import MaxValueValidator, MinValueValidator
@@ -39,8 +39,6 @@ class RunningCostCategory(UserAbstractModel):
 
 class RunningCost(UserAbstractModel):
     class PeriodType(models.TextChoices):
-        DAYS = ("days", "Days")
-        WEEKS = ("weeks", "Weeks")
         MONTHS = ("months", "Months")
         YEARS = ("years", "Years")
 
@@ -96,6 +94,16 @@ class RunningCost(UserAbstractModel):
             return True
         return False
 
+    @property
+    def total_in_month(self) -> int:
+        calculate_total = {
+            self.PeriodType.MONTHS: round(self.amount / self.period),
+            self.PeriodType.YEARS: round(self.amount / self.period * 12),
+        }
+        if self.is_completed:
+            return 0
+        return calculate_total.get(self.period_type, 0)
+
     def save(self, *args, **kwargs) -> None:
         if self.is_paid:
             self.update_next_payment_date()
@@ -103,9 +111,6 @@ class RunningCost(UserAbstractModel):
 
     def update_next_payment_date(self) -> None:
         conditions = {
-            self.PeriodType.DAYS: self.next_payment_date + timedelta(days=self.period),
-            self.PeriodType.WEEKS: self.next_payment_date
-            + timedelta(weeks=self.period),
             self.PeriodType.MONTHS: self.add_months(
                 self.next_payment_date, self.period
             ),

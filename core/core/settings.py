@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 import sentry_sdk
@@ -188,6 +189,13 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 SESSION_COOKIE_AGE = 3600
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_SECURE = True
+USE_TZ = True
+TIME_ZONE = "UTC"
+
+
+def is_running_tests():
+    return "test" in sys.argv
+
 
 if DEBUG:
     INTERNAL_IPS = [
@@ -196,13 +204,7 @@ if DEBUG:
     MIDDLEWARE += [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
     ]
-    INSTALLED_APPS += [
-        "debug_toolbar",
-    ]
-    import mimetypes
-
-    mimetypes.add_type("application/javascript", ".js", True)
-
-    DEBUG_TOOLBAR_CONFIG = {
-        "INTERCEPT_REDIRECTS": False,
-    }
+    if not is_running_tests():
+        INSTALLED_APPS += [
+            "debug_toolbar",
+        ]
