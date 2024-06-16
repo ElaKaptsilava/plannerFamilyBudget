@@ -28,9 +28,7 @@ class TestLoginLogoutUser(TestCase):
         response = self.client.post(reverse_lazy("accounts:login"), data)
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(
-            response, reverse_lazy("home", kwargs={"user_id": self.user.pk})
-        )
+        self.assertRedirects(response, reverse_lazy("home"))
 
     def test_login_with_invalid_email(self):
         data: dict = {"email": "", "password": self.user_build.password}
@@ -71,11 +69,9 @@ class TestRegisterUser(TestCase):
         response = self.client.post(
             reverse_lazy("accounts:register"), self.cleaned_data
         )
-        user: CustomUser = CustomUser.objects.get(email=self.user_build.email)
+        CustomUser.objects.get(email=self.user_build.email)
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertRedirects(
-            response, reverse_lazy("home", kwargs={"user_id": user.pk})
-        )
+        self.assertRedirects(response, reverse_lazy("home"))
         self.assertTrue(
             get_user_model().objects.filter(email=self.user_build.email).exists()
         )

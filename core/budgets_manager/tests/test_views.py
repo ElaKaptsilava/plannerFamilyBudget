@@ -47,7 +47,7 @@ class BudgetManagerTestCase(TestCase):
         }
 
         create_budget_response = self.client.post(expected_budget_url, budgets_data)
-        expected_home_url = reverse_lazy("home", kwargs={"user_id": user.pk})
+        expected_home_url = reverse_lazy("home")
 
         self.assertEqual(create_budget_response.url, expected_home_url)
         self.assertEqual(create_budget_response.status_code, HTTPStatus.FOUND)

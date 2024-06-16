@@ -16,6 +16,4 @@ class BudgetManagerCreateView(LoginRequiredMixin, CreateView):
         budget = form.save(commit=False)
         budget.user = self.request.user
         budget.save()
-        return HttpResponseRedirect(
-            reverse_lazy("home", kwargs={"user_id": self.request.user.pk})
-        )
+        return HttpResponseRedirect(reverse_lazy("home"))

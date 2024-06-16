@@ -4,9 +4,9 @@ from django.shortcuts import render
 from django.views.generic import View
 
 
-class HomeView(LoginRequiredMixin, View):
+class HomeView(LoginRequiredMixin, View):  # TemplateView
     template_name: str = "accounts/dashboard.html"
     http_method_names: list = ["get"]
 
-    def get(self, request, user_id: int) -> HttpResponse:
-        return render(request, self.template_name, {"user_id": user_id})
+    def get(self, request) -> HttpResponse:
+        return render(request, self.template_name)

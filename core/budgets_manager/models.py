@@ -9,6 +9,30 @@ from incomes.models import Income
 from runningCosts.models import RunningCost, RunningCostCategory
 from targets.models import Target
 
+# class NeedsManager(BudgetManager):
+#     class Meta:
+#         proxy = True
+#
+#     @property
+#     def total_needs_expenses(self):
+#         pass
+#
+#     @property
+#     def get_needs_limit(self):
+#         pass
+#
+# class WantsManager(BudgetManager):
+#     class Meta:
+#         proxy = True
+#
+#     @property
+#     def total_needs_expenses(self):
+#         pass
+#
+#     @property
+#     def get_needs_limit(self):
+#         pass
+
 
 class BudgetManager(models.Model):
     user = models.OneToOneField(
