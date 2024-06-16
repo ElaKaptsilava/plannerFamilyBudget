@@ -1,10 +1,9 @@
 from accounts.factories import CustomUserFactory
 from django.test import TestCase, tag
 from django.urls import reverse, reverse_lazy
+from incomes.models import Income
+from incomes.tests.factories import IncomeFactory
 from rest_framework import status
-
-from .factories import IncomeFactory
-from .models import Income
 
 
 class IncomesTests(TestCase):

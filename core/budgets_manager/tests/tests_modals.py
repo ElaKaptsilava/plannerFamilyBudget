@@ -3,7 +3,7 @@ from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase, tag
 from django.utils import timezone
 from expenses.factories import ExpenseCategoryFactory
-from incomes.factories import IncomeFactory
+from incomes.tests.factories import IncomeFactory
 
 
 class BudgetManagerTestCase(TestCase):

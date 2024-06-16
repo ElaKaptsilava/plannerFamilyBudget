@@ -5,7 +5,7 @@ from accounts.models import CustomUser
 from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase, tag
 from django.urls import reverse_lazy
-from incomes.factories import IncomeFactory
+from incomes.tests.factories import IncomeFactory
 from runningCosts.factories import RunningCostCategoryFactory
 
 

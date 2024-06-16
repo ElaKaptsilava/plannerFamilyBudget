@@ -1,6 +1,5 @@
 import factory
-
-from .models import Income
+from incomes.models import Income
 
 
 class IncomeFactory(factory.django.DjangoModelFactory):
