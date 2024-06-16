@@ -1,4 +1,5 @@
 import factory
+from django.utils import timezone
 from runningCosts.models import RunningCost, RunningCostCategory
 
 
@@ -18,6 +19,6 @@ class RunningCostFactory(factory.django.DjangoModelFactory):
     amount = factory.Faker("random_int", min=1000, max=10000)
     period_type = RunningCost.PeriodType.MONTHS
     period = 1
-    next_payment_date = factory.Faker("date")
-    payment_deadline = factory.Faker("date")
+    next_payment_date = timezone.now()
+    payment_deadline = timezone.now() + timezone.timedelta(days=365)
     is_paid = False

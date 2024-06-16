@@ -4,7 +4,7 @@ from accounts.models import CustomUser
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
-from expenses.models import ExpenseCategory
+from expenses.models import Expense, ExpenseCategory
 from incomes.models import Income
 from runningCosts.models import RunningCost, RunningCostCategory
 from targets.models import Target
@@ -70,9 +70,18 @@ class BudgetManager(models.Model):
             next_payment_date__month=current_month,
             next_payment_date__year=current_year,
         )
-        total_cost = sum(map(lambda item: item.total_in_month, filtered_running_costs))
+        filtered_expenses = Expense.objects.filter(
+            user=self.user,
+            datetime__month=current_month,
+            datetime__year=current_year,
+        )
 
-        return total_cost
+        total_cost = sum(
+            map(lambda item: item.total_amount_in_month, filtered_running_costs)
+        )
+        total_expenses = sum(map(lambda item: item.amount, filtered_expenses))
+
+        return total_cost + total_expenses
 
     def is_within_needs_budget(self):
         return self.total_needs_expenses <= self.get_needs_limit

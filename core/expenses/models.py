@@ -21,11 +21,11 @@ class Expense(models.Model):
     amount = models.FloatField(default=0)
     datetime = models.DateTimeField(default=timezone.now)
 
+    class Meta:
+        ordering = ["-datetime"]
+
     def __str__(self) -> str:
         return str(self.amount)
 
     def __repr__(self) -> str:
         return f"Expense(amount={self.amount!r}, user={self.user!r}, category={self.category!r})"
-
-    class Meta:
-        ordering = ["-datetime"]

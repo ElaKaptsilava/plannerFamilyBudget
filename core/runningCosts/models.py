@@ -95,7 +95,7 @@ class RunningCost(UserAbstractModel):
         return False
 
     @property
-    def total_in_month(self) -> int:
+    def total_amount_in_month(self) -> int:
         calculate_total = {
             self.PeriodType.MONTHS: round(self.amount / self.period),
             self.PeriodType.YEARS: round(self.amount / self.period * 12),
