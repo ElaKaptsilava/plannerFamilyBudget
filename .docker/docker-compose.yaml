@@ -1,14 +1,4 @@
-version: '3.9'
-
 services:
-  nginx:
-    image: nginx:latest
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    volumes:
-      - ./.docker/default.conf:/etc/conf.d/default.conf
-      - static_volume:/app/core/django_static
   server:
     restart: unless-stopped
     build:
@@ -19,6 +9,7 @@ services:
       - ..:/app
     ports:
       - "8000:8000"
+    command: python core/manage.py runserver 0.0.0.0:8000
     environment:
       DEBUG: "True"
       CELERY_BROKER_URL: "redis://redis:6379/0"
@@ -48,7 +39,7 @@ services:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     expose:
-      - 5432
+      - "5432"
     healthcheck:
       test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 5s

@@ -1,7 +1,7 @@
-from core.celery import app
+from celery import shared_task
 
 
-@app.task(bind=True)
+@shared_task
 def update_target_deadlines():
     from django.core.management import call_command
 

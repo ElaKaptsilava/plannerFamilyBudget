@@ -21,6 +21,5 @@ RUN pip install poetry \
 
 COPY . /app/
 
-RUN poetry run python core/manage.py collectstatic --noinput
 
-CMD ["poetry", "run", "python", "core/manage.py", "runserver"]
+CMD ["python", "core/manage.py", "runserver"]

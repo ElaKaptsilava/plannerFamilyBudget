@@ -19,7 +19,13 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
+
+if os.environ.get("ALLOWED_HOSTS") is not None:
+    try:
+        ALLOWED_HOSTS += os.environ.get("ALLOWED_HOSTS").split(",")
+    except Exception:
+        print("Cant set ALLOWED_HOSTS, using default instead")
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -73,9 +79,6 @@ if "test" not in sys.argv and DEBUG:
     ]
     MIDDLEWARE += [
         "debug_toolbar.middleware.DebugToolbarMiddleware",
-    ]
-    INTERNAL_IPS = [
-        "127.0.0.1",
     ]
 
 ROOT_URLCONF = "core.urls"
@@ -192,7 +195,16 @@ MESSAGE_TAGS = {
     messages.ERROR: "alert-danger",
 }
 
+STATIC_URL = "/django_static/"
+STATIC_ROOT = BASE_DIR / "django_static"
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+FLOWER_PORT = 5555
+FLOWER_BASIC_AUTH = ("flower_username", "flower_password")
+
+# Celery configuration
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
 
 CELERY_BROKER_URL = os.environ.get("BROKER_URL", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("RESULT_BACKEND", "redis://localhost:6379/0")
