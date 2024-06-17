@@ -1,27 +1,45 @@
+version: '3.9'
+
 services:
+  nginx:
+    image: nginx:latest
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./.docker/default.conf:/etc/conf.d/default.conf
+      - static_volume:/app/core/django_static
   server:
     restart: unless-stopped
     build:
-      context: ..
+      context: ../
       dockerfile: .docker/Dockerfile
     volumes:
       - static_volume:/app/core/django_static
-      - .:/app/
-    expose:
-      - 8000
+      - ..:/app
+    ports:
+      - "8000:8000"
     environment:
-      DEBUG: ${DEBUG}
-      DJANGO_DB: postgres
-      POSTGRES_HOST: ${DB_HOST}
+      DEBUG: "True"
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      CELERY_RESULT_BACKEND: "redis://redis:6379/0"
+      DJANGO_DB: postgresql
+      POSTGRES_HOST: db
       POSTGRES_NAME: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_PORT: ${DB_PORT}
+      POSTGRES_PORT: 5432
     depends_on:
-        db:
-          condition: service_healthy
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      celery_worker:
+        condition: service_started
+      celery_beat:
+        condition: service_started
   db:
-    image: postgres:3.12.3-alpine
+    image: postgres:latest
     restart: unless-stopped
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -32,11 +50,62 @@ services:
     expose:
       - 5432
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "postgrest"]
+      test: [ "CMD", "pg_isready", "-U", "postgres" ]
       interval: 5s
       timeout: 30s
       retries: 6
+  redis:
+    image: redis:latest
+    restart: unless-stopped
+    expose:
+      - 6379
+  celery_worker:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    hostname: worker
+    entrypoint: celery
+    command: worker --loglevel=info
+    volumes:
+      - ..:/app
+    depends_on:
+      - redis
+    environment:
+      DEBUG: "True"
+      DJANGO_DB: postgresql
+      POSTGRES_HOST: db
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PORT: 5432
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      DJANGO_SETTINGS_MODULE: "core.settings"
+    restart: unless-stopped
+  celery_beat:
+    build:
+      context: ../
+      dockerfile: .docker/Dockerfile
+    hostname: beat
+    entrypoint: celery
+    command: beat --loglevel=info
+    volumes:
+      - ..:/app
+    depends_on:
+      - redis
+    environment:
+      DEBUG: "True"
+      DJANGO_DB: postgresql
+      POSTGRES_HOST: db
+      POSTGRES_NAME: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PORT: 5432
+      CELERY_BROKER_URL: "redis://redis:6379/0"
+      DJANGO_SETTINGS_MODULE: "core.settings"
+    restart: unless-stopped
+    expose:
+      - 5555
 volumes:
-  static_volume: {}
-  postgres_data: {}
+  static_volume: { }
+  postgres_data: { }
 
