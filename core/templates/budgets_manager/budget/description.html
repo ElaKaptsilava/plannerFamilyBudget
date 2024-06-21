@@ -1,0 +1,98 @@
+{% extends "index.html" %}
+{% load static %}
+{% load crispy_forms_filters %}
+{% load crispy_forms_tags %}
+
+{% block appname %}
+<p class="nav-item dropdown no-arrow appname">Budget Plan Description</p>
+<a href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}"
+   class="btn btn-outline-success btn-user float-right">Update</a>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <section>
+        <h2 class="sectionTitle">Plan for Your Needs {{ budget.needs_percentage }}%</h2>
+
+        <p class="descriptionBudget">This section covers your essential expenses. Aim to allocate up to 40% of your
+            after-tax income to these needs:</p>
+
+        <ul class="ul-custom">
+            <li>Groceries</li>
+            <li>Housing</li>
+            <li>Basic utilities (electricity, water, gas, internet)</li>
+            <li>Transportation</li>
+            <li>Insurance (health, car, etc.)</li>
+            <li>Minimum debt payments (loans, credit cards) (Anything extra goes towards savings or faster debt
+                repayment)
+            </li>
+            <li>Childcare or other work-related expenses</li>
+        </ul>
+
+        <p class="descriptionBudget">If your essential expenses exceed {{ needs.total_targets_amount_in_month }}%, you might need to temporarily adjust your
+            "wants" category to make ends meet.</p>
+    </section>
+
+    <section>
+        <h2 class="sectionTitle">Plan for Your Wants </h2>
+
+        <p class="descriptionBudget">This section includes discretionary spending on things you enjoy but aren't
+            essential for survival. You allocate around {{ budget.wants_percentage }}% of your income for wants, such as:</p>
+
+        <ul class="ul-custom">
+            <li>Dining out</li>
+            <li>Entertainment (movies, hobbies, etc.)</li>
+            <li>Clothing</li>
+            <li>Subscriptions (streaming services, gym memberships)</li>
+        </ul>
+    </section>
+
+    <section>
+        <p class="descriptionBudget">Sometimes, the line between needs and wants can be blurry. Ask yourself: "Is this
+            essential for my well-being or survival?"</p>
+    </section>
+
+    <section>
+        <h2 class="sectionTitle">Build in Flexibility (Wiggle Room)</h2>
+
+        <p class="descriptionBudget">Allocate a small percentage (around 5-10%) for unexpected expenses or occasional
+            treats. This "wiggle room" prevents feeling overly restricted by your budget.</p>
+    </section>
+
+    <section>
+        <h2 class="sectionTitle">Savings and Debt Repayment {{ budget.savings_percentage }}%</h2>
+
+        <p class="descriptionBudget">Aim to dedicate {{ budget.savings_percentage }}% or {{ saves. }} of your income towards savings and debt repayment. This might
+            include:</p>
+
+        <ul class="ul-custom">
+            <li>Emergency fund</li>
+            <li>Retirement savings</li>
+            <li>Debt payments beyond minimums</li>
+        </ul>
+
+        <p class="descriptionBudget">Remember, this is a guideline. You can adjust the percentages based on your
+            financial situation and goals. Regularly review and update your budget to reflect your changing needs and
+            income.</p>
+    </section>
+</div>
+
+{% block script %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const paragraphs = document.querySelectorAll('.descriptionBudget');
+        paragraphs.forEach(paragraph => {
+            paragraph.addEventListener('mouseenter', function () {
+                this.style.backgroundColor = '#f0f0f0';
+            });
+            paragraph.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = 'transparent';
+            });
+        });
+    });
+</script>
+{% endblock %}
+
+{% endblock %}

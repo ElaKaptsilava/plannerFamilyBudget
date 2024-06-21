@@ -53,7 +53,7 @@ class Target(models.Model):
     def monthly_payment(self) -> float:
         today = timezone.now().date()
         months = self.calculate_months(today)
-        if months > 0:
+        if months > 0 and not self.is_completed:
             remaining_amount = self.amount - self.total_contributions
             return round(remaining_amount / months, 2)
         return 0.0

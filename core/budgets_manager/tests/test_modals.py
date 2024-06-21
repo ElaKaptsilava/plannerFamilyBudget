@@ -1,5 +1,5 @@
 from accounts.factories import CustomUserFactory
-from budgets_manager.models import NeedsManager
+from budgets_manager.models import SavingManager
 from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase
 from django.utils import timezone
@@ -15,7 +15,7 @@ class NeedsLimitTestCase(TestCase):
         self.expenses_category = ExpenseCategoryFactory(user=self.user)
         self.running_cost_category = RunningCostCategoryFactory(user=self.user)
         self.incomes = IncomeFactory(user=self.user, date=timezone.now())
-        self.needs_manager = NeedsManager.objects.get(user=self.user)
+        self.needs_manager = SavingManager.objects.get(user=self.user)
 
     def test_calculate_monthly_income_when_user_add_more_incomes(self):
         self.assertEqual(
@@ -53,7 +53,9 @@ class NeedsLimitTestCase(TestCase):
         expenses = ExpenseFactory.create(
             user=self.user, category=self.expenses_category, datetime=timezone.now()
         )
-        self.assertEqual(self.needs_manager.total_needs_expenses, expenses.amount)
+        self.assertEqual(
+            self.needs_manager.total_targets_amount_in_month, expenses.amount
+        )
 
         cost = RunningCostFactory.create(
             user=self.user, category=self.running_cost_category
@@ -61,7 +63,8 @@ class NeedsLimitTestCase(TestCase):
         expected_total_needs_expenses = cost.amount + expenses.amount
 
         self.assertEqual(
-            self.needs_manager.total_needs_expenses, expected_total_needs_expenses
+            self.needs_manager.total_targets_amount_in_month,
+            expected_total_needs_expenses,
         )
 
         next_payment_date = timezone.now() + timezone.timedelta(days=60)
@@ -73,7 +76,8 @@ class NeedsLimitTestCase(TestCase):
         )
 
         self.assertEqual(
-            self.needs_manager.total_needs_expenses, expected_total_needs_expenses
+            self.needs_manager.total_targets_amount_in_month,
+            expected_total_needs_expenses,
         )
 
     def test_is_within_needs_budget(self):

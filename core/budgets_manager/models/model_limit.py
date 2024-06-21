@@ -1,5 +1,5 @@
 from accounts.models import CustomUser
-from budgets_manager.models.model_budget import BudgetManager
+from budgets_manager.models.budget import BudgetManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory

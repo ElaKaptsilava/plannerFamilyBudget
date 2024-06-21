@@ -1,4 +1,5 @@
 from accounts.views.profile.home import HomeView
+from budgets_manager.views import dash_app
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
@@ -17,6 +18,7 @@ urlpatterns = [
     path("running-costs/", include("runningCosts.urls"), name="running-costs"),
     path("targets/", include("targets.urls"), name="target"),
     path("manager/", include("budgets_manager.urls"), name="manager"),
+    path("earnings-data/", dash_app.earnings_data, name="earnings_data"),
 ]
 
 if settings.DEBUG:

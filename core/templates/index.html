@@ -65,7 +65,7 @@
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Custom Components:</h6>
                             <a class="collapse-item"
-                               href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}">Budget</a>
+                               href="{% url 'manager:budget-info' %}">Budget</a>
                             <a class="collapse-item"
                                href="{% url 'manager:limits-list' user_id=request.user.pk %}">Limits</a>
                         </div>
@@ -468,6 +468,7 @@
             </div>
         </div>
         <!-- Bootstrap core JavaScript-->
+        {% block script %}{% endblock %}
         <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
         <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
         <!-- Core plugin JavaScript-->

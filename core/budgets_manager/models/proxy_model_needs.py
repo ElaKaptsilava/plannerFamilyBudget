@@ -10,10 +10,10 @@ class NeedsManager(BudgetManager):
 
     @property
     def get_needs_limit(self):
-        return self.calculate_monthly_income * float(self.needs_percentage / 100)
+        return self.calculate_monthly_incomes * self.needs_percentage / 100
 
     @property
-    def total_needs_expenses(self):
+    def total_needs_amount_in_month(self):
         current_month = timezone.now().month
         current_year = timezone.now().year
 
@@ -37,4 +37,4 @@ class NeedsManager(BudgetManager):
 
     @property
     def is_within_needs_budget(self):
-        return self.total_needs_expenses <= self.get_needs_limit
+        return self.total_needs_amount_in_month <= self.get_needs_limit

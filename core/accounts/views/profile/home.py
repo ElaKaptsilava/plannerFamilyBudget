@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views.generic import View
 
 
-class HomeView(LoginRequiredMixin, View):  # TemplateView
+class HomeView(LoginRequiredMixin, View):
     template_name: str = "accounts/dashboard.html"
     http_method_names: list = ["get"]
 

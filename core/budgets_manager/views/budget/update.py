@@ -15,6 +15,4 @@ class UpdateBudgetView(LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         budget = form.save(commit=False)
         budget.save()
-        return HttpResponseRedirect(
-            reverse_lazy("home", kwargs={"user_id": self.request.user.pk})
-        )
+        return HttpResponseRedirect(reverse_lazy("home"))
