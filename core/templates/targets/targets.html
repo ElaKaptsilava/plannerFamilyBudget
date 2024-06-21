@@ -31,55 +31,56 @@
 
 {% block content %}
 
-<!-- Begin Page Content -->
 <div class="container-fluid">
-    {% if object_list %}
-    <div class="card-body justify-content-between align-items-center">
+    <div class="row">
         <form id="deleteMultipleTargetsForm" method="post"
               action="{% url 'targets:targets-list-delete-multiple' %}">
             {% csrf_token %}
-            <div class="card-group">
-                {% for target in object_list %}
-                <div class="card target-card shadow-sm mb-4">
-                    <div class="position-relative">
-                        <div class="form-check custom-checkbox position-absolute top-0 start-0">
-                            <input class="form-check-input row-checkbox" type="checkbox" value="{{ target.id }}"
-                                   name="selected_targets" id="checkbox{{ target.id }}">
-                            <label class="form-check-label" for="checkbox{{ target.id }}"></label>
-                        </div>
-                        {% if target.image %}
-                        <img class="card-img-top" src="{{ target.image }}" alt="Card image cap">
-                        {% endif %}
-                    </div>
+            {% if object_list %}
+            {% for target in object_list %}
+
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-warning shadow h-100 py-2">
                     <div class="card-body">
-                        <h5 class="card-title">{{ target.target }}</h5>
-                        <p class="card-text" style="white-space: pre-line;">{{ target.description }}</p>
-                        <h4 class="small font-weight-bold">Payout Details <span
-                                class="float-end">{{ target.progress_percentage }}%</span></h4>
-                        <div class="progress mt-3">
-                            <div class="progress-bar bg-info" role="progressbar"
-                                 style="width: {{ target.progress_percentage }}%"
-                                 aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
-                                 aria-valuemax="100"></div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <input class="form-check-input" type="checkbox" value="{{ target.id }}"
+                                       name="selected_targets" id="checkbox{{ target.id }}">
+                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                    {{ target.target}}
+                                </div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ target.deadline }}</div>
+                            </div>
+                            {% if target.description %}
+                            <div class="col-auto mt-2">
+                                <i class="fas fa-info-circle fa-1x text-gray-600">{{ target.description }}</i>
+                            </div>
+                            {% endif %}
+                            <div class="col mr-2 mt-2">
+                                <div class="progress mt-1 mr-4">
+                                    <div class="progress-bar bg-info" role="progressbar"
+                                         style="width: {{ target.progress_percentage }}%"
+                                         aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
+                                         aria-valuemax="100"></div>
+                                </div>
+                                <!--                            <h4 class="h5 mb-0 font-weight-bold text-gray-800"> <span-->
+                                <!--                                class="float-end">{{ target.progress_percentage }}%</span></h4>-->
+                            </div>
                         </div>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <a href="{% url 'targets:contributions-list' pk=target.pk %}"
-                               class="btn btn-outline-secondary mr-3">Contributions</a>
-                            <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                    data-target="#updateTargetModal{{ target.pk }}">Details
-                            </button>
-                        </div>
-                        <p class="card-text mt-3 text-end"><small class="text-muted">{{ target.deadline }}</small></p>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="{% url 'targets:contributions-list' pk=target.pk %}"
+                           class="btn btn-outline-secondary">Contributions</a>
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                data-target="#updateTargetModal{{ target.pk }}">Details
+                        </button>
                     </div>
                 </div>
-                {% endfor %}
             </div>
+            {% endfor %}
+            {% endif %}
         </form>
     </div>
-    {% else %}
-    <p class="customMessage">
-        {{ custom_message }}</p>
-    {% endif %}
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

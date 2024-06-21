@@ -18,7 +18,7 @@ urlpatterns = [
     path("running-costs/", include("runningCosts.urls"), name="running-costs"),
     path("targets/", include("targets.urls"), name="target"),
     path("manager/", include("budgets_manager.urls"), name="manager"),
-    path("earnings-data/", dash_app.earnings_data, name="earnings_data"),
+    path("earnings-data/", dash_app.EarningsDataView.as_view(), name="earnings_data"),
 ]
 
 if settings.DEBUG:
