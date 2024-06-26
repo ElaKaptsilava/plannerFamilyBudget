@@ -1,12 +1,18 @@
+from accounts.models import CustomUser
+from budgets_manager.models import BudgetManager, NeedsManager, SavingManager
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
-from django.shortcuts import render
-from django.views.generic import View
+from django.views.generic import ListView
 
 
-class HomeView(LoginRequiredMixin, View):
+class HomeView(LoginRequiredMixin, ListView):
+    model = CustomUser
     template_name: str = "accounts/dashboard.html"
     http_method_names: list = ["get"]
 
-    def get(self, request) -> HttpResponse:
-        return render(request, self.template_name)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["budget"] = BudgetManager.objects.get(user=self.request.user)
+        context["needs"] = NeedsManager.objects.get(user=self.request.user)
+        context["saves"] = SavingManager.objects.get(user=self.request.user)
+        print(context["saves"].total_targets_amount_in_month, "saves")
+        return context

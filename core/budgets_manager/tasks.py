@@ -4,7 +4,7 @@ from django.utils import timezone
 
 
 @shared_task
-def update_monthly_incomes():
+def create_monthly_incomes_modal():
     current_month = timezone.now().month
     current_year = timezone.now().year
 

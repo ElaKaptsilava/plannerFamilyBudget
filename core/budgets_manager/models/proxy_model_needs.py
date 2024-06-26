@@ -1,6 +1,5 @@
 from budgets_manager.models import BudgetManager
 from django.utils import timezone
-from expenses.models import Expense
 from runningCosts.models import RunningCost
 
 
@@ -22,18 +21,12 @@ class NeedsManager(BudgetManager):
             next_payment_date__month=current_month,
             next_payment_date__year=current_year,
         )
-        filtered_expenses = Expense.objects.filter(
-            user=self.user,
-            datetime__month=current_month,
-            datetime__year=current_year,
-        )
 
         total_cost = sum(
             map(lambda item: item.total_amount_in_month, filtered_running_costs)
         )
-        total_expenses = sum(map(lambda item: item.amount, filtered_expenses))
 
-        return total_cost + total_expenses
+        return total_cost
 
     @property
     def is_within_needs_budget(self):

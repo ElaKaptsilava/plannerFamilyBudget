@@ -7,13 +7,11 @@ from django.views import View
 class EarningsDataView(View):
     def get(self, request, *args, **kwargs):
         year = timezone.now().year
-        month = timezone.now().month
         budget = request.user.budgetmanager
         earnings = MonthlyIncomes.objects.filter(year=year, budget=budget)
         earns = [0] * 12
         for earning in earnings:
-            earns[earning.month - 1] = earning.amount
-        earns[month - 1] = budget.calculate_monthly_incomes
+            earns[earning.month - 1] = earning.total_incomes_sum
         data = {
             "data": earns,
         }

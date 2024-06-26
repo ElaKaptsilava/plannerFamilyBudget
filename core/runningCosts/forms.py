@@ -60,3 +60,15 @@ class RunningCostCategoryForm(forms.ModelForm):
     class Meta:
         model = RunningCostCategory
         fields = ["name", "description"]
+        widgets = {
+            "name": forms.TextInput(
+                attrs={"class": "form-control form-control-user text-secondary"}
+            ),
+            "description": forms.Textarea(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "rows": 3,
+                    "placeholder": "Enter description...",
+                }
+            ),
+        }

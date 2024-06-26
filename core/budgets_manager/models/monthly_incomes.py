@@ -1,8 +1,7 @@
-from decimal import Decimal
-
 from budgets_manager.models import BudgetManager
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from incomes.models import Income
 
 
 class MonthlyIncomes(models.Model):
@@ -14,10 +13,15 @@ class MonthlyIncomes(models.Model):
         null=True,
         blank=True,
     )
-    total_income = models.DecimalField(
-        max_digits=10, decimal_places=2, default=Decimal("0.00"), null=True, blank=True
-    )
 
     class Meta:
         unique_together = ["budget", "year", "month"]
         ordering = ["budget", "year", "month"]
+
+    @property
+    def total_incomes_sum(self) -> dict:
+        incomes = Income.objects.filter(
+            user=self.budget.user, date__year=self.year, date__month=self.month
+        )
+        total = incomes.aggregate(total=models.Sum("amount"))["total"]
+        return total

@@ -1,4 +1,5 @@
 from django.urls import path
+from runningCosts.views.category import CategoryCreateView, CategoryListView
 from runningCosts.views.running_cost.delete_multiple import (
     RunningCostDeleteMultipleView,
 )
@@ -18,5 +19,15 @@ urlpatterns = [
         "list/delete-multiple/",
         RunningCostDeleteMultipleView.as_view(),
         name="running-costs-list-delete-multiple",
+    ),
+    path(
+        "category/list/",
+        CategoryListView.as_view(),
+        name="category-list",
+    ),
+    path(
+        "category/list/create/",
+        CategoryCreateView.as_view(),
+        name="category-list-create",
     ),
 ]

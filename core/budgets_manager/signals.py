@@ -1,13 +1,15 @@
 from budgets_manager.models import BudgetManager, MonthlyIncomes
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 
 @receiver(post_save, sender=BudgetManager)
 def create_monthly_income(sender, instance, created, **kwargs):
-    if created:
+    year = timezone.now().year
+    month = timezone.now().month
+    if created and instance.user.profile_created:
         monthly_income, is_exist = MonthlyIncomes.objects.get_or_create(
-            budget=instance.budget
+            budget=instance.budget, year=year, month=month
         )
-        if not is_exist:
-            monthly_income.save()
+        monthly_income.save()
