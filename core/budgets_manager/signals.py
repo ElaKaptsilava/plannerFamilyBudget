@@ -8,7 +8,7 @@ from django.utils import timezone
 def create_monthly_income(sender, instance, created, **kwargs):
     year = timezone.now().year
     month = timezone.now().month
-    if created and instance.user.profile_created:
+    if created:
         monthly_income, is_exist = MonthlyIncomes.objects.get_or_create(
             budget=instance.budget, year=year, month=month
         )

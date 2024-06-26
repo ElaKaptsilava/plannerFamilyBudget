@@ -14,5 +14,4 @@ class HomeView(LoginRequiredMixin, ListView):
         context["budget"] = BudgetManager.objects.get(user=self.request.user)
         context["needs"] = NeedsManager.objects.get(user=self.request.user)
         context["saves"] = SavingManager.objects.get(user=self.request.user)
-        print(context["saves"].total_targets_amount_in_month, "saves")
         return context

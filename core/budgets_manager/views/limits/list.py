@@ -1,5 +1,6 @@
 from budgets_manager.forms import LimitForm
 from budgets_manager.models import LimitManager
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView
@@ -17,4 +18,6 @@ class LimitListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["object_list"] = self.get_queryset()
         context["form"] = LimitForm()
+        if not self.get_queryset().exists():
+            messages.info(self.request, "No limits found.")
         return context
