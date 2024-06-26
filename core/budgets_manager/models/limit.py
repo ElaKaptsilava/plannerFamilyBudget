@@ -50,6 +50,20 @@ class LimitManager(models.Model):
         help_text="Amount allocated to this budget entry.",
     )
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "category_running_cost"],
+                name="unique_user_category_running_cost",
+            ),
+            models.UniqueConstraint(
+                fields=["user", "category_expense"], name="unique_user_category_expense"
+            ),
+            models.UniqueConstraint(
+                fields=["user", "target"], name="unique_user_target"
+            ),
+        ]
+
     def save(self, *args, **kwargs) -> None:
         if self.type == "needs":
             if not self.category_expense or not self.category_running_cost:
