@@ -28,6 +28,8 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
         context["custom_message"] = (
             "You haven't added any contributions yet. Start by adding one!"
         )
+        if not self.get_queryset():
+            messages.info(self.request, "You haven't added any contributions yet.")
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

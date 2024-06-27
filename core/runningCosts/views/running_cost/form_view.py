@@ -30,6 +30,8 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
         context["custom_message"] = (
             "You haven't added any costs yet. Start by adding one!"
         )
+        if not self.get_queryset():
+            messages.info(self.request, "You haven't added any costs yet.")
         return context
 
     def form_valid(self, form) -> HttpResponseRedirect:

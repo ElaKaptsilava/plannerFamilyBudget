@@ -36,6 +36,8 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
         context["custom_message"] = (
             "You haven't added any incomes yet. Start by adding one!"
         )
+        if not self.get_queryset():
+            messages.info(self.request, "You haven't added any incomes yet.")
         return context
 
     def form_invalid(self, form):

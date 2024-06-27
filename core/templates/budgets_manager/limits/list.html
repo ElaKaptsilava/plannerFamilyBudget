@@ -31,115 +31,182 @@
 {% endblock %}
 
 {% block content %}
-<!-- Begin Page Content -->
-{% if object_list %}
+
 <div class="container-fluid">
-    <!-- Messages -->
+    <form id="deleteMultipleTargetsForm" method="post" action="{% url 'targets:targets-list-delete-multiple' %}">
+        {% csrf_token %}
+        <div class="row">
 
-    <div class="card shadow mb-4">
+            {% if object_list %}
 
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-condensed" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                    <tr>
-                        <th class="card-header"></th>
-                        <th class="card-header">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="selectAll">
-                                <label class="form-check-label" for="selectAll">ALL</label>
+            {% for limit in object_list %}
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-left-info shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="col mr-2 mb-4">
+                            <input class="form-check-input" type="checkbox" value="{{ target.id }}"
+                                   name="selected_targets" id="checkbox{{ target.id }}">
+                        </div>
+                        <div class="row no-gutters align-items-center">
+
+                            <div class="col mr-2">
+
+                                {% if limit.category_expense %}
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1">
+                                    {{ limit.category_expense }} ({{ limit.type }})
+                                </div>
+                                {% endif %}
+
+                                {% if limit.category_running_cost %}
+                                <div class="text-xl font-weight-bold text-warning text-uppercase mb-1">
+                                    {{ limit.category_running_cost }} ({{ limit.type }})
+                                </div>
+                                {% endif %}
+
+                                {% if limit.target %}
+                                <div class="text-xl font-weight-bold text-info text-uppercase mb-1">
+                                    {{ limit.target.target }} ({{ limit.type }})
+                                </div>
+                                {% endif %}
+
+                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ limit.amount }}</div>
                             </div>
-                        </th>
-                        <th class="card-header">Type</th>
-                        <th class="card-header">Expense category</th>
-                        <th class="card-header">Running cost category</th>
-                        <th class="card-header">Target</th>
-                        <th class="card-header">Amount</th>
-                        <th class="card-header"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="running-costs-tbody">
-                    <form id="deleteMultipleLimitForm"
-                          action="{% url 'manager:limits-delete-multiple' user_id=request.user.pk %}"
-                          method="post">
-                        {% csrf_token %}
-                        {% for limit in object_list %}
-                        <tr class="table-row" data-income-id="{{ limit.id }}">
-                            <td>
-                                <div class="form-check checkbox-container">
-                                    <input class="form-check-input row-checkbox" type="checkbox"
-                                           value="{{ limit.id }}" name="selected"
-                                           data-income-id="{{ limit.id }}" id="row-checkbox">
-                                    <label class="form-check-label" for="markSource{{ limit.id }}"></label>
-                                </div>
-                            </td>
-                            <td>{{ limit.type }}</td>
-                            <td>{{ limit.category_expense }}</td>
-                            <td>{{ limit.category_running_cost }}</td>
-                            <td>{{ limit.target }}</td>
-                            <td>{{ limit.amount }}</td>
-                            <td>
-                                <div class="btn-group" role="group" aria-label="Actions">
-                                    <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
-                                            data-target="#updateRunningCostModal{{ limit.id }}">
-                                        Edit
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </form>
-                    </tbody>
-                </table>
+                        </div>
+                        {{ limit.calculate_total_spent }}
+                        <div class="col mr-2 mb-4">
+                            <div class="progress mt-3">
+                                <div class="progress-bar {{ limit.within_limit }} " role="progressbar"
+                                     style="width: {{ limit.limit_percentage }}%"
+                                     aria-valuenow="{{ limit.limit_percentage }}" aria-valuemin="0"
+                                     aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-primary" data-toggle="modal"
+                                data-target="#updateTargetModal{{ target.pk }}">Details
+                        </button>
+                    </div>
+                </div>
+
             </div>
+            {% endfor %}
+            {% endif %}
         </div>
-    </div>
-    {% endif %}
+    </form>
     <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function showFields() {
-            var type = document.getElementById('id_type').value;
-            var expenseDiv = document.getElementById('div_id_category_expense');
-            var runningCostDiv = document.getElementById('div_id_category_running_cost');
-            var targetDiv = document.getElementById('div_id_target');
-            var amountDiv = document.getElementById('div_id_amount');
 
-            if (type === 'needs') {
-                expenseDiv.classList.remove('hidden');
-                runningCostDiv.classList.remove('hidden');
-                targetDiv.classList.add('hidden');
-                amountDiv.classList.remove('hidden')
-            } else if (type === 'wants') {
-                expenseDiv.classList.add('hidden');
-                runningCostDiv.classList.add('hidden');
-                targetDiv.classList.remove('hidden');
-                amountDiv.classList.remove('hidden')
-            } else {
-                expenseDiv.classList.add('hidden');
-                runningCostDiv.classList.add('hidden');
-                targetDiv.classList.add('hidden');
-                amountDiv.classList.add('hidden')
-            }
-            toggleLabelVisibility('id_category_expense', type !== 'wants');
-            toggleLabelVisibility('id_category_running_cost', type !== 'wants');
-            toggleLabelVisibility('id_target', type !== 'needs');
-        }
-
-        function toggleLabelVisibility(inputId, show) {
-            var label = document.querySelector('label[for="' + inputId + '"]');
-            if (label) {
-                label.style.display = show ? 'block' : 'none';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', function () {
-            showFields();
-        });
-
-        document.getElementById('id_type').addEventListener('change', showFields);
-    </script>
 </div>
+<!--&lt;!&ndash; Begin Page Content &ndash;&gt;-->
+<!--{% if object_list %}-->
+<!--<div class="container-fluid">-->
+<!--    &lt;!&ndash; Messages &ndash;&gt;-->
+
+<!--    <div class="card shadow mb-4">-->
+
+<!--        <div class="card-body">-->
+<!--            <div class="table-responsive">-->
+<!--                <table class="table table-condensed" id="dataTable" width="100%" cellspacing="0">-->
+<!--                    <thead>-->
+<!--                    <tr>-->
+<!--                        <th class="card-header"></th>-->
+<!--                        <th class="card-header">-->
+<!--                            <div class="form-check">-->
+<!--                                <input class="form-check-input" type="checkbox" id="selectAll">-->
+<!--                                <label class="form-check-label" for="selectAll">ALL</label>-->
+<!--                            </div>-->
+<!--                        </th>-->
+<!--                        <th class="card-header">Type</th>-->
+<!--                        <th class="card-header">Expense category</th>-->
+<!--                        <th class="card-header">Running cost category</th>-->
+<!--                        <th class="card-header">Target</th>-->
+<!--                        <th class="card-header">Amount</th>-->
+<!--                        <th class="card-header"></th>-->
+<!--                    </tr>-->
+<!--                    </thead>-->
+<!--                    <tbody id="running-costs-tbody">-->
+<!--                    <form id="deleteMultipleLimitForm"-->
+<!--                          action="{% url 'manager:limits-delete-multiple' user_id=request.user.pk %}"-->
+<!--                          method="post">-->
+<!--                        {% csrf_token %}-->
+<!--                        {% for limit in object_list %}-->
+<!--                        <tr class="table-row" data-income-id="{{ limit.id }}">-->
+<!--                            <td>-->
+<!--                                <div class="form-check checkbox-container">-->
+<!--                                    <input class="form-check-input row-checkbox" type="checkbox"-->
+<!--                                           value="{{ limit.id }}" name="selected"-->
+<!--                                           data-income-id="{{ limit.id }}" id="row-checkbox">-->
+<!--                                    <label class="form-check-label" for="markSource{{ limit.id }}"></label>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                            <td>{{ limit.type }}</td>-->
+<!--                            <td>{{ limit.category_expense }}</td>-->
+<!--                            <td>{{ limit.category_running_cost }}</td>-->
+<!--                            <td>{{ limit.target }}</td>-->
+<!--                            <td>{{ limit.amount }}</td>-->
+<!--                            <td>-->
+<!--                                <div class="btn-group" role="group" aria-label="Actions">-->
+<!--                                    <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"-->
+<!--                                            data-target="#updateRunningCostModal{{ limit.id }}">-->
+<!--                                        Edit-->
+<!--                                    </button>-->
+<!--                                </div>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                        {% endfor %}-->
+<!--                    </form>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--    {% endif %}-->
+<!--    <script src="{% static 'js/select-all-in-checkbox.js' %}"></script>-->
+<!--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
+<!--    <script>-->
+<!--        function showFields() {-->
+<!--            var type = document.getElementById('id_type').value;-->
+<!--            var expenseDiv = document.getElementById('div_id_category_expense');-->
+<!--            var runningCostDiv = document.getElementById('div_id_category_running_cost');-->
+<!--            var targetDiv = document.getElementById('div_id_target');-->
+<!--            var amountDiv = document.getElementById('div_id_amount');-->
+
+<!--            if (type === 'needs') {-->
+<!--                expenseDiv.classList.remove('hidden');-->
+<!--                runningCostDiv.classList.remove('hidden');-->
+<!--                targetDiv.classList.add('hidden');-->
+<!--                amountDiv.classList.remove('hidden')-->
+<!--            } else if (type === 'wants') {-->
+<!--                expenseDiv.classList.add('hidden');-->
+<!--                runningCostDiv.classList.add('hidden');-->
+<!--                targetDiv.classList.remove('hidden');-->
+<!--                amountDiv.classList.remove('hidden')-->
+<!--            } else {-->
+<!--                expenseDiv.classList.add('hidden');-->
+<!--                runningCostDiv.classList.add('hidden');-->
+<!--                targetDiv.classList.add('hidden');-->
+<!--                amountDiv.classList.add('hidden')-->
+<!--            }-->
+<!--            toggleLabelVisibility('id_category_expense', type !== 'wants');-->
+<!--            toggleLabelVisibility('id_category_running_cost', type !== 'wants');-->
+<!--            toggleLabelVisibility('id_target', type !== 'needs');-->
+<!--        }-->
+
+<!--        function toggleLabelVisibility(inputId, show) {-->
+<!--            var label = document.querySelector('label[for="' + inputId + '"]');-->
+<!--            if (label) {-->
+<!--                label.style.display = show ? 'block' : 'none';-->
+<!--            }-->
+<!--        }-->
+
+<!--        document.addEventListener('DOMContentLoaded', function () {-->
+<!--            showFields();-->
+<!--        });-->
+
+<!--        document.getElementById('id_type').addEventListener('change', showFields);-->
+<!--    </script>-->
+<!--</div>-->
 
 
 <!-- Modals-->
