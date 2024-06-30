@@ -7,6 +7,8 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
 
+from core.middleware import redirect_to_budget_create_view_if_budget_not_created
+
 
 class CustomLoginView(View):
     template_name: str = "registration/login.html"
@@ -16,6 +18,7 @@ class CustomLoginView(View):
         user: CustomUser = request.user
         if user.is_authenticated:
             messages.info(request, f"You are already logged in as {user.email}.")
+            redirect_to_budget_create_view_if_budget_not_created(request)
             return redirect(reverse_lazy("home"))
         else:
             messages.info(request, "Please log in to continue.")
@@ -33,6 +36,7 @@ class CustomLoginView(View):
             if user:
                 login(request, user)
                 messages.success(request, f"Welcome back, {user.email}!")
+                redirect_to_budget_create_view_if_budget_not_created(request)
                 return redirect(reverse_lazy("home"))
             else:
                 messages.error(request, "Invalid email or password.")

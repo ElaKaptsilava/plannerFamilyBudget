@@ -10,6 +10,6 @@ def create_monthly_income(sender, instance, created, **kwargs):
     month = timezone.now().month
     if created:
         monthly_income, is_exist = MonthlyIncomes.objects.get_or_create(
-            budget=instance.budget, year=year, month=month
+            budget=instance, year=year, month=month
         )
         monthly_income.save()

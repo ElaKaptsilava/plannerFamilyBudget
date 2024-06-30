@@ -31,7 +31,7 @@ class ExpensesView(LoginRequiredMixin, FilterView, FormView):
             "You haven't added any costs yet. Start by adding one!"
         )
         if not self.get_queryset():
-            messages.info(self.request, "You haven't added any costs yet.")
+            messages.info(self.request, "You haven't added any expenses yet.")
         return context
 
     def form_valid(self, form) -> HttpResponse:

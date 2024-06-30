@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.views.generic import ListView
@@ -16,4 +17,6 @@ class CategoryListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["categories"] = self.get_queryset()
         context["form_category"] = RunningCostCategoryForm()
+        if not self.get_queryset():
+            messages.info(self.request, "You haven't added any costs yet.")
         return context

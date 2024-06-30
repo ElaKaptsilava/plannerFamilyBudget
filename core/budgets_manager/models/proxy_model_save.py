@@ -8,7 +8,9 @@ class SavingManager(BudgetManager):
 
     @property
     def get_saving_limit(self):
-        return self.calculate_monthly_incomes * float(self.savings_percentage / 100)
+        return float(self.calculate_monthly_incomes) * float(
+            self.savings_percentage / 100
+        )
 
     @property
     def total_targets_amount_in_month(self):
