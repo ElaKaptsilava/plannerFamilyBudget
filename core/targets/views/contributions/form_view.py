@@ -14,7 +14,9 @@ class TargetContributionsView(LoginRequiredMixin, FormView):
     form_class = TargetContributionForm
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        return self.model.objects.filter(user=self.request.user).prefetch_related(
+            "target"
+        )
 
     def get_success_url(self) -> HttpResponseRedirect:
         target_pk = self.kwargs.get("pk")

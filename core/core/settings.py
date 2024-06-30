@@ -59,6 +59,7 @@ THIRD_PARTY_APPS = [
     "crispy_forms",
     "django_filters",
     "django_extensions",
+    "silk",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS
@@ -72,6 +73,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "core.middleware.BudgetCheckMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
 
 if "test" not in sys.argv and DEBUG:

@@ -18,10 +18,8 @@ class EarningsDataView(View):
         earns = [0] * 12
         for earning in earnings:
             earns[earning.month - 1] = earning.total_incomes_sum
-        data = {
-            "data": earns,
-        }
-        return JsonResponse(data)
+
+        return JsonResponse({"data": earns})
 
 
 class RevenueSourcesView(View):

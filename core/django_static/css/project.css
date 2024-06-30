@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap'); /* CSS for modern table row styling */
+.munich {
+    font-family: Munich, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+
+}
+
+.table-row {
+    transition: background-color 0.3s;
+}
+
+.table-row:hover {
+    background-color: #f8f9fa;
+}
+
+.table-link {
+    color: #007bff;
+    transition: color 0.3s;
+}
+
+.table-link:hover {
+    color: #0056b3;
+}
+
+.edit-button, .delete-button {
+    transition: transform 0.3s;
+}
+
+.edit-button:hover, .delete-button:hover {
+    transform: scale(1.1);
+}
+
+.table-row.active {
+    background-color: #fff7a2;
+}
+
+.late-payment {
+    /*background-color: #ffe8a1;*/
+    border-color: #fda052;
+    border-style: solid;
+    border-width: 3px;
+}
+
+.btn-circle-custom {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 0;
+}
+
+.luminous-indicator {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 0 0 var(--glow-color);
+    }
+    100% {
+        box-shadow: 0 0 2px 1px var(--glow-color);
+    }
+}
+
+.btn-success {
+    /*--glow-color: #01b301;*/
+    background-color: #01b301;
+    border-color: #01b301;
+}
+
+.btn-danger {
+    --glow-color: #ff0000;
+    background-color: var(--glow-color);
+}
+
+/* Container for cards */
+.card-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 20px;
+}
+
+/* Card styles */
+.target-card {
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.target-card:hover {
+    transform: translateY(-10px);
+}
+
+.target-card .card-body {
+    padding: 1.25rem;
+}
+
+.target-card .btn {
+    width: 100%;
+}
+
+.target-card img {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    object-fit: cover;
+}
+
+.custom-file-input {
+    display: none;
+}
+
+.custom-file-label {
+    display: block;
+    padding: 0.5rem;
+    cursor: pointer;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    background-color: #fff;
+}
+
+.btn-outline-danger {
+    border: 1px solid red;
+    color: red;
+}
+
+.btn-outline-danger:hover {
+    background-color: red;
+    color: white;
+}
+
+.bg-gradient-register {
+    background-color: rgb(253, 253, 253);
+}
+
+.progress {
+    position: relative;
+}
+
+.progress-text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: bold;
+    text-align: center; /* Center the text horizontally */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7); /* Add a shadow effect */
+}
+
+.progress-bar {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2); /* Add a shadow to the progress bar */
+    border-radius: 5px; /* Add border radius for a smoother appearance */
+    background: linear-gradient(to right, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000, #f8c000); /* Add gradient for a 3D effect */
+}
+
+#total {
+    color: white;
+    text-align: left;
+    padding-left: 10px;
+}
+
+#target-amount {
+    color: #f8c000;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.bg-depressed .progress-bar {
+    background-color: #4CAF50;
+    box-shadow: inset 0px -3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.bg-depressed .progress-bar:after {
+    content: "";
+    position: absolute;
+    top: -3px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: #fff;
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.3);
+}
+
+.hidden {
+    display: none;
+}
+
+.customMessage {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #01012e;
+    padding: 10px;
+    background-color: #e4f4ff;
+    border: 1px solid #7ea9ff;
+    border-radius: 5px;
+}
+
+.appname {
+    font-family: 'Munich', 'Bodoni', 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #283480;
+    padding: 10px 15px;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.appname:hover {
+    color: #090d1b;
+    font-size: 20px;
+}
+
+.titleBudget {
+    font-size: 32px;
+    color: #090d1b;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.descriptionBudget {
+    font-size: 18px;
+    color: #1c1c1c;
+    margin-bottom: 15px;
+}
+
+.ul-custom {
+    list-style-type: disc;
+    margin-left: 20px;
+    font-size: 16px;
+    color: #090d1b;
+}

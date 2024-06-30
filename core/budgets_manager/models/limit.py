@@ -1,10 +1,4 @@
-"""
-TODO list:
-    1. if elf.type == "wants"
-"""
-
-from accounts.models import CustomUser
-from budgets_manager.models.budget import BudgetManager
+from budgets_manager.models import BudgetManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -19,11 +13,7 @@ class LimitManager(models.Model):
         ("wants", "Wants"),
         ("needs", "Needs"),
     ]
-    user = models.ForeignKey(
-        CustomUser,
-        on_delete=models.CASCADE,
-        help_text="The user this budget is associated with.",
-    )
+
     budget_manager = models.ForeignKey(BudgetManager, on_delete=models.CASCADE)
     type = models.CharField(
         max_length=10, choices=BUDGET_TYPE_CHOICES, help_text="Type of budget category."
@@ -49,84 +39,89 @@ class LimitManager(models.Model):
         blank=True,
         help_text="Target category for 'wants' type budget.",
     )
-
     amount = models.DecimalField(
         max_digits=20,
         decimal_places=2,
         help_text="Amount allocated to this budget entry.",
     )
 
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "category_running_cost"],
-                name="unique_user_category_running_cost",
-            ),
-            models.UniqueConstraint(
-                fields=["user", "category_expense"], name="unique_user_category_expense"
-            ),
-            models.UniqueConstraint(
-                fields=["user", "target"], name="unique_user_target"
-            ),
-        ]
-
     @property
     def within_limit(self) -> str:
-        total_spent = self.__calculate_total_spent()
+        total_spent = self._calculate_total_spent()
         if total_spent < float(self.amount):
             return "bg-info"
-        if total_spent > float(self.amount):
+        elif total_spent > float(self.amount):
             return "bg-danger"
-        return "bg-warning"
+        else:
+            return "bg-warning"
 
     @property
     def limit_percentage(self) -> float:
-        return self.__calculate_total_spent() * 100 / float(self.amount)
+        return self._calculate_total_spent() * 100 / float(self.amount)
 
-    def __calculate_total_spent(self) -> float:
+    def _calculate_total_spent(self) -> float:
         today = timezone.now()
         total_spent = 0
+
         if self.type == "needs":
-            if self.category_expense:
-                total_spent += (
-                    self.user.expenses_set.filter(
-                        category=self.category_expense,
-                        datetime__year=today.year,
-                        datetime__month=today.month,
-                    ).aggregate(models.Sum("amount"))["amount__sum"]
-                    or 0
-                )
-            elif self.category_running_cost:
-                current_costs = self.user.running_cost_set.filter(
-                    next_payment_date__year=today.year,
-                    next_payment_date__month=today.month,
-                    category=self.category_running_cost,
-                )
-                for current_cost in current_costs:
-                    if not current_cost.is_completed:
-                        total_spent += current_cost.total_amount_in_month
+            total_spent = self._calculate_needs_spent(today)
         elif self.type == "wants":
-            targets = self.user.target_set.filter(
-                deadline__gte=today.date(), target=self.target.target
-            )
-            for target in targets:
-                total_spent += float(target.monthly_payment)
+            total_spent = self._calculate_wants_spent(today)
+
         return total_spent
 
-    def save(self, *args, **kwargs) -> None:
-        if self.type == "needs":
-            if not self.category_expense or not self.category_running_cost:
-                raise ValidationError(
-                    "For 'needs' type, either category_expense or category_running_cost must be set."
-                )
-        elif self.type == "wants":
-            if not self.target:
-                raise ValidationError("For 'wants' type, target must be set.")
+    def _calculate_needs_spent(self, today):
+        total_spent = 0
 
+        if self.category_expense:
+            total_spent += (
+                self.budget_manager.user.expense_set.filter(
+                    category=self.category_expense,
+                    datetime__year=today.year,
+                    datetime__month=today.month,
+                ).aggregate(models.Sum("amount"))["amount__sum"]
+                or 0
+            )
+        elif self.category_running_cost:
+            current_costs = self.budget_manager.user.runningcost_set.prefetch_related(
+                "category"
+            ).filter(
+                next_payment_date__year=today.year,
+                next_payment_date__month=today.month,
+                category=self.category_running_cost,
+            )
+            total_spent += sum(
+                current_cost.total_amount_in_month
+                for current_cost in current_costs
+                if not current_cost.is_completed
+            )
+
+        return total_spent
+
+    def _calculate_wants_spent(self, today):
+        targets = self.budget_manager.user.target_set.filter(
+            deadline__gte=today.date(), target=self.target
+        )
+        return sum(target.monthly_payment for target in targets)
+
+    def save(self, *args, **kwargs) -> None:
+        self._validate_budget_type()
         super().save(*args, **kwargs)
 
+    def _validate_budget_type(self):
+        if self.type == "needs" and not (
+            self.category_expense or self.category_running_cost
+        ):
+            raise ValidationError(
+                "For 'needs' type, either category_expense or category_running_cost must be set."
+            )
+        elif self.type == "wants" and not self.target:
+            raise ValidationError("For 'wants' type, target must be set.")
+
     def __str__(self) -> str:
-        return f"{self.user.username}'s Limit - {self.type} - {self.amount}"
+        return (
+            f"{self.budget_manager.user.username}'s Limit - {self.type} - {self.amount}"
+        )
 
     def __repr__(self) -> str:
-        return f"Limit(user={self.user.username!r}, save={self.type!r}, amount={self.amount!r})"
+        return f"Limit(user={self.budget_manager.user.username!r}, type={self.type!r}, amount={self.amount!r})"

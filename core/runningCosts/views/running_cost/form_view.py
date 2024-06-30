@@ -20,7 +20,9 @@ class RunningCostView(LoginRequiredMixin, FilterView, FormView):
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-        return self.filterset.qs.filter(user=self.request.user)
+        return self.filterset.qs.filter(user=self.request.user).prefetch_related(
+            "category"
+        )
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)

@@ -15,7 +15,9 @@ class TargetsView(LoginRequiredMixin, FormView):
     success_url = reverse_lazy("targets:targets-list")
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        return self.model.objects.filter(user=self.request.user).prefetch_related(
+            "user", "targetcontribution_set"
+        )
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)

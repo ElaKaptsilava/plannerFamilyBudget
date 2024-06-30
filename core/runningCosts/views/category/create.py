@@ -13,10 +13,13 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
     template_name = "runningCosts/category-create-modal.html"
     success_url = reverse_lazy("running-costs:category-list")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_category"] = RunningCostCategoryForm()
+        return context
+
     def form_valid(self, form) -> HttpResponse:
-        category = form.save(commit=False)
-        category.user = self.request.user
-        category.save()
+        form.instance.user = self.request.user
         messages.success(self.request, "The category was added successfully!")
         return super().form_valid(form)
 

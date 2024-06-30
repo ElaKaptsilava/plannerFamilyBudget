@@ -21,7 +21,7 @@ urlpatterns = [
         name="budget-detail-update",
     ),
     path(
-        "<int:user_id>/limits/list/",
+        "limits/list/",
         LimitListView.as_view(),
         name="limits-list",
     ),

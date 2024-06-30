@@ -9,6 +9,7 @@ from incomes.models import Income
 
 
 class BudgetManager(models.Model):
+    MAX_ALLOCATION = 100
     user = models.OneToOneField(
         CustomUser,
         on_delete=models.CASCADE,
@@ -35,7 +36,7 @@ class BudgetManager(models.Model):
             self.savings_percentage + self.wants_percentage + self.needs_percentage
         )
 
-        if total_allocation != 100:
+        if total_allocation != self.MAX_ALLOCATION:
             raise ValidationError(
                 "The total allocation for saves, wants, and needs must equal 100."
             )

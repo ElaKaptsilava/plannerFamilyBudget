@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from budgets_manager.models import BudgetManager
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
@@ -6,7 +8,15 @@ from incomes.models import Income
 
 class MonthlyIncomes(models.Model):
     budget = models.ForeignKey(BudgetManager, on_delete=models.CASCADE)
-    year = models.IntegerField(help_text="Enter Year", null=True, blank=True)
+    year = models.IntegerField(
+        help_text="Enter Year",
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(1900),
+            MaxValueValidator(datetime.now().year + 100),
+        ],
+    )
     month = models.IntegerField(
         help_text="Enter Month",
         validators=[MinValueValidator(1), MaxValueValidator(12)],
