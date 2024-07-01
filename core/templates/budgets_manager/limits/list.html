@@ -26,12 +26,16 @@
             <i class="fas fa-minus fa-sm fa-fw mr-2 text-gray-400"></i>
             Delete Selected
         </button>
+        <button class="dropdown-item" type="button" data-toggle="modal"
+                data-target="#createFilterLimitModal">
+            <i class="fas fa-filter fa-sm fa-fw mr-2 text-gray-400"></i>
+            Filter
+        </button>
     </div>
 </li>
 {% endblock %}
 
 {% block content %}
-
 <div class="container-fluid">
     <form id="deleteMultipleTargetsForm" method="post" action="{% url 'targets:targets-list-delete-multiple' %}">
         {% csrf_token %}
@@ -65,14 +69,14 @@
                                 </div>
 
 
-
                                 <div class="h5 mb-0 font-weight-bold text-gray-800">{{ limit.amount }}</div>
                             </div>
                         </div>
                         {{ limit.calculate_total_spent }}
                         <div class="col mr-2 mb-4">
                             <div class="progress mt-3">
-                                <div class="progress-bar-animated bg-{{ limit.limit_percentage_label }} " role="progressbar"
+                                <div class="progress-bar-animated bg-{{ limit.limit_percentage_label }} "
+                                     role="progressbar"
                                      style="width: {{ limit.limit_percentage }}%"
                                      aria-valuenow="{{ limit.limit_percentage }}" aria-valuemin="0"
                                      aria-valuemax="100"></div>
@@ -97,9 +101,9 @@
 </div>
 
 
-
 <!-- Modals-->
 {% include 'budgets_manager/limits/create-modal.html' %}
+{% include 'budgets_manager/limits/filter-modal.html' %}
 {% include 'budgets_manager/limits/multiple-delete-modal.html' %}
 
 {% endblock %}

@@ -5,10 +5,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import QuerySet
 from django.utils import timezone
+from expenses.models import Expense
 from incomes.models import Income
 
 
 class BudgetManager(models.Model):
+    TODAY = timezone.now()
     MAX_ALLOCATION = 100
     user = models.OneToOneField(
         CustomUser,
@@ -43,15 +45,15 @@ class BudgetManager(models.Model):
         super().save(*args, **kwargs)
 
     def _get_current_year_incomes(self) -> QuerySet[Income]:
-        current_year = timezone.now().year
-        current_incomes = Income.objects.filter(user=self.user, date__year=current_year)
+        current_incomes = Income.objects.filter(
+            user=self.user, date__year=self.TODAY.year
+        )
         return current_incomes
 
     @property
     def calculate_monthly_incomes(self) -> Decimal:
-        current_month = timezone.now().month
         monthly_incomes = self._get_current_year_incomes().filter(
-            date__month=current_month
+            date__month=self.TODAY.month, date__year=self.TODAY.year
         ).aggregate(monthly_incomes=models.Sum("amount"))["monthly_incomes"] or Decimal(
             "0.0"
         )
@@ -63,6 +65,19 @@ class BudgetManager(models.Model):
             annual_incomes=models.Sum("amount")
         )["annual_incomes"] or Decimal("0.0")
         return annual_incomes
+
+    @property
+    def calculate_monthly_expenses(self) -> float:
+        get_filtered_expenses = Expense.objects.filter(
+            user=self.user,
+            datetime__year=self.TODAY.year,
+            datetime__month=self.TODAY.month,
+        )
+        total = (
+            get_filtered_expenses.aggregate(total=models.Sum("amount"))["total"]
+            or Decimal()
+        )
+        return total
 
     def __str__(self) -> str:
         return f"{self.user.first_name.upper()}'s Budget Plan"

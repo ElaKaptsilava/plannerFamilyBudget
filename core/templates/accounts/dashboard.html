@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings (Monthly)
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Earnings ({{ budget.TODAY.date|date:"F Y" }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ budget.calculate_monthly_incomes }}
@@ -35,7 +35,7 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Earnings (Annual)
+                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Earnings ({{ budget.TODAY.date.year }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                 {{ budget.calculate_annual_incomes }}
@@ -53,11 +53,10 @@
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold text-{{ needs.is_within_needs_budget }} text-uppercase mb-1">Total / limit needs
-                                amount (Monthly)
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Expenses ({{ budget.TODAY.date|date:"F Y" }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ needs.total_needs_amount_in_month }} / {{ needs.get_needs_limit }}
+                                {{ budget.calculate_monthly_expenses }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -122,7 +121,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview ({{ budget.TODAY.date.year }})</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle"
                            href="#"
@@ -156,7 +155,7 @@
             <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources ({{ budget.TODAY.date|date:"F Y" }})</h6>
                     <div class="dropdown no-arrow">
                         <a class="dropdown-toggle"
                            href="#"
