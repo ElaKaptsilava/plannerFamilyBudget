@@ -40,7 +40,7 @@
 
             {% for target in object_list %}
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-info shadow h-100 py-2">
+                <div class="card border-left-{{ target.deadline_is_overdue }} shadow h-100 py-2">
                     <div class="card-body">
                         <div class="col mr-2 mb-4">
                             <input class="form-check-input" type="checkbox" value="{{ target.id }}"
@@ -48,10 +48,10 @@
                         </div>
                         <div class="row no-gutters align-items-center">
                             <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                <div class="text-xs font-weight-bold text-{{ target.deadline_status_label }} text-uppercase mb-1">
                                     {{ target.target}}
                                 </div>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ target.deadline }}</div>
+                                <div class="h5 mb-0 font-weight-bold text-{{ target.deadline_status_label }}">{{ target.deadline }}</div>
                             </div>
                         </div>
 
@@ -62,7 +62,7 @@
                         {% endif %}
                         <div class="col mr-2">
                             <div class="progress mt-3">
-                                <div class="progress-bar bg-info" role="progressbar"
+                                <div class="progress-bar-animated bg-{{ target.completed_status_label }}" role="progressbar"
                                      style="width: {{ target.progress_percentage }}%"
                                      aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
                                      aria-valuemax="100"></div>

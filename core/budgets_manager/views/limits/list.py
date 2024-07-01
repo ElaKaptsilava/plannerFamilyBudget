@@ -15,7 +15,11 @@ class LimitListView(LoginRequiredMixin, ListView):
         return (
             LimitManager.objects.filter(budget_manager__user=self.request.user)
             .select_related("budget_manager")
-            .prefetch_related("category_expense", "category_running_cost", "target")
+            .prefetch_related(
+                "category_expense",
+                "category_running_cost",
+                "target",
+            )
         )
 
     def get_context_data(self, **kwargs) -> dict:

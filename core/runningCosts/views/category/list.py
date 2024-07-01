@@ -11,7 +11,9 @@ class CategoryListView(LoginRequiredMixin, ListView):
     template_name = "runningCosts/category-list.html"
 
     def get_queryset(self) -> QuerySet[RunningCostCategory]:
-        return self.model.objects.filter(user=self.request.user)
+        return self.model.objects.prefetch_related("running_costs").filter(
+            user=self.request.user
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

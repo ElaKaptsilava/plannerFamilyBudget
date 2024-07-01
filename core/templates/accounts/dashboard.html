@@ -48,13 +48,12 @@
                 </div>
             </div>
         </div>
-        {% for bg, text in needs.is_within_needs_budget %}
         <div class="col-xl-3 col-md-6 mb-4">
-            <div class="card {{ bg }} shadow h-100 py-2">
+            <div class="card border-left-{{ needs.is_within_needs_budget }} shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
-                            <div class="text-xs font-weight-bold {{ text }} text-uppercase mb-1">Total / limit targets
+                            <div class="text-xs font-weight-bold text-{{ needs.is_within_needs_budget }} text-uppercase mb-1">Total / limit needs
                                 amount (Monthly)
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
@@ -68,7 +67,6 @@
                 </div>
             </div>
         </div>
-        {% endfor %}
         <!-- Earnings (Monthly) Card Example -->
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-info shadow h-100 py-2">

@@ -6,6 +6,8 @@ from expenses.models import ExpenseCategory
 from runningCosts.models import RunningCostCategory
 from targets.models import Target
 
+from core.constants import labels
+
 
 class LimitManager(models.Model):
     BUDGET_TYPE_CHOICES = [
@@ -46,18 +48,26 @@ class LimitManager(models.Model):
     )
 
     @property
-    def within_limit(self) -> str:
-        total_spent = self._calculate_total_spent()
-        if total_spent < float(self.amount):
-            return "bg-info"
-        elif total_spent > float(self.amount):
-            return "bg-danger"
-        else:
-            return "bg-warning"
+    def within_limit(self) -> bool:
+        return self._calculate_total_spent() < float(self.amount)
 
     @property
     def limit_percentage(self) -> float:
         return self._calculate_total_spent() * 100 / float(self.amount)
+
+    @property
+    def limit_percentage_label(self) -> str:
+        if self.limit_percentage < 80:
+            return labels.INFO
+        elif self.limit_percentage <= 100:
+            return labels.WARNING
+        return labels.DANGER
+
+    @property
+    def within_limit_label(self) -> str:
+        if self.within_limit:
+            return labels.INFO
+        return labels.DANGER
 
     def _calculate_total_spent(self) -> float:
         today = timezone.now()
@@ -72,8 +82,8 @@ class LimitManager(models.Model):
 
     def _calculate_needs_spent(self, today):
         total_spent = 0
-
-        if self.category_expense:
+        not_choice_any = not self.category_expense and self.category_running_cost
+        if self.category_expense or not_choice_any:
             total_spent += (
                 self.budget_manager.user.expense_set.filter(
                     category=self.category_expense,
@@ -82,13 +92,10 @@ class LimitManager(models.Model):
                 ).aggregate(models.Sum("amount"))["amount__sum"]
                 or 0
             )
-        elif self.category_running_cost:
-            current_costs = self.budget_manager.user.runningcost_set.prefetch_related(
-                "category"
-            ).filter(
+        elif self.category_running_cost or not_choice_any:
+            current_costs = self.category_running_cost.running_costs.filter(
                 next_payment_date__year=today.year,
                 next_payment_date__month=today.month,
-                category=self.category_running_cost,
             )
             total_spent += sum(
                 current_cost.total_amount_in_month
@@ -99,24 +106,22 @@ class LimitManager(models.Model):
         return total_spent
 
     def _calculate_wants_spent(self, today):
-        targets = self.budget_manager.user.target_set.filter(
-            deadline__gte=today.date(), target=self.target
-        )
-        return sum(target.monthly_payment for target in targets)
+        return self.target.monthly_payment
 
     def save(self, *args, **kwargs) -> None:
         self._validate_budget_type()
         super().save(*args, **kwargs)
 
     def _validate_budget_type(self):
-        if self.type == "needs" and not (
-            self.category_expense or self.category_running_cost
-        ):
-            raise ValidationError(
-                "For 'needs' type, either category_expense or category_running_cost must be set."
-            )
-        elif self.type == "wants" and not self.target:
-            raise ValidationError("For 'wants' type, target must be set.")
+        if self.category_expense or self.category_running_cost or self.target:
+            if self.type == "needs" and not (
+                self.category_expense or self.category_running_cost
+            ):
+                raise ValidationError(
+                    "For 'needs' type, either category_expense or category_running_cost must be set."
+                )
+            elif self.type == "wants" and not self.target:
+                raise ValidationError("For 'wants' type, target must be set.")
 
     def __str__(self) -> str:
         return (

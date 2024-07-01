@@ -5,8 +5,11 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from core.constants import labels
+
 
 class Target(models.Model):
+    today = timezone.now().date()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     target = models.CharField(max_length=255, help_text="A name of the target goal.")
@@ -51,9 +54,26 @@ class Target(models.Model):
 
     @property
     def monthly_payment(self) -> float:
-        today = timezone.now().date()
-        months = self.calculate_months(today)
+        months = self.calculate_months(self.today)
         if months > 0 and not self.is_completed:
             remaining_amount = self.amount - self.total_contributions
             return round(remaining_amount / months, 2)
         return 0.0
+
+    @property
+    def deadline_is_overdue(self) -> bool:
+        return self.deadline <= self.today
+
+    @property
+    def deadline_status_label(self) -> str:
+        if self.deadline_is_overdue:
+            return labels.SUCCESS
+        return labels.DANGER
+
+    @property
+    def completed_status_label(self) -> str:
+        if self.is_completed:
+            return labels.SUCCESS
+        if self.progress_percentage < 80:
+            return labels.INFO
+        return labels.WARNING

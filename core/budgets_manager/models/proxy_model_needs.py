@@ -33,20 +33,12 @@ class NeedsManager(BudgetManager):
     @property
     def is_within_needs_budget(self):
         if not self.get_needs_limit:
-            return [
-                ("border-right-warning", "text-warning"),
-            ]
+            return "warning"
         total_needs_amount_in_month_percentage = (
             self.total_needs_amount_in_month * 100 / self.get_needs_limit
         )
         if total_needs_amount_in_month_percentage <= 80:
-            return [
-                ("border-left-success", "text-success"),
-            ]
+            return "success"
         elif total_needs_amount_in_month_percentage < 100:
-            return [
-                ("border-right-warning", "text-warning"),
-            ]
-        return [
-            ("border-left-danger", "text-danger"),
-        ]
+            return "warning"
+        return "danger"
