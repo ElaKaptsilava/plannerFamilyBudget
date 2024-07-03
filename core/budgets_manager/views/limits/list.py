@@ -28,6 +28,9 @@ class LimitListView(LoginRequiredMixin, ListView):
         context["object_list"] = self.get_queryset()
         context["form"] = LimitForm()
         context["filter"] = self.filterset
+        context["limit_forms"] = {
+            limit.pk: LimitForm(instance=limit) for limit in self.object_list
+        }.items()
         if not self.get_queryset().exists():
             messages.info(self.request, "No limits found.")
         return context

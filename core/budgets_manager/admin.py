@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BudgetManager, LimitManager, MonthlyIncomes
+from .models import BudgetManager, LimitManager, MonthlyIncomes, WantsManager
 
 
 @admin.register(LimitManager)
@@ -15,4 +15,9 @@ class BudgetManagerAdmin(admin.ModelAdmin):
 
 @admin.register(MonthlyIncomes)
 class MonthlyIncomesAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(WantsManager)
+class WantsManagerAdmin(admin.ModelAdmin):
     pass

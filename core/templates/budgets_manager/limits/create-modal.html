@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'manager:limits-list-create' user_id=request.user.pk %}" method="post">
+                <form action="{% url 'manager:limits-list-create' %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">

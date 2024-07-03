@@ -1,4 +1,4 @@
-from budgets_manager.models import BudgetManager, NeedsManager, SavingManager
+from budgets_manager.models import BudgetManager, NeedsManager, WantsManager
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import ListView
 
@@ -13,6 +13,6 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["budget"] = self.get_queryset()
-        context["needs"] = SavingManager.objects.get(user=self.request.user)
+        context["needs"] = WantsManager.objects.get(user=self.request.user)
         context["saves"] = NeedsManager.objects.get(user=self.request.user)
         return context

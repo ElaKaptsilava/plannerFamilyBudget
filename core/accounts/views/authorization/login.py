@@ -1,13 +1,12 @@
 from accounts.forms import AccountAuthenticationForm
 from accounts.models import CustomUser
+from budgets_manager.utils import check_and_redirect_to_budget_create
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
-
-from core.middleware import redirect_to_budget_create_view_if_budget_not_created
 
 
 class CustomLoginView(View):
@@ -18,7 +17,7 @@ class CustomLoginView(View):
         user: CustomUser = request.user
         if user.is_authenticated:
             messages.info(request, f"You are already logged in as {user.email}.")
-            redirect_to_budget_create_view_if_budget_not_created(request)
+            check_and_redirect_to_budget_create(request)
             return redirect(reverse_lazy("home"))
         else:
             messages.info(request, "Please log in to continue.")
@@ -36,7 +35,7 @@ class CustomLoginView(View):
             if user:
                 login(request, user)
                 messages.success(request, f"Welcome back, {user.email}!")
-                redirect_to_budget_create_view_if_budget_not_created(request)
+                check_and_redirect_to_budget_create(request)
                 return redirect(reverse_lazy("home"))
             else:
                 messages.error(request, "Invalid email or password.")

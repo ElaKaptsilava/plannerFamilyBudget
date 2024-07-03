@@ -37,7 +37,7 @@
 
 {% block content %}
 <div class="container-fluid">
-    <form id="deleteMultipleTargetsForm" method="post" action="{% url 'targets:targets-list-delete-multiple' %}">
+    <form id="deleteMultipleLimitForm" method="post" action="{% url 'manager:limits-delete-multiple' %}">
         {% csrf_token %}
         <div class="row">
 
@@ -45,11 +45,11 @@
 
             {% for limit in object_list %}
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-{{ limit.within_limit_label }} shadow h-100 py-2">
+                <div class="card border-left-{{ limit.limit_percentage_label }} shadow h-100 py-2">
                     <div class="card-body">
                         <div class="col mr-2 mb-4">
-                            <input class="form-check-input" type="checkbox" value="{{ target.id }}"
-                                   name="selected_targets" id="checkbox{{ target.id }}">
+                            <input class="form-check-input" type="checkbox" value="{{ limit.id }}"
+                                   name="selected" id="checkbox{{ limit.id }}">
                         </div>
                         <div class="row no-gutters align-items-center">
 
@@ -85,7 +85,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary" data-toggle="modal"
-                                data-target="#updateTargetModal{{ target.pk }}">Details
+                                data-target="#updateLimitModal{{ limit.pk }}">Details
                         </button>
                     </div>
                 </div>
@@ -103,6 +103,7 @@
 
 <!-- Modals-->
 {% include 'budgets_manager/limits/create-modal.html' %}
+{% include 'budgets_manager/limits/update-modal.html' %}
 {% include 'budgets_manager/limits/filter-modal.html' %}
 {% include 'budgets_manager/limits/multiple-delete-modal.html' %}
 

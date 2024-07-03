@@ -1,6 +1,8 @@
+from budgets_manager import constants
 from budgets_manager.models import BudgetManager
-from django.utils import timezone
 from runningCosts.models import RunningCost
+
+from core.constants import labels
 
 
 class NeedsManager(BudgetManager):
@@ -8,37 +10,38 @@ class NeedsManager(BudgetManager):
         proxy = True
 
     @property
-    def get_needs_limit(self):
+    def get_needs_limit(self) -> float:
         return (
-            float(self.calculate_monthly_incomes) * float(self.needs_percentage) / 100
+            self.calculate_total_monthly_incomes
+            * float(self.needs_percentage)
+            / constants.MAX_ALLOCATION
         )
 
     @property
-    def total_needs_amount_in_month(self):
-        current_month = timezone.now().month
-        current_year = timezone.now().year
+    def get_needs_progress(self) -> float:
+        return (
+            self.total_needs_amount_in_month
+            * constants.MAX_ALLOCATION
+            / self.get_needs_limit
+            or 0.0
+        )
 
+    @property
+    def total_needs_amount_in_month(self) -> float:
         filtered_running_costs = RunningCost.objects.filter(
             user=self.user,
-            next_payment_date__month=current_month,
-            next_payment_date__year=current_year,
+            next_payment_date__month=self.TODAY.month,
+            next_payment_date__year=self.TODAY.year,
         )
-
-        total_cost = sum(
-            map(lambda item: item.total_amount_in_month, filtered_running_costs)
+        total_amounts_in_month = map(
+            lambda item: float(item.total_amount_in_month), filtered_running_costs
         )
-
-        return total_cost
+        return sum(total_amounts_in_month)
 
     @property
     def is_within_needs_budget(self):
-        if not self.get_needs_limit:
-            return "warning"
-        total_needs_amount_in_month_percentage = (
-            self.total_needs_amount_in_month * 100 / self.get_needs_limit
-        )
-        if total_needs_amount_in_month_percentage <= 80:
-            return "success"
-        elif total_needs_amount_in_month_percentage < 100:
-            return "warning"
-        return "danger"
+        if self.get_needs_progress <= constants.WARNING_THRESHOLD:
+            return labels.INFO
+        elif self.get_needs_progress < constants.DANGER_THRESHOLD:
+            return labels.WARNING
+        return labels.DANGER

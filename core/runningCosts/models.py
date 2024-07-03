@@ -81,6 +81,11 @@ class RunningCost(UserAbstractModel):
             f"amount={self.amount!r}, payment day={self.next_payment_date})"
         )
 
+    def save(self, *args, **kwargs) -> None:
+        if self.is_paid:
+            self.update_next_payment_date()
+        super().save(*args, **kwargs)
+
     @property
     def has_overdue(self) -> bool:
         if hasattr(self, "is_late_payment"):
@@ -103,11 +108,6 @@ class RunningCost(UserAbstractModel):
         if self.is_completed:
             return 0
         return calculate_total.get(self.period_type, 0)
-
-    def save(self, *args, **kwargs) -> None:
-        if self.is_paid:
-            self.update_next_payment_date()
-        super().save(*args, **kwargs)
 
     def update_next_payment_date(self) -> None:
         conditions = {
