@@ -99,8 +99,39 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-{{ wants.is_within_wants_budget_label }} shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-{{ wants.is_within_wants_budget_label }} text-uppercase mb-1">
+                                Total wants amount ({{ budget.TODAY.date|date:"F Y" }})
+                            </div>
+                            <div class="row no-gutters align-items-center">
+                                <div class="col-auto">
+                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">
+                                        {{ wants.total_targets_amount_in_month}}
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="progress progress-sm mr-2">
+                                        <div class="bg-{{ wants.is_within_wants_budget_label }} progress-bar-animated"
+                                             role="progressbar"
+                                             style="width: {{ wants.get_targets_progress }}%"
+                                             aria-valuenow="{{ wants.get_targets_progress }}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-xl-3 col-md-6 mb-4">
             <div class="card border-left-{{ needs.is_within_needs_budget }} shadow h-100 py-2">
                 <div class="card-body">
@@ -119,7 +150,7 @@
                                     <div class="progress progress-sm mr-2">
                                         <div class="bg-{{ needs.is_within_needs_budget }} progress-bar-animated"
                                              role="progressbar"
-                                             style="width: {{ needs.progress_percentage }}%"
+                                             style="width: {{ needs.get_needs_progress }}%"
                                              aria-valuenow="{{ needs.progress_percentage }}"
                                              aria-valuemin="0"
                                              aria-valuemax="100"></div>
@@ -127,7 +158,7 @@
                                 </div>
                             </div>
                         </div>
-                       <div class="col-auto">
+                        <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
                         </div>
                     </div>

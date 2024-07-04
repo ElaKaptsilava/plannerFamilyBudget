@@ -21,6 +21,7 @@ psycopg2-binary = "^2.9.9"
 celery = "^5.4.0"
 redis = "^5.0.6"
 django-silk = "^5.1.0"
+openai = "^1.35.9"
 
 
 [tool.poetry.group.dev.dependencies]

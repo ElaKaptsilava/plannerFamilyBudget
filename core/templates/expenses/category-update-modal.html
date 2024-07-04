@@ -1,4 +1,4 @@
-{% for category in categories %}
+{% for pk, field in category_forms %}
 <div class="modal fade" id="updateCategoryModal" tabindex="-1" role="dialog" aria-labelledby="updateCategoryModalLabel"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -10,22 +10,26 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'expenses:category-detail-update' pk=category.pk %}">
+                <form method="post" action="{% url 'expenses:category-detail-update' pk=pk %}">
                     {% csrf_token %}
                     <div class="card-body">
-                        <div class="col">
-                            <input type="text" class="form-control form-control-user text-secondary"
-                                   id="name{{ category.id }}" name="name"
-                                   value="{{ category.name }}"
-                                   placeholder="Enter name">
-                        </div>
-                        <div class="col mt-3">
-                            <textarea type="text" class="form-control form-control-user text-secondary"
-                                      id="description{{ category.id }}" name="description"
-                                      value="{{ category.description }}"
-                                      placeholder="Enter description..."></textarea>
-                        </div>
+                        {{ field }}
                     </div>
+
+                    <!--                    <div class="card-body">-->
+                    <!--                        <div class="col">-->
+                    <!--                            <input type="text" class="form-control form-control-user text-secondary"-->
+                    <!--                                   id="name{{ category.id }}" name="name"-->
+                    <!--                                   value="{{ category.name }}"-->
+                    <!--                                   placeholder="Enter name">-->
+                    <!--                        </div>-->
+                    <!--                        <div class="col mt-3">-->
+                    <!--                            <textarea type="text" class="form-control form-control-user text-secondary"-->
+                    <!--                                      id="description{{ category.id }}" name="description"-->
+                    <!--                                      value="{{ category.description }}"-->
+                    <!--                                      placeholder="Enter description..."></textarea>-->
+                    <!--                        </div>-->
+                    <!--                    </div>-->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary"
                                 data-dismiss="modal">Cancel

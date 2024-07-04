@@ -29,9 +29,15 @@ class ExpenseForm(forms.ModelForm):
 class ExpenseCategoryForm(forms.ModelForm):
     class Meta:
         model = ExpenseCategory
-        fields = ["name", "description"]
+        fields = ["name", "type", "description"]
         widgets = {
             "name": forms.TextInput(
+                attrs={
+                    "class": "form-control form-control-user text-secondary",
+                    "placeholder": "Enter category name",
+                }
+            ),
+            "type": forms.Select(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
                     "placeholder": "Enter category name",

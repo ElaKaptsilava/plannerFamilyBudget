@@ -3,6 +3,7 @@ from budgets_manager.models import BudgetManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory
+from expenses.types import Type
 from runningCosts.models import RunningCostCategory
 from targets.models import Target
 
@@ -10,13 +11,9 @@ from core.constants import labels
 
 
 class LimitManager(models.Model):
-    class BudgetType(models.TextChoices):
-        WANTS = ("wants", "Wants")
-        NEEDS = ("needs", "Needs")
-
     budget_manager = models.ForeignKey(BudgetManager, on_delete=models.CASCADE)
     type = models.CharField(
-        max_length=10, choices=BudgetType.choices, help_text="Type of budget category."
+        max_length=10, choices=Type.choices, help_text="Type of budget category."
     )
     category_expense = models.OneToOneField(
         ExpenseCategory,
@@ -56,10 +53,10 @@ class LimitManager(models.Model):
     @property
     def limit_percentage_label(self) -> str:
         if self.limit_percentage < constants.WARNING_THRESHOLD:
-            return labels.DANGER if self.type == self.BudgetType.WANTS else labels.INFO
+            return labels.DANGER if self.type == Type.WANTS else labels.INFO
         elif self.limit_percentage <= constants.DANGER_THRESHOLD:
             return labels.WARNING
-        return labels.DANGER if self.type == self.BudgetType.WANTS else labels.SUCCESS
+        return labels.DANGER if self.type == Type.WANTS else labels.SUCCESS
 
     @property
     def within_limit_label(self) -> str:
@@ -68,12 +65,12 @@ class LimitManager(models.Model):
         return labels.DANGER
 
     def _calculate_total_spent(self) -> float:
-        if self.type == self.BudgetType.NEEDS:
+        if self.type == Type.NEEDS:
             if self.category_expense:
                 return self._calculate_total_spent_for_category_expense()
             elif self.category_running_cost:
                 return self._calculate_total_spent_for_category_running_cost()
-        elif self.type == self.BudgetType.WANTS:
+        elif self.type == Type.WANTS:
             return self._calculate_wants_spent()
 
     def _calculate_total_spent_for_category_running_cost(self):
@@ -112,13 +109,13 @@ class LimitManager(models.Model):
         super().save(*args, **kwargs)
 
     def _validate_budget_type(self):
-        if self.type == self.BudgetType.NEEDS and not (
+        if self.type == Type.NEEDS and not (
             self.category_expense or self.category_running_cost
         ):
             raise ValidationError(
                 "For 'needs' type, either category_expense or category_running_cost must be set."
             )
-        elif self.type == self.BudgetType.WANTS and not self.target:
+        elif self.type == Type.WANTS and not self.target:
             raise ValidationError("For 'wants' type, target must be set.")
 
     def __str__(self) -> str:
