@@ -20,10 +20,8 @@ class ExpensesView(LoginRequiredMixin, FilterView, FormView):
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-        return (
-            self.filterset.qs.filter(user=self.request.user)
-            .select_related("category")
-            .prefetch_related("amount", "datetime")
+        return self.filterset.qs.filter(user=self.request.user).select_related(
+            "category"
         )
 
     def get_context_data(self, **kwargs) -> dict:
