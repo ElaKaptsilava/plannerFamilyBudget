@@ -3,7 +3,7 @@ from targets.views.contributions.delete_multiple import (
     TargetContributionsDeleteMultipleView,
 )
 from targets.views.contributions.form_view import TargetContributionsView
-from targets.views.savings import SavingContributionCreateView
+from targets.views.savings import NegativeCreateView, PositiveCreateView
 from targets.views.targets import (
     TargetDeleteMultipleView,
     TargetsView,
@@ -39,8 +39,13 @@ urlpatterns = [
         name="contributions-list-delete-multiple",
     ),
     path(
-        "saving/create/",
-        SavingContributionCreateView.as_view(),
-        name="saving-contributions-create",
+        "saving/create/positive",
+        PositiveCreateView.as_view(),
+        name="saving-contributions-create-positive",
+    ),
+    path(
+        "saving/create/negative",
+        NegativeCreateView.as_view(),
+        name="saving-contributions-create-negative",
     ),
 ]

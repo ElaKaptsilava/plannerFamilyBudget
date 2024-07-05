@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
@@ -17,14 +18,28 @@ class Saving(models.Model):
 
     @property
     def total_amount(self) -> float:
-        return (
-            self.savingcontributions_set.all().aggregate(total=models.Sum("amount"))[
-                "total"
-            ]
-            or 0.0
+        amount = self.savingcontributions_set.all().aggregate(
+            positive_amount=models.Sum("positive_amount"),
+            negative_amount=models.Sum("negative_amount"),
         )
+        return sum(amount.values())
 
 
 class SavingContributions(models.Model):
-    amount = models.FloatField(default=0, verbose_name="Savings amount")
+    positive_amount = models.FloatField(
+        default=0,
+        verbose_name="Positive amount",
+        help_text="Amount of the positive amount.",
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(1)],
+    )
+    negative_amount = models.FloatField(
+        default=0,
+        verbose_name="Negative amount",
+        help_text="Amount of the negative amount.",
+        null=True,
+        blank=True,
+        validators=[MaxValueValidator(0)],
+    )
     saving = models.ForeignKey(Saving, on_delete=models.CASCADE, verbose_name="Saving")

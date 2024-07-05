@@ -174,19 +174,30 @@
                     <!-- Wallet Card -->
                     <div id="walletCard" class="wallet-card">
                         <img src="{{ request.user.profile.avatar.url }}" alt="Wallet Logo" class="wallet-logo">
-                        <div class="wallet-name">My Wallet</div>
+                        <div class="wallet-name">{{ request.user.last_name }}</div>
                         <div class="col-6 wallet-balance">
-                            <i class="fas fa-plus text-success" data-toggle="collapse" href="#formCollapse"
-                               role="button" aria-expanded="false" aria-controls="formCollapse"> </i>
-                            1000.00
+                            <i class="fas fa-plus text-success" data-toggle="collapse" href="#formPositiveCollapse"
+                               role="button" aria-expanded="false" aria-controls="formPositiveCollapse"> </i>
+                            {{ savings.total_amount }}
+                            <i class="fas fa-minus text-danger" data-toggle="collapse" href="#formNegativeCollapse"
+                               role="button" aria-expanded="false" aria-controls="formNegativeCollapse"></i>
                         </div>
 
                         <i class="fas fa-dollar-sign fa-2x wallet-currency"></i>
-                        <div class="collapse" id="formCollapse">
+                        <div class="collapse" id="formPositiveCollapse">
                             <div class="card card-body">
-                                <form method="post" action="{% url 'targets:saving-contributions-create' %}">
+                                <form method="post" action="{% url 'targets:saving-contributions-create-positive' %}">
                                     {% csrf_token %}
-                                    {{ saving_contribution.as_p }}
+                                    {{ positive_form.as_p }}
+                                    <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="collapse" id="formNegativeCollapse">
+                            <div class="card card-body">
+                                <form method="post" action="{% url 'targets:saving-contributions-create-negative' %}">
+                                    {% csrf_token %}
+                                    {{ negative_form.as_p }}
                                     <button type="submit" class="btn btn-sm btn-outline-success">Add</button>
                                 </form>
                             </div>

@@ -7,7 +7,10 @@ from django.views.generic import ListView
 from expenses.models import Expense, ExpenseCategory
 from incomes.models import Income
 from runningCosts.models import RunningCost
-from targets.forms import SavingContributionsForm
+from targets.forms import (
+    SavingNegativeContributionsForm,
+    SavingPositiveContributionsForm,
+)
 from targets.models import Saving, Target
 
 
@@ -60,5 +63,6 @@ class HomeView(LoginRequiredMixin, ListView):
         context["savings"] = get_object_or_404(
             Saving.objects.select_related("user"), user=self.request.user
         )
-        context["saving_contribution"] = SavingContributionsForm()
+        context["positive_form"] = SavingPositiveContributionsForm()
+        context["negative_form"] = SavingNegativeContributionsForm()
         return context
