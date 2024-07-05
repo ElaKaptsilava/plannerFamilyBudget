@@ -1,10 +1,15 @@
 from django.urls import path
-from runningCosts.views.category import CategoryCreateView, CategoryListView
-from runningCosts.views.running_cost.delete_multiple import (
-    RunningCostDeleteMultipleView,
+from runningCosts.views.category import (
+    CategoryCostDeleteView,
+    CategoryCostUpdateView,
+    CategoryCreateView,
+    CategoryListView,
 )
-from runningCosts.views.running_cost.form_view import RunningCostView
-from runningCosts.views.running_cost.update import RunningCostUpdateView
+from runningCosts.views.running_cost import (
+    RunningCostDeleteMultipleView,
+    RunningCostUpdateView,
+    RunningCostView,
+)
 
 app_name = "running-costs"
 
@@ -29,5 +34,15 @@ urlpatterns = [
         "category/list/create/",
         CategoryCreateView.as_view(),
         name="category-list-create",
+    ),
+    path(
+        "category/detail/<int:pk>/update/",
+        CategoryCostUpdateView.as_view(),
+        name="category-detail-update",
+    ),
+    path(
+        "category/detail/<int:pk>/delete/",
+        CategoryCostDeleteView.as_view(),
+        name="category-detail-delete",
     ),
 ]

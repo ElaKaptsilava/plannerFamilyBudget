@@ -1,4 +1,4 @@
-{% for pk, field in category_forms %}
+{% for pk, field in category_update %}
 <div class="modal fade" id="updateCategoryModal{{ pk }}" tabindex="-1" role="dialog" aria-labelledby="updateCategoryModal{{ pk }}Label"
      aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -10,7 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'expenses:category-detail-update' pk=pk %}">
+                <form method="post" action="{% url 'running-costs:category-detail-update' pk=pk %}">
                     {% csrf_token %}
                     <div class="card-body">
                         {{ field }}

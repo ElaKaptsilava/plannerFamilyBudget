@@ -42,32 +42,35 @@
             <div class="col-xl-3 col-md-6 mb-4">
                 <div class="card border-left-{{ target.deadline_is_overdue }} shadow h-100 py-2">
                     <div class="card-body">
-                        <div class="col mr-2 mb-4">
+                        <div class="col text-right">
                             <input class="form-check-input" type="checkbox" value="{{ target.id }}"
                                    name="selected_targets" id="checkbox{{ target.id }}">
                         </div>
                         <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <div class="text-xs font-weight-bold text-{{ target.deadline_status_label }} text-uppercase mb-1">
-                                    {{ target.target}}
-                                </div>
-                                <div class="h5 mb-0 font-weight-bold text-{{ target.deadline_status_label }}">{{ target.deadline }}</div>
+                            <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">
+                                {{ target.target}}
                             </div>
                         </div>
 
-                        {% if target.description %}
+                    {% if category.description %}
+                    <div class="row">
                         <div class="col-auto">
-                            <i class="fas fa-info-circle fa-1x text-gray-600">{{ target.description }}</i>
+                            <i class="fas fa-info text-warning"></i>
                         </div>
-                        {% endif %}
-                        <div class="col mr-2">
-                            <div class="progress mt-3">
-                                <div class="progress-bar-animated bg-{{ target.completed_status_label }}" role="progressbar"
-                                     style="width: {{ target.progress_percentage }}%"
-                                     aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
-                                     aria-valuemax="100"></div>
-                            </div>
+                        <div class="col">
+                            <p class="card-text text-sm-left">{{ category.description }}</p>
                         </div>
+                    </div>
+                    {% endif %}
+                    </div>
+                    <div class="col mb-2">
+                        <div class="progress mb-2">
+                            <div class="progress-bar-animated bg-{{ target.completed_status_label }}" role="progressbar"
+                                 style="width: {{ target.progress_percentage }}%"
+                                 aria-valuenow="{{ target.progress_percentage }}" aria-valuemin="0"
+                                 aria-valuemax="100"></div>
+                        </div>
+                        <div class="font-weight-bold text-{{ target.deadline_status_label }} text-md-right">{{ target.deadline }}</div>
                     </div>
                     <div class="modal-footer">
                         <a href="{% url 'targets:contributions-list' pk=target.pk %}"

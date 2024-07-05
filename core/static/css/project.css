@@ -236,3 +236,24 @@
     font-size: 16px;
     color: #090d1b;
 }
+
+.custom_card {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid #e3e6f0;
+    border-radius: .35rem;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.card-body {
+    padding: 10px;
+}
+
+.modal-footer {
+    padding: 10px;
+}

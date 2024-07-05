@@ -19,6 +19,10 @@ class CategoryListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["categories"] = self.get_queryset()
         context["form_category"] = RunningCostCategoryForm()
+        context["category_update"] = {
+            category.pk: RunningCostCategoryForm(instance=category)
+            for category in self.object_list
+        }.items()
         if not self.get_queryset():
             messages.info(self.request, "You haven't added any costs yet.")
         return context
