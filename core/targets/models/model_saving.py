@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
@@ -43,3 +44,13 @@ class SavingContributions(models.Model):
         validators=[MaxValueValidator(0)],
     )
     saving = models.ForeignKey(Saving, on_delete=models.CASCADE, verbose_name="Saving")
+
+    def validate(self):
+        if not self.positive_amount and not self.negative_amount:
+            raise ValidationError(
+                "At least one of positive amount or negative amount must be provided."
+            )
+
+    def save(self, *args, **kwargs):
+        self.validate()
+        super().save(*args, **kwargs)
