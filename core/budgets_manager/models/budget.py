@@ -3,6 +3,7 @@ from budgets_manager import constants
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import QuerySet
+from django.utils import timezone
 from expenses.models import Expense
 from incomes.models import Income
 
@@ -43,6 +44,16 @@ class BudgetManager(models.Model):
 
     def _get_current_year_incomes(self) -> QuerySet[Income]:
         return Income.objects.filter(user=self.user, date__year=self.TODAY.year)
+
+    @property
+    def get_current_month_range(self):
+        start_date = self.TODAY.replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        end_date = start_date.replace(month=start_date.month + 1) - timezone.timedelta(
+            microseconds=1
+        )
+        return start_date, end_date
 
     @property
     def calculate_total_monthly_incomes(self) -> float:

@@ -5,13 +5,20 @@ from expenses.models import ExpenseCategory
 
 
 class Expense(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, related_name="expenses"
+    )
     category = models.ForeignKey(ExpenseCategory, on_delete=models.CASCADE)
     amount = models.FloatField(default=0)
     datetime = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ["-datetime"]
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["datetime"]),
+            models.Index(fields=["category"]),
+        ]
 
     def __str__(self) -> str:
         return str(self.amount)

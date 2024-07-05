@@ -17,11 +17,7 @@ class LimitListView(LoginRequiredMixin, ListView):
         queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
         queryset = self.filterset.qs.filter(budget_manager__user=self.request.user)
-        return queryset.select_related("budget_manager").prefetch_related(
-            "category_expense",
-            "category_running_cost",
-            "target",
-        )
+        return queryset.select_related("budget_manager")
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)

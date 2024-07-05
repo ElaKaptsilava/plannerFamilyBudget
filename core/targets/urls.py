@@ -3,9 +3,12 @@ from targets.views.contributions.delete_multiple import (
     TargetContributionsDeleteMultipleView,
 )
 from targets.views.contributions.form_view import TargetContributionsView
-from targets.views.targets.delete_multiple import TargetDeleteMultipleView
-from targets.views.targets.form_view import TargetsView
-from targets.views.targets.update import TargetUpdateView
+from targets.views.savings import SavingContributionCreateView
+from targets.views.targets import (
+    TargetDeleteMultipleView,
+    TargetsView,
+    TargetUpdateView,
+)
 
 app_name = "targets"
 urlpatterns = [
@@ -34,5 +37,10 @@ urlpatterns = [
         "detail/<int:pk>/contributions/delete-multiple/",
         TargetContributionsDeleteMultipleView.as_view(),
         name="contributions-list-delete-multiple",
+    ),
+    path(
+        "saving/create/",
+        SavingContributionCreateView.as_view(),
+        name="saving-contributions-create",
     ),
 ]

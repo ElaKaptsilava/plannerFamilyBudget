@@ -1,7 +1,7 @@
 import calendar
 from datetime import date, datetime
 
-from accounts.models import UserAbstractModel
+from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.utils import timezone
@@ -22,7 +22,8 @@ class RunningCostQuerySet(models.QuerySet):
         )
 
 
-class RunningCostCategory(UserAbstractModel):
+class RunningCostCategory(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(
         max_length=256, help_text="Enter the category of the running coast."
     )
@@ -37,10 +38,14 @@ class RunningCostCategory(UserAbstractModel):
         return f"RunningCostCategory(name={self.name!r}, description={self.description!r}...)"
 
 
-class RunningCost(UserAbstractModel):
+class RunningCost(models.Model):
     class PeriodType(models.TextChoices):
         MONTHS = ("months", "Months")
         YEARS = ("years", "Years")
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="running_costs"
+    )
 
     name = models.CharField(max_length=256)
     category = models.ForeignKey(
@@ -71,6 +76,10 @@ class RunningCost(UserAbstractModel):
 
     class Meta:
         ordering = ["next_payment_date"]
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["next_payment_date"]),
+        ]
 
     def __str__(self) -> str:
         return f"{self.name} - ${self.amount:.2f}"

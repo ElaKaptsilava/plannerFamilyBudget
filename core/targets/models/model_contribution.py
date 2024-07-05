@@ -19,6 +19,11 @@ class TargetContribution(models.Model):
 
     class Meta:
         ordering = ("-date",)
+        indexes = [
+            models.Index(fields=["user"]),
+            models.Index(fields=["amount"]),
+            models.Index(fields=["date"]),
+        ]
 
     def __str__(self) -> str:
         return f"Income for {self.target} on {self.date}"

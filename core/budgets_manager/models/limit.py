@@ -73,7 +73,7 @@ class LimitManager(models.Model):
         elif self.type == Type.WANTS:
             return self._calculate_wants_spent()
 
-    def _calculate_total_spent_for_category_running_cost(self):
+    def _calculate_total_spent_for_category_running_cost(self) -> float:
         current_costs = self.category_running_cost.running_costs.filter(
             next_payment_date__year=constants.TODAY.year,
             next_payment_date__month=constants.TODAY.month,
@@ -83,7 +83,7 @@ class LimitManager(models.Model):
             for current_cost in current_costs
             if not current_cost.is_completed
         )
-        return total_spent or 0
+        return total_spent or 0.0
 
     def _calculate_total_spent_for_category_expense(self) -> float:
         filtered_expenses = self.budget_manager.user.expense_set.filter(
@@ -91,24 +91,25 @@ class LimitManager(models.Model):
             datetime__year=constants.TODAY.year,
             datetime__month=constants.TODAY.month,
         )
-        total = filtered_expenses.aggregate(total=models.Sum("amount"))["total"]
-        return total or 0.0
+        total = filtered_expenses.aggregate(total=models.Sum("amount"))["total"] or 0.0
+        return total
 
     def _calculate_wants_spent(self) -> float:
         filtered_target_contributions = self.target.targetcontribution_set.filter(
             date__year=constants.TODAY.year,
             date__month=constants.TODAY.month,
         )
-        total = filtered_target_contributions.aggregate(total=models.Sum("amount"))[
-            "total"
-        ]
-        return total or 0.0
+        total = (
+            filtered_target_contributions.aggregate(total=models.Sum("amount"))["total"]
+            or 0.0
+        )
+        return total
 
     def save(self, *args, **kwargs) -> None:
-        self._validate_budget_type()
+        self.__validate_budget_type()
         super().save(*args, **kwargs)
 
-    def _validate_budget_type(self):
+    def __validate_budget_type(self):
         if self.type == Type.NEEDS and not (
             self.category_expense or self.category_running_cost
         ):

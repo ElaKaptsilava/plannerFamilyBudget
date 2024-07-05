@@ -8,7 +8,12 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
     template_name = "budgets_manager/budget/description.html"
 
     def get_queryset(self):
-        return self.model.objects.get(user=self.request.user)
+        print(self.model.objects.all())
+        return (
+            self.model.objects.select_related("user")
+            .filter(user=self.request.user)
+            .prefetch_related("expense", "category_running_cost", "target", "income")
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

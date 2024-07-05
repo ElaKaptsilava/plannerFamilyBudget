@@ -10,7 +10,9 @@ from core.constants import labels
 
 class Target(models.Model):
     today = timezone.now().date()
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="targets"
+    )
     image = models.ImageField(upload_to=get_upload_path, null=True, blank=True)
     target = models.CharField(max_length=255, help_text="A name of the target goal.")
     amount = models.FloatField(
