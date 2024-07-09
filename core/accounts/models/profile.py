@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser
+from accounts.models import CustomUser
 from django.db import models
 from PIL import Image
 
@@ -8,22 +8,6 @@ DEFAULT_PROFILE_IMAGE = "undraw_profile.svg"
 def get_upload_path(self, instance, filename):
     folder_name = f"{instance.email}_{instance.id}"
     return "/".join(["accounts", folder_name, filename])
-
-
-class CustomUser(AbstractUser):
-    email = models.EmailField(unique=True, help_text="Email address")
-    username = models.CharField(
-        max_length=50,
-        help_text="Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.",
-    )
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["last_name", "first_name", "username"]
-
-    def __str__(self) -> str:
-        return f"{self.email}"
-
-    def __repr__(self) -> str:
-        return f"CustomUser(email={self.email!r})"
 
 
 class Profile(models.Model):

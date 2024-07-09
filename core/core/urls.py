@@ -1,4 +1,4 @@
-from accounts.views.profile.home import HomeView
+from accounts.views.profile import HomeView
 from budgets_manager.views import dash_app
 from django.conf import settings
 from django.conf.urls.static import static
