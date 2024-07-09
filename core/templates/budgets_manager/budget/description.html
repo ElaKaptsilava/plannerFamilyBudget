@@ -6,93 +6,89 @@
 {% block appname %}
 <p class="nav-item dropdown no-arrow appname">Budget Plan Description</p>
 <a href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}"
-   class="btn btn-outline-success btn-user float-right">Update</a>
+   class="btn btn-sm btn-outline-success btn-user float-right"><i class="fas fa-edit"></i></a>
 {% endblock %}
 
 {% block content %}
 
 <div class="container">
 
-    <section>
-        <h2 class="sectionTitle">Plan for Your Needs {{ budget.needs_percentage }}%</h2>
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-{{ needs.is_within_needs_budget }} shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">
+                                Your Needs {{ request.user.budgetmanager.needs_percentage }}%
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                ${{ needs.total_spent_in_month }} / ${{ needs.get_limit }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-info-circle text-warning" data-toggle="tooltip" data-placement="top"
+                               title="Includes essential expenses such as rent, utilities, groceries, and transportation."></i>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <p class="card-text text-sm-left">
+                                Status: <span class="badge badge-{{ needs.is_within_needs_budget }}">{{ needs.is_within_needs_budget }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <p class="card-text text-sm-left">
+                                <strong>Includes:</strong> Essential expenses such as rent, utilities, groceries, and
+                                transportation.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-left-{{ wants.is_within_wants_budget_label }} shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">
+                                Your Wants {{ request.user.budgetmanager.wants_percentage }}%
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                ${{ wants.total_spent_in_month }} / ${{ wants.get_limit }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-info-circle text-warning" data-toggle="tooltip" data-placement="top"
+                               title="Includes discretionary expenses such as entertainment, dining out, and hobbies."></i>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <p class="card-text text-sm-left">
+                                Status: <span class="badge badge-{{ wants.is_within_wants_budget_label }}">{{ wants.is_within_wants_budget_label }}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <p class="card-text text-sm-left">
+                                <strong>Includes:</strong> Discretionary expenses such as entertainment, dining out, and
+                                hobbies.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        <p class="descriptionBudget">This section covers your essential expenses. Aim to allocate up to 40% of your
-            after-tax income to these needs:</p>
-
-        <ul class="ul-custom">
-            <li>Groceries</li>
-            <li>Housing</li>
-            <li>Basic utilities (electricity, water, gas, internet)</li>
-            <li>Transportation</li>
-            <li>Insurance (health, car, etc.)</li>
-            <li>Minimum debt payments (loans, credit cards) (Anything extra goes towards savings or faster debt
-                repayment)
-            </li>
-            <li>Childcare or other work-related expenses</li>
-        </ul>
-
-        <p class="descriptionBudget">If your essential expenses exceed {{ needs.total_targets_amount_in_month }}%, you might need to temporarily adjust your
-            "wants" category to make ends meet.</p>
-    </section>
-
-    <section>
-        <h2 class="sectionTitle">Plan for Your Wants </h2>
-
-        <p class="descriptionBudget">This section includes discretionary spending on things you enjoy but aren't
-            essential for survival. You allocate around {{ budget.wants_percentage }}% of your income for wants, such as:</p>
-
-        <ul class="ul-custom">
-            <li>Dining out</li>
-            <li>Entertainment (movies, hobbies, etc.)</li>
-            <li>Clothing</li>
-            <li>Subscriptions (streaming services, gym memberships)</li>
-        </ul>
-    </section>
-
-    <section>
-        <p class="descriptionBudget">Sometimes, the line between needs and wants can be blurry. Ask yourself: "Is this
-            essential for my well-being or survival?"</p>
-    </section>
-
-    <section>
-        <h2 class="sectionTitle">Build in Flexibility (Wiggle Room)</h2>
-
-        <p class="descriptionBudget">Allocate a small percentage (around 5-10%) for unexpected expenses or occasional
-            treats. This "wiggle room" prevents feeling overly restricted by your budget.</p>
-    </section>
-
-    <section>
-        <h2 class="sectionTitle">Savings and Debt Repayment {{ budget.savings_percentage }}%</h2>
-
-        <p class="descriptionBudget">Aim to dedicate {{ budget.savings_percentage }}% or {{ saves }} of your income towards savings and debt repayment. This might
-            include:</p>
-
-        <ul class="ul-custom">
-            <li>Emergency fund</li>
-            <li>Retirement savings</li>
-            <li>Debt payments beyond minimums</li>
-        </ul>
-
-        <p class="descriptionBudget">Remember, this is a guideline. You can adjust the percentages based on your
-            financial situation and goals. Regularly review and update your budget to reflect your changing needs and
-            income.</p>
-    </section>
+    </div>
 </div>
 
 {% block script %}
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const paragraphs = document.querySelectorAll('.descriptionBudget');
-        paragraphs.forEach(paragraph => {
-            paragraph.addEventListener('mouseenter', function () {
-                this.style.backgroundColor = '#f0f0f0';
-            });
-            paragraph.addEventListener('mouseleave', function () {
-                this.style.backgroundColor = 'transparent';
-            });
-        });
-    });
-</script>
 {% endblock %}
 
 {% endblock %}

@@ -44,19 +44,19 @@ class LimitManager(models.Model):
 
     @property
     def within_limit(self) -> bool:
-        return self._calculate_total_spent() < float(self.amount)
+        return self.calculate_total_spent() < float(self.amount)
 
     @property
-    def limit_percentage(self) -> float:
-        return self._calculate_total_spent() * 100 / float(self.amount)
+    def spent_percentage(self) -> float:
+        return round(self.calculate_total_spent() * 100 / float(self.amount))
 
     @property
-    def limit_percentage_label(self) -> str:
-        if self.limit_percentage < constants.WARNING_THRESHOLD:
-            return labels.DANGER if self.type == Type.WANTS else labels.INFO
-        elif self.limit_percentage <= constants.DANGER_THRESHOLD:
+    def spent_percentage_label(self) -> str:
+        if self.spent_percentage < constants.WARNING_THRESHOLD:
+            return labels.INFO
+        elif self.spent_percentage < constants.DANGER_THRESHOLD:
             return labels.WARNING
-        return labels.DANGER if self.type == Type.WANTS else labels.SUCCESS
+        return labels.DANGER
 
     @property
     def within_limit_label(self) -> str:
@@ -64,7 +64,7 @@ class LimitManager(models.Model):
             return labels.INFO
         return labels.DANGER
 
-    def _calculate_total_spent(self) -> float:
+    def calculate_total_spent(self) -> float:
         if self.type == Type.NEEDS:
             if self.category_expense:
                 return self._calculate_total_spent_for_category_expense()
@@ -86,7 +86,7 @@ class LimitManager(models.Model):
         return total_spent or 0.0
 
     def _calculate_total_spent_for_category_expense(self) -> float:
-        filtered_expenses = self.budget_manager.user.expense_set.filter(
+        filtered_expenses = self.budget_manager.user.expenses.filter(
             category=self.category_expense,
             datetime__year=constants.TODAY.year,
             datetime__month=constants.TODAY.month,

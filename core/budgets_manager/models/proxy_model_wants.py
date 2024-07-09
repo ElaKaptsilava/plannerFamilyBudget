@@ -14,7 +14,7 @@ class WantsManager(BudgetManager):
     @property
     def get_limit(self) -> float:
         return self.calculate_total_monthly_incomes * float(
-            self.savings_percentage / constants.MAX_ALLOCATION
+            self.wants_percentage / constants.MAX_ALLOCATION
         )
 
     @property

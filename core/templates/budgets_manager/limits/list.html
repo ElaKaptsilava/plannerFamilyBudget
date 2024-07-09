@@ -45,40 +45,48 @@
 
             {% for limit in object_list %}
             <div class="col-xl-3 col-md-6 mb-4">
-                <div class="card border-left-{{ limit.limit_percentage_label }} shadow h-100 py-2">
+                <div class="card border-left-{{ limit.within_limit_label }} shadow h-100 py-2">
+                    <input class="form-check-input position-absolute top-0 end-0 m-3" type="checkbox" value="{{ limit.id }}"
+                               name="selected" id="checkbox{{ limit.id }}">
                     <div class="card-body">
-                        <div class="col mr-2 mb-4">
-                            <input class="form-check-input" type="checkbox" value="{{ limit.id }}"
-                                   name="selected" id="checkbox{{ limit.id }}">
-                        </div>
+
                         <div class="row no-gutters align-items-center">
-
-                            <div class="col mr-2">
-
-                                <div class="text-xl font-weight-bold text-{{ limit.within_limit_label }} text-uppercase mb-1">
+                            <div class="col d-flex justify-content-between align-items-center">
+                                <div class="text-xl font-weight-bold text-primary text-uppercase">
                                     {% if limit.category_expense %}
-                                    {{ limit.category_expense }} ({{ limit.type }})
-
+                                    {{ limit.category_expense }}
                                     {% elif limit.category_running_cost %}
-                                    {{ limit.category_running_cost }} ({{ limit.type }})
-
+                                    {{ limit.category_running_cost }}
                                     {% elif limit.target %}
-                                    {{ limit.target.target }} ({{ limit.type }})
-
+                                    {{ limit.target.target }}
                                     {% endif %}
                                 </div>
-
-
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">{{ limit.amount }}</div>
+                            </div>
+                            <div class="col mr-2">
+                                <div class="row mt-3">
+                                    <div class="col">
+                                        <p class="card-text text-sm-left">
+                                            Limit: ${{ limit.amount }}
+                                        </p>
+                                        <p class="card-text text-sm-left">
+                                            Spent: ${{ limit.calculate_total_spent }}
+                                        </p>
+                                        <p class="card-text text-sm-left">
+                                            Type: <span class="badge badge-secondary">{{ limit.type }}</span>
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {{ limit.calculate_total_spent }}
+                        <h4 class="small font-weight-bold mt-3">
+                            <span class="float-right">{{ limit.spent_percentage }}%</span>
+                        </h4>
                         <div class="col mr-2 mb-4">
                             <div class="progress mt-3">
-                                <div class="progress-bar-animated bg-{{ limit.limit_percentage_label }} "
+                                <div class="progress-bar-animated bg-{{ limit.spent_percentage_label }} "
                                      role="progressbar"
-                                     style="width: {{ limit.limit_percentage }}%"
-                                     aria-valuenow="{{ limit.limit_percentage }}" aria-valuemin="0"
+                                     style="width: {{ limit.spent_percentage }}%"
+                                     aria-valuenow="{{ limit.spent_percentage }}" aria-valuemin="0"
                                      aria-valuemax="100"></div>
                             </div>
                         </div>
