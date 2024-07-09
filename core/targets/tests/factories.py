@@ -1,5 +1,5 @@
 import factory
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from django.utils import timezone
 from targets.models import Target, TargetContribution
 

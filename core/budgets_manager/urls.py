@@ -11,7 +11,7 @@ app_name = "manager"
 urlpatterns = [
     path("budget/info/", BudgetManagerListView.as_view(), name="budget-info"),
     path(
-        "budget/<int:user_id>/budget/create/",
+        "budget/create/",
         BudgetManagerCreateView.as_view(),
         name="budget-list-create",
     ),

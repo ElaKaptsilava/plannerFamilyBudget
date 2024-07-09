@@ -1,6 +1,6 @@
 import datetime
 
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from django.test import TestCase
 from runningCosts.models import RunningCost
 from runningCosts.tests.factories import RunningCostCategoryFactory, RunningCostFactory

@@ -1,4 +1,4 @@
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from django.test import TestCase, tag
 from django.utils import timezone
 from targets.tests.factories import TargetContributionFactory, TargetFactory

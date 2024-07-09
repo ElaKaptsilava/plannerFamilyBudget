@@ -1,6 +1,5 @@
 import factory
-
-from .models import CustomUser
+from accounts.models import CustomUser
 
 
 class CustomUserFactory(factory.django.DjangoModelFactory):

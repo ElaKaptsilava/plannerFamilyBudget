@@ -1,10 +1,9 @@
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
-from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-
 from accounts.forms import RegistrationForm
 from accounts.models import CustomUser
+from django.contrib.auth import authenticate, login
+from django.http import HttpResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
 from django.views import View
 
 
@@ -39,7 +38,6 @@ class CustomRegisterView(View):
                 return redirect(
                     reverse_lazy(
                         "manager:budget-list-create",
-                        kwargs={"user_id": user_authenticate.pk},
                     )
                 )
         return render(

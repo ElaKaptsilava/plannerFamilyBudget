@@ -1,4 +1,4 @@
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from django.test import TestCase, tag
 from django.urls import reverse_lazy
 from django.utils.http import urlencode

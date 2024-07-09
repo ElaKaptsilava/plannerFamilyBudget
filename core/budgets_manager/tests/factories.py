@@ -1,5 +1,5 @@
 import factory
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from budgets_manager.models import BudgetManager
 
 

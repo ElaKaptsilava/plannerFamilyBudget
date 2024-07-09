@@ -1,6 +1,5 @@
+from accounts.models import CustomUser, Profile
 from django.contrib import admin
-
-from .models import CustomUser, Profile
 
 
 @admin.register(CustomUser)

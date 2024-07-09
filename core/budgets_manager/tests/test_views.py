@@ -1,9 +1,9 @@
 from http import HTTPStatus
 
-from accounts.factories import CustomUserFactory
 from accounts.models import CustomUser
+from accounts.tests import CustomUserFactory
 from budgets_manager.tests.factories import BudgetManagerFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from incomes.tests.factories import IncomeFactory
 from runningCosts.tests.factories import RunningCostCategoryFactory
@@ -18,7 +18,6 @@ class BudgetManagerTestCase(TestCase):
         self.category = RunningCostCategoryFactory.create(user=self.user)
         self.income = IncomeFactory.create(user=self.user)
 
-    @tag("test")
     def test_create_budget_when_user_registered(self):
         user_data = {
             "first_name": self.user_build.first_name,

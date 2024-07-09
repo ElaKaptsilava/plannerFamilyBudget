@@ -1,4 +1,3 @@
-from reset_password import *
-
 from .login import *
 from .register import *
+from .reset_password import *

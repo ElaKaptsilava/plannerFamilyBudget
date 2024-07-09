@@ -1,4 +1,4 @@
-from accounts.factories import CustomUserFactory
+from accounts.tests import CustomUserFactory
 from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone

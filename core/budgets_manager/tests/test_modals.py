@@ -1,5 +1,5 @@
-from accounts.factories import CustomUserFactory
-from budgets_manager.models import SavingManager
+from accounts.tests import CustomUserFactory
+from budgets_manager.models import NeedsManager
 from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase
 from django.utils import timezone
@@ -15,7 +15,7 @@ class NeedsLimitTestCase(TestCase):
         self.expenses_category = ExpenseCategoryFactory(user=self.user)
         self.running_cost_category = RunningCostCategoryFactory(user=self.user)
         self.incomes = IncomeFactory(user=self.user, date=timezone.now())
-        self.needs_manager = SavingManager.objects.get(user=self.user)
+        self.needs_manager = NeedsManager.objects.get(user=self.user)
 
     def test_calculate_monthly_income_when_user_add_more_incomes(self):
         self.assertEqual(

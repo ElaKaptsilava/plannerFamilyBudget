@@ -1,4 +1,4 @@
-from accounts.models import CustomUser
+from accounts.models.user import CustomUser
 from django.db import models
 from PIL import Image
 
