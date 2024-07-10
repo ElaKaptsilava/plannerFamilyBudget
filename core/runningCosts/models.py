@@ -97,6 +97,7 @@ class RunningCost(models.Model):
     def save(self, *args, **kwargs) -> None:
         if self.is_paid:
             self.update_next_payment_date()
+            self.is_paid = False
         super().save(*args, **kwargs)
 
     @property

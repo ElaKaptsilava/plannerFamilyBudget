@@ -19,6 +19,6 @@ class RunningCostFactory(factory.django.DjangoModelFactory):
     amount = factory.Faker("random_int", min=1000, max=10000)
     period_type = RunningCost.PeriodType.MONTHS
     period = 1
-    next_payment_date = timezone.now()
+    next_payment_date = timezone.now() + timezone.timedelta(days=1)
     payment_deadline = timezone.now() + timezone.timedelta(days=365)
     is_paid = False

@@ -1,4 +1,5 @@
 import factory
+from budgets_manager.constants import TODAY
 from expenses.models import Expense, ExpenseCategory
 from expenses.types import Type
 
@@ -18,4 +19,4 @@ class ExpenseFactory(factory.django.DjangoModelFactory):
 
     category = factory.SubFactory(ExpenseCategoryFactory)
     amount = factory.Faker("random_int", min=1000, max=10000)
-    datetime = factory.Faker("date_time_between", start_date="-1y", end_date="now")
+    datetime = TODAY

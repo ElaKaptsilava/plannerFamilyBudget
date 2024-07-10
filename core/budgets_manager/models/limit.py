@@ -1,5 +1,4 @@
 from budgets_manager import constants
-from budgets_manager.models import BudgetManager
 from django.core.exceptions import ValidationError
 from django.db import models
 from expenses.models import ExpenseCategory
@@ -8,6 +7,10 @@ from runningCosts.models import RunningCostCategory
 from targets.models import Target
 
 from core.constants import labels
+
+from .budget import BudgetManager
+from .proxy_model_needs import NeedsManager
+from .proxy_model_wants import WantsManager
 
 
 class LimitManager(models.Model):
@@ -65,18 +68,16 @@ class LimitManager(models.Model):
         return labels.DANGER
 
     def calculate_total_spent(self) -> float:
-        if self.type == Type.NEEDS:
-            if self.category_expense:
-                return self._calculate_total_spent_for_category_expense()
-            elif self.category_running_cost:
-                return self._calculate_total_spent_for_category_running_cost()
-        elif self.type == Type.WANTS:
+        if self.category_expense:
+            return self._calculate_total_spent_for_category_expense()
+        elif self.type == Type.NEEDS and self.category_running_cost:
+            return self._calculate_total_spent_for_category_running_cost()
+        elif self.type == Type.WANTS and self.target:
             return self._calculate_wants_spent()
 
     def _calculate_total_spent_for_category_running_cost(self) -> float:
         current_costs = self.category_running_cost.running_costs.filter(
-            next_payment_date__year=constants.TODAY.year,
-            next_payment_date__month=constants.TODAY.month,
+            next_payment_date__range=self.budget_manager.get_current_month_range,
         )
         total_spent = sum(
             current_cost.total_amount_in_month
@@ -86,19 +87,15 @@ class LimitManager(models.Model):
         return total_spent or 0.0
 
     def _calculate_total_spent_for_category_expense(self) -> float:
-        filtered_expenses = self.budget_manager.user.expenses.filter(
-            type=self.type,
-            category=self.category_expense,
-            datetime__year=constants.TODAY.year,
-            datetime__month=constants.TODAY.month,
+        filtered_expenses = self.category_expense.expense_set.filter(
+            datetime__range=self.budget_manager.get_current_month_range,
         )
         total = filtered_expenses.aggregate(total=models.Sum("amount"))["total"] or 0.0
         return total
 
     def _calculate_wants_spent(self) -> float:
         filtered_target_contributions = self.target.targetcontribution_set.filter(
-            date__year=constants.TODAY.year,
-            date__month=constants.TODAY.month,
+            date__range=self.budget_manager.get_current_month_range,
         )
         total = (
             filtered_target_contributions.aggregate(total=models.Sum("amount"))["total"]
@@ -108,6 +105,7 @@ class LimitManager(models.Model):
 
     def save(self, *args, **kwargs) -> None:
         self.__validate_budget_type()
+        self.__validate_amount()
         super().save(*args, **kwargs)
 
     def __validate_budget_type(self):
@@ -118,6 +116,20 @@ class LimitManager(models.Model):
         elif self.type == Type.WANTS and self.category_running_cost:
             raise ValidationError(
                 "For 'wants' type, target or category expense must be set."
+            )
+
+    def __validate_amount(self):
+        limits = {
+            Type.NEEDS: NeedsManager.objects.get(
+                user=self.budget_manager.user
+            ).get_limit,
+            Type.WANTS: WantsManager.objects.get(
+                user=self.budget_manager.user
+            ).get_limit,
+        }
+        if self.amount > limits.get(self.type):
+            raise ValidationError(
+                f"The amount should be less than the {int(limits.get(self.type))}..."
             )
 
     def __str__(self) -> str:

@@ -14,7 +14,7 @@
 <div class="container">
 
     <div class="row">
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
             <div class="card border-left-{{ needs.is_within_needs_budget }} shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -49,7 +49,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 mb-4">
+        <div class="col-xl-4 col-md-6 mb-4">
             <div class="card border-left-{{ wants.is_within_wants_budget_label }} shadow h-100 py-2">
                 <div class="card-body">
                     <div class="row no-gutters align-items-center">
@@ -84,6 +84,42 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-xl-4 col-md-6 mb-4">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xl font-weight-bold text-primary text-uppercase mb-1">
+                                Your save's target (monthly) {{ request.user.budgetmanager.savings_percentage }}%
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                ${{ savings.total_amount }}
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-info-circle text-warning" data-toggle="tooltip" data-placement="top"
+                               title="Includes discretionary expenses such as entertainment, dining out, and hobbies."></i>
+                        </div>
+                    </div>
+<!--                    <div class="row mt-3">-->
+<!--                        <div class="col">-->
+<!--                            <p class="card-text text-sm-left">-->
+<!--                                Status: <span class="badge badge-{{ wants.is_within_wants_budget_label }}">{{ wants.is_within_wants_budget_label }}</span>-->
+<!--                            </p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                    <div class="row mt-3">
+                        <div class="col">
+                            <p class="card-text text-sm-left">
+                                <strong>Includes:</strong> Your savings.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
     </div>
 </div>

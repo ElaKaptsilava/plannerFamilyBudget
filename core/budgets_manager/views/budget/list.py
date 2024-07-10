@@ -2,6 +2,7 @@ from budgets_manager.models import BudgetManager, NeedsManager, WantsManager
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import get_object_or_404
 from django.views.generic import ListView
+from targets.models import Saving
 
 
 class BudgetManagerListView(LoginRequiredMixin, ListView):
@@ -18,5 +19,8 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
         )
         context["wants"] = get_object_or_404(
             WantsManager.objects.select_related("user"), user=self.request.user
+        )
+        context["savings"] = get_object_or_404(
+            Saving.objects.select_related("user"), user=self.request.user
         )
         return context
