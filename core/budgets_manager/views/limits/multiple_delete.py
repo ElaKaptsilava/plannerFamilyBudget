@@ -11,7 +11,7 @@ class PlannerMultipleDeleteView(LoginRequiredMixin, View):
         selected = request.POST.getlist("selected")
         if selected:
             LimitManager.objects.filter(id__in=selected).delete()
-            messages.success(request, "Selected planners was successfully deleted")
+            messages.success(self.request, "Selected planners was successfully deleted")
         else:
-            messages.error(request, "No planners selected")
+            messages.error(self.request, "No planners selected")
         return HttpResponseRedirect(reverse_lazy("manager:limits-list", kwargs=kwargs))

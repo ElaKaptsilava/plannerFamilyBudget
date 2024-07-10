@@ -31,15 +31,17 @@ class BudgetManager(models.Model):
         help_text="Percentage of the income allocated for needs.",
     )
 
-    def save(self, *args, **kwargs) -> None:
+    def clean(self):
         total_allocation = (
-            self.savings_percentage + self.wants_percentage + self.needs_percentage
+            self.savings_percentage + self.needs_percentage + self.wants_percentage
         )
-
         if total_allocation != constants.MAX_ALLOCATION:
             raise ValidationError(
-                "The total allocation for saves, wants, and needs must equal 100."
+                "The total allocation for savings, needs, and wants must equal 100."
             )
+
+    def save(self, *args, **kwargs):
+        self.clean()
         super().save(*args, **kwargs)
 
     def _get_current_year_incomes(self) -> QuerySet[Income]:

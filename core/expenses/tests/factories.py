@@ -1,5 +1,6 @@
 import factory
 from expenses.models import Expense, ExpenseCategory
+from expenses.types import Type
 
 
 class ExpenseCategoryFactory(factory.django.DjangoModelFactory):
@@ -8,6 +9,7 @@ class ExpenseCategoryFactory(factory.django.DjangoModelFactory):
 
     name = factory.Faker("word")
     description = factory.Faker("sentence")
+    type = Type.NEEDS
 
 
 class ExpenseFactory(factory.django.DjangoModelFactory):

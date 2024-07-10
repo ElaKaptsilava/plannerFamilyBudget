@@ -87,6 +87,7 @@ class LimitManager(models.Model):
 
     def _calculate_total_spent_for_category_expense(self) -> float:
         filtered_expenses = self.budget_manager.user.expenses.filter(
+            type=self.type,
             category=self.category_expense,
             datetime__year=constants.TODAY.year,
             datetime__month=constants.TODAY.month,
@@ -110,14 +111,14 @@ class LimitManager(models.Model):
         super().save(*args, **kwargs)
 
     def __validate_budget_type(self):
-        if self.type == Type.NEEDS and not (
-            self.category_expense or self.category_running_cost
-        ):
+        if self.type == Type.NEEDS and self.target:
             raise ValidationError(
-                "For 'needs' type, either category_expense or category_running_cost must be set."
+                "For 'needs' type, either category expense or category running cost must be set."
             )
-        elif self.type == Type.WANTS and not self.target:
-            raise ValidationError("For 'wants' type, target must be set.")
+        elif self.type == Type.WANTS and self.category_running_cost:
+            raise ValidationError(
+                "For 'wants' type, target or category expense must be set."
+            )
 
     def __str__(self) -> str:
         return (

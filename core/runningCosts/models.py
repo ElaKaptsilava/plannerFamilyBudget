@@ -23,7 +23,11 @@ class RunningCostQuerySet(models.QuerySet):
 
 
 class RunningCostCategory(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="cost_categories",
+    )
     name = models.CharField(
         max_length=256, help_text="Enter the category of the running coast."
     )

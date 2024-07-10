@@ -1,5 +1,6 @@
 from budgets_manager.forms import BudgetManagerForm
 from budgets_manager.models import BudgetManager
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
@@ -11,3 +12,7 @@ class UpdateBudgetView(LoginRequiredMixin, UpdateView):
     context_object_name = "budget"
     model = BudgetManager
     success_url = reverse_lazy("home")
+
+    def form_invalid(self, form):
+        messages.info(self.request, "Check budget data!")
+        return super().form_invalid(form)

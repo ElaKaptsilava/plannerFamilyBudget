@@ -1,5 +1,5 @@
 from accounts.tests import CustomUserFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils.http import urlencode
 from expenses.models import Expense
@@ -42,7 +42,6 @@ class ExpenseListTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.context["expenses"]), 2)
 
-    @tag("x")
     def test_unauthorized_user_get_expenses_fail(self):
         response = self.client.get(self.expenses_list_url)
 
