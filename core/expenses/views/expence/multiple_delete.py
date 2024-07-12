@@ -13,5 +13,5 @@ class DeleteMultipleExpenseView(LoginRequiredMixin, View):
             Expense.objects.filter(id__in=selected_expenses).delete()
             messages.success(request, "Selected expenses were deleted successfully.")
         else:
-            messages.error(request, "No expenses were selected.")
+            messages.info(request, "No expenses were selected.")
         return HttpResponseRedirect(reverse_lazy("expenses:expenses-list"))

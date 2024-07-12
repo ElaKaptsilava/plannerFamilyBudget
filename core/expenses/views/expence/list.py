@@ -1,17 +1,15 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponse
 from django.urls import reverse_lazy
-from django.views.generic import FormView
+from django.views.generic import ListView
 from django_filters.views import FilterView
 from expenses.filters import ExpenseFilter
 from expenses.forms import ExpenseForm
 from expenses.models import Expense, ExpenseCategory
 
 
-class ExpensesView(LoginRequiredMixin, FilterView, FormView):
+class ExpensesListView(LoginRequiredMixin, FilterView, ListView):
     model = Expense
-    form_class = ExpenseForm
     template_name = "expenses/expenses-list.html"
     context_object_name = "expenses"
     success_url = reverse_lazy("expenses:expenses-list")
@@ -26,25 +24,11 @@ class ExpensesView(LoginRequiredMixin, FilterView, FormView):
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
-        context["form"] = self.form_class
+        context["form"] = ExpenseForm()
         context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
         context["object_list"] = self.get_queryset()
-        context["custom_message"] = (
-            "You haven't added any costs yet. Start by adding one!"
-        )
-        if not self.get_queryset():
-            messages.info(self.request, "You haven't added any expenses yet.")
+        if not context["object_list"]:
+            messages.info(
+                self.request, "You haven't added any expenses yet. Start by adding one!"
+            )
         return context
-
-    def form_valid(self, form) -> HttpResponse:
-        expense = form.save(commit=False)
-        expense.user = self.request.user
-        expense.save()
-        messages.success(self.request, "The expense added successfully!")
-        return super().form_valid(form)
-
-    def form_invalid(self, form):
-        messages.error(
-            self.request, "Failed to add the expense. Please check the form."
-        )
-        return super().form_invalid(form)

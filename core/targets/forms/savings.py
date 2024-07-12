@@ -5,9 +5,9 @@ from targets.models import SavingContributions
 class SavingPositiveContributionsForm(forms.ModelForm):
     class Meta:
         model = SavingContributions
-        fields = ["positive_amount"]
+        fields = ["amount"]
         widgets = {
-            "positive_amount": forms.NumberInput(
+            "amount": forms.NumberInput(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
                     "step": "0,1",
@@ -20,9 +20,9 @@ class SavingPositiveContributionsForm(forms.ModelForm):
 class SavingNegativeContributionsForm(forms.ModelForm):
     class Meta:
         model = SavingContributions
-        fields = ["negative_amount"]
+        fields = ["amount"]
         widgets = {
-            "negative_amount": forms.NumberInput(
+            "amount": forms.NumberInput(
                 attrs={
                     "class": "form-control form-control-user text-secondary",
                     "step": "0.1",

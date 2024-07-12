@@ -1,16 +1,18 @@
 from django.urls import path
-from expenses.views.category_expense.create import CategoryCreateView
-from expenses.views.category_expense.delete import CategoryExpenseDeleteView
-from expenses.views.category_expense.list import CategoryListView
-from expenses.views.category_expense.update import CategoryExpenseUpdateView
-from expenses.views.expence.form_view import ExpensesView
-from expenses.views.expence.multiple_delete import DeleteMultipleExpenseView
-from expenses.views.expence.update import ExpensesUpdateView
+
+from .views.category_expense.create import CategoryCreateView
+from .views.category_expense.delete import CategoryExpenseDeleteView
+from .views.category_expense.list import CategoryListView
+from .views.category_expense.update import CategoryExpenseUpdateView
+from .views.expence import ExpensesCreateView, ExpensesListView
+from .views.expence.multiple_delete import DeleteMultipleExpenseView
+from .views.expence.update import ExpensesUpdateView
 
 app_name = "expenses"
 
 urlpatterns = [
-    path("list/", ExpensesView.as_view(), name="expenses-list"),
+    path("list/", ExpensesListView.as_view(), name="expenses-list"),
+    path("list/create/", ExpensesCreateView.as_view(), name="expenses-list-create"),
     path(
         "<int:pk>/update/",
         ExpensesUpdateView.as_view(),

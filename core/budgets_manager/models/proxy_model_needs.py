@@ -37,6 +37,8 @@ class NeedsManager(BudgetManager):
             next_payment_date__month=self.TODAY.month,
             next_payment_date__year=self.TODAY.year,
         ).order_by("next_payment_date")
+        if not filtered_running_costs:
+            return 0.0
         total_amounts_in_month = map(
             lambda item: float(item.total_amount_in_month), filtered_running_costs
         )
@@ -44,9 +46,9 @@ class NeedsManager(BudgetManager):
 
     @property
     def total_expenses_spent_in_month(self) -> float:
-        queryset = Expense.objects.select_related(
-            "datetime", "amount"
-        ).prefetch_related("category", "user")
+        queryset = Expense.objects.prefetch_related("category", "user")
+        if not queryset:
+            return 0.0
         expenses_wants = queryset.filter(
             user=self.user,
             datetime__month=self.TODAY.month,
@@ -57,7 +59,7 @@ class NeedsManager(BudgetManager):
         return float(total)
 
     @property
-    def is_within_needs_budget(self):
+    def is_within_needs_budget(self) -> str:
         if self.get_progress <= constants.WARNING_THRESHOLD:
             return labels.INFO
         elif self.get_progress < constants.DANGER_THRESHOLD:

@@ -21,8 +21,5 @@ class ExpensesUpdateView(LoginRequiredMixin, UpdateView):
         return HttpResponseRedirect(self.success_url)
 
     def form_valid(self, form):
-        """If the form is valid, save the associated model."""
-        self.object = form.save()
-        response = super().form_valid(form)
         messages.success(self.request, "The expense updated successfully!")
-        return response
+        return super().form_valid(form)

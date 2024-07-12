@@ -1,2 +1,2 @@
-from expenses.models.category import *
-from expenses.models.expenses import *
+from .category import *
+from .expense import *

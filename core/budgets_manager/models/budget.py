@@ -47,7 +47,6 @@ class BudgetManager(models.Model):
     def _get_current_year_incomes(self) -> QuerySet[Income]:
         return Income.objects.filter(user=self.user, date__year=self.TODAY.year)
 
-    @property
     def get_current_month_range(self):
         start_date = self.TODAY.replace(
             day=1, hour=0, minute=0, second=0, microsecond=0

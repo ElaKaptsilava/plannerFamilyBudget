@@ -39,6 +39,9 @@ class TestLimitModel(TestCase):
         )
 
     def test_calculate_target_spent_in_month(self):
+        """
+        ...
+        """
         contribution = TargetContributionFactory.create(
             user=self.user, target=self.target
         )

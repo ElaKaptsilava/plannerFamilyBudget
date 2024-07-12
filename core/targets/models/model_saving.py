@@ -1,11 +1,11 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 
 class Saving(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="saving"
+    )
     date = models.DateField(help_text="Date of the saving entry.", auto_now_add=True)
 
     def __str__(self) -> str:
@@ -19,38 +19,28 @@ class Saving(models.Model):
 
     @property
     def total_amount(self) -> float:
-        amount = self.savingcontributions_set.all().aggregate(
-            positive_amount=models.Sum("positive_amount"),
-            negative_amount=models.Sum("negative_amount"),
-        )
-        return sum(amount.values())
+        amount = 0.0
+        contributions = self.savingcontributions_set.all()
+        if contributions:
+            amount = contributions.aggregate(
+                amount=models.Sum("amount"),
+            )["amount"]
+        return amount
 
 
+# models.DecimalField
 class SavingContributions(models.Model):
-    positive_amount = models.FloatField(
-        default=0,
-        verbose_name="Positive amount",
-        help_text="Amount of the positive amount.",
-        null=True,
-        blank=True,
-        validators=[MinValueValidator(1)],
-    )
-    negative_amount = models.FloatField(
-        default=0,
-        verbose_name="Negative amount",
-        help_text="Amount of the negative amount.",
-        null=True,
-        blank=True,
-        validators=[MaxValueValidator(0)],
+    amount = models.DecimalField(
+        default=0.0,
+        decimal_places=2,
+        max_digits=10,
+        verbose_name="Amount",
+        help_text="Enter the amount.",
     )
     saving = models.ForeignKey(Saving, on_delete=models.CASCADE, verbose_name="Saving")
+    date = models.DateField(
+        help_text="Date of the contribution entry.", auto_now_add=True
+    )
 
-    def validate(self):
-        if not self.positive_amount and not self.negative_amount:
-            raise ValidationError(
-                "At least one of positive amount or negative amount must be provided."
-            )
-
-    def save(self, *args, **kwargs):
-        self.validate()
-        super().save(*args, **kwargs)
+    class Meta:
+        ordering = ("date",)

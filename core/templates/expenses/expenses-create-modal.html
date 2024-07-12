@@ -9,7 +9,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'expenses:expenses-list' %}" method="post">
+                <form action="{% url 'expenses:expenses-list-create' %}" method="post">
                     {% csrf_token %}
                     <div class="container">
                         <div class="main-body">

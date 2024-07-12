@@ -18,11 +18,11 @@ class WantsManager(BudgetManager):
         )
 
     @property
-    def get_progress(self) -> float:  # Check
+    def get_progress(self) -> float:
         return self.total_spent_in_month * constants.MAX_ALLOCATION / self.get_limit
 
     @property
-    def total_spent_in_month(self):
+    def total_spent_in_month(self) -> float:
         return (
             self.total_targets_contribution_in_month
             + self.total_expenses_spent_in_month
@@ -33,19 +33,23 @@ class WantsManager(BudgetManager):
         get_queryset = TargetContribution.objects.prefetch_related("user").order_by(
             "user", "date"
         )
+        if not get_queryset:
+            return 0.0
         targets = get_queryset.filter(
-            user=self.user, date__range=self.get_current_month_range
+            user=self.user, date__range=self.get_current_month_range()
         )
-        total = targets.aggregate(total=models.Sum("amount"))["total"] or 0.0
+        total = targets.aggregate(total=models.Sum("amount"))["total"]
         return float(total)
 
     @property
     def total_expenses_spent_in_month(self) -> float:
         expenses_wants = Expense.objects.filter(
             user=self.user,
-            datetime__range=self.get_current_month_range,
+            datetime__range=self.get_current_month_range(),
             category__type=Type.WANTS,
         )
+        if not expenses_wants:
+            return 0.0
         total = expenses_wants.aggregate(total=models.Sum("amount"))["total"] or 0.0
         return float(total)
 
@@ -55,8 +59,8 @@ class WantsManager(BudgetManager):
 
     @property
     def is_within_wants_budget_label(self):
-        if self.total_spent_in_month <= constants.WARNING_THRESHOLD:
+        if self.get_progress <= constants.WARNING_THRESHOLD:
             return labels.INFO
-        elif self.total_spent_in_month < constants.DANGER_THRESHOLD:
+        elif self.get_progress < constants.DANGER_THRESHOLD:
             return labels.WARNING
         return labels.DANGER
