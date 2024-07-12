@@ -18,14 +18,21 @@ app.conf.update(
     beat_schedule={
         "update_target_deadlines": {
             "task": "targets.tasks.update_target_deadlines",
-            "schedule": crontab(minute=0, hour=2),
+            "schedule": crontab(minute=0, hour=0),
             "options": {
                 "queue": "default",
             },
         },
         "update_monthly_incomes": {
             "task": "budgets_manager.tasks.update_monthly_incomes",
-            "schedule": crontab(hour=23, minute=50, day_of_month=last_day_of_month),
+            "schedule": crontab(hour=0, minute=0, day_of_month=last_day_of_month),
+            "options": {
+                "queue": "default",
+            },
+        },
+        "generate_budget_analysis_message": {
+            "task": "budgets_manager.tasks.generate_budget_analysis_message",
+            "schedule": crontab(minute=0, hour=0, day_of_week=1),
             "options": {
                 "queue": "default",
             },

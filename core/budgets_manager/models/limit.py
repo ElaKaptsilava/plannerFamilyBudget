@@ -77,7 +77,7 @@ class LimitManager(models.Model):
 
     def _calculate_total_spent_for_category_running_cost(self) -> float:
         current_costs = self.category_running_cost.running_costs.filter(
-            next_payment_date__range=self.budget_manager.get_current_month_range,
+            next_payment_date__range=self.budget_manager.get_current_month_range(),
         )
         total_spent = sum(
             current_cost.total_amount_in_month
@@ -88,14 +88,14 @@ class LimitManager(models.Model):
 
     def _calculate_total_spent_for_category_expense(self) -> float:
         filtered_expenses = self.category_expense.expense_set.filter(
-            datetime__range=self.budget_manager.get_current_month_range,
+            datetime__range=self.budget_manager.get_current_month_range(),
         )
         total = filtered_expenses.aggregate(total=models.Sum("amount"))["total"] or 0.0
         return total
 
     def _calculate_wants_spent(self) -> float:
         filtered_target_contributions = self.target.targetcontribution_set.filter(
-            date__range=self.budget_manager.get_current_month_range,
+            date__range=self.budget_manager.get_current_month_range(),
         )
         total = (
             filtered_target_contributions.aggregate(total=models.Sum("amount"))["total"]
