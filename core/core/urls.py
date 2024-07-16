@@ -1,4 +1,4 @@
-from accounts.views.profile import HomeView
+from accounts.views.profile import DropMenuView, HomeView
 from budgets_manager.views import dash_app
 from django.conf import settings
 from django.conf.urls.static import static
@@ -7,11 +7,13 @@ from django.urls import include, path
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", DropMenuView.as_view(), name="drop-menu"),
     path(
-        "home/",
+        "dashboard/",
         HomeView.as_view(),
         name="home",
     ),
+    path("", include("communication.urls"), name="communication"),
     path("auth/", include("accounts.urls"), name="accounts"),
     path("incomes/", include("incomes.urls"), name="incomes"),
     path("expenses/", include("expenses.urls"), name="expenses"),

@@ -4,9 +4,9 @@ from unittest.mock import patch
 from accounts.tests import CustomUserFactory
 from budgets_manager.tests import BudgetManagerFactory
 from communication.management.commands.open_ai_message import Command
-from communication.models import Message
+from communication.models.messages import Message
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.utils import timezone
 from expenses.tests import ExpenseCategoryFactory, ExpenseFactory
 from expenses.types import Type
@@ -18,9 +18,7 @@ class CommandTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
         self.budget = BudgetManagerFactory.create(user=self.user)
-        self.income = IncomeFactory.create(user=self.user)
-        self.income = IncomeFactory.create(user=self.user)
-        self.income = IncomeFactory.create(user=self.user)
+        self.incomes = IncomeFactory.create_batch(user=self.user, size=3)
         self.expense_category1 = ExpenseCategoryFactory.create(user=self.user)
         self.expense_category2 = ExpenseCategoryFactory.create(
             user=self.user, type=Type.WANTS
@@ -60,6 +58,7 @@ class CommandTestCase(TestCase):
     @patch(
         "communication.management.commands.open_ai_message.Command.get_openai_response"
     )
+    @tag("test")
     def test_create_budget_message(self, mock_get_openai_response):
         mock_get_openai_response.return_value = self.mock_open_ai_response()
         mock_now = timezone.now()

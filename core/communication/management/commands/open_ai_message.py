@@ -2,7 +2,7 @@ from typing import Any, Optional
 
 from accounts.models import CustomUser
 from budgets_manager.models import BudgetManager, NeedsManager, WantsManager
-from communication.models import Message
+from communication.models.messages import Message
 from django.core.management.base import BaseCommand
 from django.db.models import QuerySet, Sum
 from django.utils import timezone
@@ -20,7 +20,7 @@ class Command(BaseCommand):
         self.create_budget_message()
 
         self.stdout.write(
-            self.style.SUCCESS("Successfully updated deadlines for targets.")
+            self.style.SUCCESS("Successfully created alert messages with openai.")
         )
 
     def create_budget_message(self) -> None:

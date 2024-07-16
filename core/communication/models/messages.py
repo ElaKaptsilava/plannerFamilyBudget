@@ -18,4 +18,7 @@ class Message(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.title} - {self.user.username}"
+        return f"{self.content[:30]}"
+
+    def __repr__(self):
+        return f"{self.user} - {self.title}"

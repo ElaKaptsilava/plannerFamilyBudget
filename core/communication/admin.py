@@ -1,6 +1,5 @@
+from communication.models.messages import Message
 from django.contrib import admin
-
-from .models import Message
 
 
 @admin.register(Message)

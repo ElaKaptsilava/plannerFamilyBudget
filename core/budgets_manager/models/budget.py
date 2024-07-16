@@ -62,13 +62,17 @@ class BudgetManager(models.Model):
             date__month=self.TODAY.month, date__year=self.TODAY.year
         )
         total = monthly_incomes.aggregate(total=models.Sum("amount"))["total"]
-        return float(total) or 0.0
+        if not total:
+            return 0.0
+        return float(total)
 
     @property
     def calculate_annual_incomes(self) -> float:
         annual_incomes = self._get_current_year_incomes().aggregate(
             annual_incomes=models.Sum("amount")
         )["annual_incomes"]
+        if not annual_incomes:
+            return 0.0
         return float(annual_incomes) or 0.0
 
     @property
@@ -79,8 +83,7 @@ class BudgetManager(models.Model):
             datetime__month=self.TODAY.month,
         )
         total = get_filtered_expenses.aggregate(total=models.Sum("amount"))["total"]
-
-        return total or 0.0
+        return total if total else 0.0
 
     def __str__(self) -> str:
         return f"{self.user.first_name.upper()}'s Budget Plan"

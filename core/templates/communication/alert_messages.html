@@ -1,0 +1,13 @@
+{% for alert in alert_messages %}
+<a class="dropdown-item d-flex align-items-center" href="#">
+    <div class="mr-3">
+        <div class="icon-circle bg-primary">
+            <i class="fas fa-file-alt text-white"></i>
+        </div>
+    </div>
+    <div>
+        <div class="small text-gray-500">{{ alert.created_at }}</div>
+        <span class="{% if not alert.is_read %}font-weight-bold{% endif %} %}">{{ alert.title }}</span>
+    </div>
+</a>
+{% endfor %}

@@ -22,9 +22,9 @@ class NeedsManager(BudgetManager):
 
     @property
     def get_progress(self) -> float:
-        return (
-            self.total_spent_in_month * constants.MAX_ALLOCATION / self.get_limit or 0.0
-        )
+        if not self.get_limit:
+            return 0.0
+        return self.total_spent_in_month * constants.MAX_ALLOCATION / self.get_limit
 
     @property
     def total_spent_in_month(self) -> float:

@@ -19,6 +19,8 @@ class WantsManager(BudgetManager):
 
     @property
     def get_progress(self) -> float:
+        if not self.get_limit:
+            return 0
         return self.total_spent_in_month * constants.MAX_ALLOCATION / self.get_limit
 
     @property
@@ -33,12 +35,13 @@ class WantsManager(BudgetManager):
         get_queryset = TargetContribution.objects.prefetch_related("user").order_by(
             "user", "date"
         )
-        if not get_queryset:
-            return 0.0
+
         targets = get_queryset.filter(
             user=self.user, date__range=self.get_current_month_range()
         )
         total = targets.aggregate(total=models.Sum("amount"))["total"]
+        if not total:
+            return 0.0
         return float(total)
 
     @property
@@ -48,9 +51,9 @@ class WantsManager(BudgetManager):
             datetime__range=self.get_current_month_range(),
             category__type=Type.WANTS,
         )
-        if not expenses_wants:
+        total = expenses_wants.aggregate(total=models.Sum("amount"))["total"]
+        if not total:
             return 0.0
-        total = expenses_wants.aggregate(total=models.Sum("amount"))["total"] or 0.0
         return float(total)
 
     @property
