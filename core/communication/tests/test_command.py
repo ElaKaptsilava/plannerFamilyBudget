@@ -6,7 +6,7 @@ from budgets_manager.tests import BudgetManagerFactory
 from communication.management.commands.open_ai_message import Command
 from communication.models.messages import Message
 from django.core.management import call_command
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.utils import timezone
 from expenses.tests import ExpenseCategoryFactory, ExpenseFactory
 from expenses.types import Type
@@ -33,7 +33,7 @@ class CommandTestCase(TestCase):
         self.running_cost = RunningCostFactory.create(
             user=self.user, category=self.category_cost
         )
-        self.success_message = "Successfully updated deadlines for targets."
+        self.success_message = "Successfully created alert messages with openai."
 
     @staticmethod
     def mock_open_ai_response():
@@ -58,7 +58,6 @@ class CommandTestCase(TestCase):
     @patch(
         "communication.management.commands.open_ai_message.Command.get_openai_response"
     )
-    @tag("test")
     def test_create_budget_message(self, mock_get_openai_response):
         mock_get_openai_response.return_value = self.mock_open_ai_response()
         mock_now = timezone.now()

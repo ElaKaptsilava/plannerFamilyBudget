@@ -1,5 +1,5 @@
 {% for alert in alert_messages %}
-<a class="dropdown-item d-flex align-items-center" href="#">
+<a class="dropdown-item d-flex align-items-center" href="{% url 'communication:message-detail' pk=alert.pk %}">
     <div class="mr-3">
         <div class="icon-circle bg-primary">
             <i class="fas fa-file-alt text-white"></i>

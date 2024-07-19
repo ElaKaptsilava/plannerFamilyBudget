@@ -38,7 +38,9 @@ class Command(BaseCommand):
             prompt: str = (
                 f"Generate a message for the user about their budget status with the following information:\n{summary}\n"
             )
-            message_content: str = self.get_openai_response(prompt=prompt)
+            message_content: str = self.get_openai_response(
+                user=user.username, prompt=prompt
+            )
 
             message: Message = Message(
                 user=user,
@@ -50,20 +52,21 @@ class Command(BaseCommand):
             message.save()
 
     @staticmethod
-    def get_openai_response(prompt: str) -> str:
-        client = OpenAI()
+    def get_system_content_from_file() -> str:
+        with open("communication/management/commands/content.txt", "r") as content_file:
+            return content_file.read()
 
+    def get_openai_response(self, user: str, prompt: str) -> str:
+        client = OpenAI()
+        content = self.get_system_content_from_file().replace("user", f"{user}'s")
         completion: ChatCompletion = client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o",
             messages=[
-                {
-                    "role": "system",
-                    "content": "You are a financial consultant and expert in family budgeting, "
-                    "providing insightful and actionable advice.",
-                },
+                {"role": "system", "content": content},
                 {"role": "user", "content": prompt},
             ],
         )
+
         return completion.choices[0].message.content.replace("[Your Name]", "")
 
     @staticmethod
@@ -126,4 +129,7 @@ class Command(BaseCommand):
             f"Total need expenses (monthly): {self.calculate_need_expenses_monthly(user=user, budget=budget)}\n"
             f"Total running costs: {needs_manager.total_costs_spent_in_month}\n"
         )
+        last_message = user.messages.first()
+        if last_message:
+            summary += f"last your proposed message: {last_message.content}\n"
         return summary
