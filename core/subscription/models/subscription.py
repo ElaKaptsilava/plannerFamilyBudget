@@ -15,7 +15,7 @@ class Subscription(models.Model):
     plan = models.ForeignKey(
         Plan,
         on_delete=models.CASCADE,
-        help_text="The subscription plan selected by the user.",
+        help_text="Select subscription plan.",
     )
     start_date = models.DateField(
         auto_now_add=True, help_text="The date when the subscription started."

@@ -8,6 +8,9 @@ class Plan(models.Model):
     description = models.TextField(help_text="Enter description of the plan.")
     price = models.FloatField(help_text="Enter price of the plan.")
 
+    class Meta:
+        ordering = ["price"]
+
     def __str__(self) -> str:
         return f"{self.name} - ${self.price}"
 

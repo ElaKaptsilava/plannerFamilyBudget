@@ -1,10 +1,41 @@
 {% extends "registration/base_auth.html" %}
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    <div class="row">
-        {{ subscription_form.as_p }}
-    </div>
-    <button type="submit" class="btn btn-primary mt-3">Submit</button>
-</form>
+<div class="container">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    {{ subscription_form.as_p }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for plan in plans %}
+            <div class="col-xl-4 col-md-6 mb-4">
+                <div class="card border-left-dark shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xl font-weight-bold text-success text-uppercase mb-1">
+                                    {{ plan.name }}
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                                   title="{{ plan.description }}">
+                                </i> {{ plan.description }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Submit</button>
+    </form>
+</div>
 {% endblock %}
