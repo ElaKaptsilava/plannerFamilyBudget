@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.generic import CreateView
 from subscription.forms.subscription import SubscriptionForm
 from subscription.models import Plan
@@ -21,6 +24,7 @@ class CreateSubscriptionView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user
+        form.instance.end_date = timezone.now() + timedelta(days=30)
         form.instance.save()
         messages.success(self.request, "Your subscription has been added!")
         return super().form_valid(form)

@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from accounts.models import CustomUser
 from django.db import models
 from django.utils import timezone
@@ -28,11 +26,6 @@ class Subscription(models.Model):
 
     class Meta:
         ordering = ["-end_date"]
-
-    def save(self, *args, **kwargs):
-        if not self.end_date:
-            self.end_date = self.start_date + timedelta(days=30)
-        super().save(*args, **kwargs)
 
     def __repr__(self) -> str:
         return f"{self.user} - {self.plan}"
