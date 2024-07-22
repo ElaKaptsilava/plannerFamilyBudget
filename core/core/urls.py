@@ -20,6 +20,7 @@ urlpatterns = [
     path("running-costs/", include("runningCosts.urls"), name="running-costs"),
     path("targets/", include("targets.urls"), name="target"),
     path("manager/", include("budgets_manager.urls"), name="manager"),
+    path("subscription/", include("subscription.urls"), name="subscription"),
     path("earnings-data/", dash_app.EarningsDataView.as_view(), name="earnings-data"),
     path(
         "revenue-sources/",

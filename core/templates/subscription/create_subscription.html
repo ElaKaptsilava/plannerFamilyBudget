@@ -1,0 +1,10 @@
+{% extends "registration/base_auth.html" %}
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div class="row">
+        {{ subscription_form.as_p }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Submit</button>
+</form>
+{% endblock %}
