@@ -8,6 +8,6 @@ from django.views.generic import UpdateView
 class UpdateLimitView(LoginRequiredMixin, UpdateView):
     model = LimitManager
     form_class = LimitForm
-    template_name = "budgets_manager/limits/list.html"
+    template_name = "budgets_manager/limits/update-modal.html"
     success_url = reverse_lazy("manager:limits-list")
     context_object_name = "limit"

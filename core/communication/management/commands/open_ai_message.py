@@ -48,9 +48,13 @@ class Command(BaseCommand):
                 user=user.username, prompt=prompt
             )
 
+            current_day = timezone.now().strftime("%d")
+            current_month = timezone.now().strftime("%B")
+            current_year = timezone.now().year
+
             message: Message = Message(
                 user=user,
-                title=f"Budget analiz {timezone.now().strftime('%B')} {timezone.now().year}",
+                title=f"Budget analiz {current_day} {current_month} {current_year} for {user.username}",
                 content=message_content,
                 created_at=timezone.now(),
                 is_read=False,

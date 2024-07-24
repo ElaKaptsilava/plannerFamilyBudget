@@ -8,3 +8,8 @@ class MessageDetailView(LoginRequiredMixin, DetailView):
     template_name = "communication/detail.html"
     context_object_name = "message"
     success_message = "Message successfully sent!"
+
+    def get_context_data(self, **kwargs):
+        self.object.is_read = True
+        self.object.save()
+        return super().get_context_data(**kwargs)
