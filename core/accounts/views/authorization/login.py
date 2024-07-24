@@ -30,8 +30,7 @@ class CustomLoginView(RedirectURLMixin, FormView):
 
         if user is not None:
             login(self.request, user)
-            budget_create_url = check_is_user_has_budget(request=self.request)
-            if budget_create_url:
+            if budget_create_url := check_is_user_has_budget(request=self.request):
                 return redirect(budget_create_url)
             if subscription_url := check_is_user_has_subscription(request=self.request):
                 return redirect(subscription_url)
