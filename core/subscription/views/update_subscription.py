@@ -9,7 +9,7 @@ from subscription.models import Subscription
 
 class UpdateSubscriptionView(LoginRequiredMixin, UpdateView):
     model = Subscription
-    template_name = "subscription/update-modal.html"
+    template_name = "index.html"
     success_url = reverse_lazy("home")
     context_object_name = "subscription"
     form_class = SubscriptionForm
@@ -29,4 +29,4 @@ class UpdateSubscriptionView(LoginRequiredMixin, UpdateView):
 
     def form_invalid(self, form):
         messages.error(self.request, "Subscription could not be updated")
-        return super().form_valid(form)
+        return super().form_invalid(form)

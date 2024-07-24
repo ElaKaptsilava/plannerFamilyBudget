@@ -9,6 +9,7 @@ from django.utils import timezone
 from expenses.types import Type
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
+from subscription.models import Plan
 
 
 class Command(BaseCommand):
@@ -27,7 +28,12 @@ class Command(BaseCommand):
         users: QuerySet[CustomUser] = CustomUser.objects.select_related(
             "budgetmanager"
         ).prefetch_related("expense_categories")
+        basic_plan_names = set(
+            Plan.objects.filter(price=0).values_list("name", flat=True)
+        )
         for user in users:
+            if user.subscription.plan.name in basic_plan_names:
+                continue
             needs_manager: NeedsManager = NeedsManager.objects.get(user=user)
             wants_manager: WantsManager = WantsManager.objects.get(user=user)
 

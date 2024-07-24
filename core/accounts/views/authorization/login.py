@@ -1,47 +1,48 @@
 from accounts.forms import AccountAuthenticationForm
-from accounts.models import CustomUser
 from budgets_manager.utils import check_is_user_has_budget
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+from django.contrib.auth.views import RedirectURLMixin
+from django.shortcuts import redirect, resolve_url
 from django.urls import reverse_lazy
-from django.views import View
+from django.views.generic import FormView
 from subscription.utils import check_is_user_has_subscription
 
 
-class CustomLoginView(View):
-    template_name: str = "registration/login.html"
+class CustomLoginView(RedirectURLMixin, FormView):
+    form_class = AccountAuthenticationForm
+    template_name = "registration/login.html"
+    success_url = reverse_lazy("home")
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
-        context: dict = {}
-        user: CustomUser = request.user
-        if not user.is_authenticated:
-            messages.info(request, "Please log in to continue.")
-        form = AccountAuthenticationForm()
-        context["login_form"] = form
-        return render(request, template_name=self.template_name, context=context)
-
-    def post(self, request, *args, **kwargs) -> HttpResponse:
-        context: dict = {}
-        form = AccountAuthenticationForm(request.POST)
-        if form.is_valid():
-            email: str = form.cleaned_data["email"]
-            password: str = form.cleaned_data["password"]
-            if authenticate_user := authenticate(email=email, password=password):
-                login(request, authenticate_user)
-                budget_create_url = check_is_user_has_budget(request=request)
-                if budget_create_url:
-                    return redirect(budget_create_url)
-                if subscription_url := check_is_user_has_subscription(request=request):
-                    return redirect(subscription_url)
-                messages.success(request, f"Welcome back, {authenticate_user.email}!")
-                return redirect(reverse_lazy("home"))
-            else:
-                messages.error(request, "Invalid email or password.")
+    def get_default_redirect_url(self):
+        """Return the default redirect URL."""
+        if self.next_page:
+            return resolve_url(self.next_page)
         else:
-            messages.error(
-                request, "Invalid form submission. Please check the entered data."
-            )
-        context["login_form"] = form
-        return render(request, template_name=self.template_name, context=context)
+            print(settings.LOGIN_REDIRECT_URL)
+            return resolve_url(settings.LOGIN_REDIRECT_URL)
+
+    def form_valid(self, form):
+        email = form.cleaned_data["email"]
+        password = form.cleaned_data["password"]
+        user = authenticate(email=email, password=password)
+
+        if user is not None:
+            login(self.request, user)
+            budget_create_url = check_is_user_has_budget(request=self.request)
+            if budget_create_url:
+                return redirect(budget_create_url)
+            if subscription_url := check_is_user_has_subscription(request=self.request):
+                return redirect(subscription_url)
+            return super().form_valid(form)
+        else:
+            form.add_error(None, "Invalid email or password.")
+            return self.form_invalid(form)
+
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        messages.error(
+            self.request, form.errors.get(None, "Invalid email or password.")
+        )
+        return response

@@ -13,14 +13,13 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
         return BudgetManager.objects.get(user=self.request.user)
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["needs"] = get_object_or_404(
+        kwargs["needs"] = get_object_or_404(
             NeedsManager.objects.select_related("user"), user=self.request.user
         )
-        context["wants"] = get_object_or_404(
+        kwargs["wants"] = get_object_or_404(
             WantsManager.objects.select_related("user"), user=self.request.user
         )
-        context["savings"] = get_object_or_404(
+        kwargs["savings"] = get_object_or_404(
             Saving.objects.select_related("user"), user=self.request.user
         )
-        return context
+        return super().get_context_data(**kwargs)

@@ -200,6 +200,7 @@ MESSAGE_TAGS = {
 STATIC_URL = "/django_static/"
 STATIC_ROOT = BASE_DIR / "django_static"
 
+LOGIN_REDIRECT_URL = "home"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 FLOWER_PORT = 5555
 FLOWER_BASIC_AUTH = ("flower_username", "flower_password")
