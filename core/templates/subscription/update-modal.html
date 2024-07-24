@@ -1,0 +1,22 @@
+<div class="modal fade" id="updatePlanModal{{ request.user.subscription.pk }}" tabindex="-1" role="dialog"
+     aria-labelledby="updatePlanModal{{ request.user.subscription.pk }}Label"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="updatePlanModal{{ request.user.subscription.pk }}Label">Update Plan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'subscription:detail-update' pk=request.user.subscription.pk %}">
+                    {% csrf_token %}
+                    {{ request.user.subscription }}
+                    <button type="submit" class="btn btn-outline-success">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

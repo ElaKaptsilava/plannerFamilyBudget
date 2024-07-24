@@ -7,7 +7,6 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView
 from subscription.forms.subscription import SubscriptionForm
-from subscription.models import Plan
 from subscription.models.subscription import Subscription
 
 
@@ -19,7 +18,6 @@ class CreateSubscriptionView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         kwargs["subscription_form"] = self.form_class
-        kwargs["plans"] = Plan.objects.all()
         return super().get_context_data(**kwargs)
 
     def form_valid(self, form) -> HttpResponse:

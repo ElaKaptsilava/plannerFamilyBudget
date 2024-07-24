@@ -17,7 +17,6 @@ class Saving(models.Model):
             f"date={self.date!r})"
         )
 
-    @property
     def total_amount(self) -> float:
         amount = 0.0
         contributions = self.savingcontributions_set.all()

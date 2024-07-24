@@ -311,9 +311,11 @@
                 <strong>SB Admin Pro</strong> is packed with premium features, components, and
                 more!
             </p>
-            <a class="btn btn-outline-success btn-sm"
-               href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to
-                Pro!</a>
+            <button type="button" class="btn btn-outline-success btn-sm mt-4" data-toggle="modal"
+                               data-target="#updatePlanModal{{ request.user.subscription.pk }}">
+                Upgrade Plan!
+            </button>
+            {% include 'subscription/update-modal.html' %}
         </div>
     </ul>
     <!-- End of Sidebar -->
@@ -607,5 +609,6 @@
 <!-- Page level custom scripts -->
 <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
 <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
+
 </body>
 </html>

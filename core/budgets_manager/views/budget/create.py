@@ -11,7 +11,7 @@ class BudgetManagerCreateView(LoginRequiredMixin, CreateView):
     template_name = "budgets_manager/budget/budget-create.html"
     context_object_name = "budget"
     model = BudgetManager
-    success_url = reverse_lazy("home")
+    success_url = reverse_lazy("subscription:list-create")
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user

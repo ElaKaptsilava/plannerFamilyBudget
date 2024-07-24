@@ -167,7 +167,6 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGIN_URL = reverse_lazy("accounts:login")
-LOGIN_REDIRECT_URL = reverse_lazy("home")
 
 sentry_sdk.init(
     dsn="https://f0b4ba9c057dd7b657c5026ebaf27844@o4506400042844160.ingest.us.sentry.io/4507231938215936",
@@ -177,7 +176,6 @@ sentry_sdk.init(
 
 if DEBUG:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-    print(EMAIL_BACKEND)
 
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587

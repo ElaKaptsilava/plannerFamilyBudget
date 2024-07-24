@@ -1,12 +1,13 @@
 from accounts.forms import AccountAuthenticationForm
 from accounts.models import CustomUser
-from budgets_manager.utils import check_and_redirect_to_budget_create
+from budgets_manager.utils import check_is_user_has_budget
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.views import View
+from subscription.utils import check_is_user_has_subscription
 
 
 class CustomLoginView(View):
@@ -15,11 +16,7 @@ class CustomLoginView(View):
     def get(self, request, *args, **kwargs) -> HttpResponse:
         context: dict = {}
         user: CustomUser = request.user
-        if user.is_authenticated:
-            messages.info(request, f"You are already logged in as {user.email}.")
-            check_and_redirect_to_budget_create(request)
-            return redirect(reverse_lazy("home"))
-        else:
+        if not user.is_authenticated:
             messages.info(request, "Please log in to continue.")
         form = AccountAuthenticationForm()
         context["login_form"] = form
@@ -31,11 +28,14 @@ class CustomLoginView(View):
         if form.is_valid():
             email: str = form.cleaned_data["email"]
             password: str = form.cleaned_data["password"]
-            user: authenticate = authenticate(email=email, password=password)
-            if user:
-                login(request, user)
-                messages.success(request, f"Welcome back, {user.email}!")
-                check_and_redirect_to_budget_create(request)
+            if authenticate_user := authenticate(email=email, password=password):
+                login(request, authenticate_user)
+                budget_create_url = check_is_user_has_budget(request=request)
+                if budget_create_url:
+                    return redirect(budget_create_url)
+                if subscription_url := check_is_user_has_subscription(request=request):
+                    return redirect(subscription_url)
+                messages.success(request, f"Welcome back, {authenticate_user.email}!")
                 return redirect(reverse_lazy("home"))
             else:
                 messages.error(request, "Invalid email or password.")

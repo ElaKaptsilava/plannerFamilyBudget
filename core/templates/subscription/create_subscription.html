@@ -13,7 +13,7 @@
         </div>
 
         <div class="row">
-            {% for plan in plans %}
+            {% for plan in subscription_form.fields.plan.queryset %}
             <div class="col-xl-4 col-md-6 mb-4">
                 <div class="card border-left-dark shadow h-100 py-2">
                     <div class="card-body">

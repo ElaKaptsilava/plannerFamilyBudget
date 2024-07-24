@@ -12,8 +12,6 @@ class ProfileView(LoginRequiredMixin, View):
     login_url: reverse_lazy = reverse_lazy("accounts:login")
 
     def get(self, request, user_id: int) -> HttpResponse:
-        if not request.user.is_authenticated:
-            return redirect(self.login_url)
         user_form = CustomUserUpdateForm(instance=request.user)
         profile_form = ProfileForm(instance=request.user.profile)
         return render(
@@ -23,8 +21,6 @@ class ProfileView(LoginRequiredMixin, View):
         )
 
     def post(self, request, user_id: int) -> HttpResponse:
-        if not request.user.is_authenticated:
-            return redirect(self.login_url)
         user_form = CustomUserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileForm(
             request.POST, request.FILES, instance=request.user.profile
