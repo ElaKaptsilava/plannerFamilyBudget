@@ -4,9 +4,9 @@ from django.contrib import admin
 
 @admin.register(CustomUser)
 class CustomUserAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20
 
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20

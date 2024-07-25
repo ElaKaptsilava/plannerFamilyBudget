@@ -5,19 +5,19 @@ from .models import BudgetManager, LimitManager, MonthlyIncomes, WantsManager
 
 @admin.register(LimitManager)
 class PlanerAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20
 
 
 @admin.register(BudgetManager)
 class BudgetManagerAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20
 
 
 @admin.register(MonthlyIncomes)
 class MonthlyIncomesAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20
 
 
 @admin.register(WantsManager)
 class WantsManagerAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20

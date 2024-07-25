@@ -20,7 +20,6 @@ class CustomLoginView(RedirectURLMixin, FormView):
         if self.next_page:
             return resolve_url(self.next_page)
         else:
-            print(settings.LOGIN_REDIRECT_URL)
             return resolve_url(settings.LOGIN_REDIRECT_URL)
 
     def form_valid(self, form):

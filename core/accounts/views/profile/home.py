@@ -1,7 +1,5 @@
 from budgets_manager.models import BudgetManager, NeedsManager, WantsManager
-from communication.models import Message
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
 from django.views.generic import TemplateView
 from targets.forms import (
@@ -25,20 +23,9 @@ class HomeView(LoginRequiredMixin, TemplateView):
                 "savings": self.get_savings_object_or_404(user),
                 "positive_form": SavingPositiveContributionsForm(),
                 "negative_form": SavingNegativeContributionsForm(),
-                "unread_messages": self.get_unread_messages_queryset(user),
-                "unread_alert_count": self.count_unread_alert_messages(user),
             }
         )
         return super().get_context_data(**kwargs)
-
-    @staticmethod
-    def get_unread_messages_queryset(user) -> QuerySet[Message]:
-        return Message.objects.filter(
-            user=user, title__startswith="Budget analiz", is_read=False
-        )
-
-    def count_unread_alert_messages(self, user) -> int:
-        return self.get_unread_messages_queryset(user).count()
 
     @staticmethod
     def get_budget_object(user) -> BudgetManager:

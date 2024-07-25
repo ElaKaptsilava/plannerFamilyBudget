@@ -5,7 +5,7 @@ from subscription.models import Plan
 
 
 class Subscription(models.Model):
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         help_text="The user who owns this subscription.",
@@ -28,10 +28,13 @@ class Subscription(models.Model):
         ordering = ["-end_date"]
 
     def __repr__(self) -> str:
-        return f"{self.user} - {self.plan}"
+        return (
+            f"Subscription(user={self.user}, plan={self.plan}, "
+            f"start_date={self.start_date}, end_date={self.end_date})"
+        )
 
     def __str__(self) -> str:
-        return f"{self.plan} - {self.end_date}"
+        return f"Subscription for {self.user} to {self.plan} from {self.start_date} to {self.end_date}"
 
     def is_active(self) -> bool:
         if not self.end_date:

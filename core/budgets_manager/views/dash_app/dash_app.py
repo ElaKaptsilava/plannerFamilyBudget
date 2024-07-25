@@ -59,5 +59,7 @@ class RevenueSourcesView(View):
         current_month: int, current_year: int
     ) -> Union[str, str]:
         first_of_current_month = datetime(current_year, current_month, 1)
-        last_of_previous_month = first_of_current_month - timedelta(days=1)
+        last_of_previous_month = first_of_current_month - timedelta(
+            days=1
+        )  # pip install python-dateutil
         return last_of_previous_month.year, last_of_previous_month.month

@@ -17,12 +17,15 @@ class CreateSubscriptionView(LoginRequiredMixin, CreateView):
     template_name = "subscription/create_subscription.html"
 
     def get_context_data(self, **kwargs):
-        kwargs["subscription_form"] = self.form_class
-        return super().get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
+        context["subscription_form"] = self.form_class
+        return context
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user
-        form.instance.end_date = timezone.now() + timedelta(days=30)
+        form.instance.end_date = timezone.now() + timedelta(
+            days=30
+        )  # pip install python-dateutil
         form.instance.save()
         messages.success(self.request, "Your subscription has been added!")
         return super().form_valid(form)

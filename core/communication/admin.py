@@ -4,4 +4,6 @@ from django.contrib import admin
 
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    pass
+    list_per_page = 20
+    list_filter = ["is_read", "created_at"]
+    search_fields = ["user__email", "user__username"]

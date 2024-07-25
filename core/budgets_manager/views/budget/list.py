@@ -8,11 +8,13 @@ from targets.models import Saving
 class BudgetManagerListView(LoginRequiredMixin, ListView):
     model = BudgetManager
     template_name = "budgets_manager/budget/description.html"
+    context_object_name = "budget_manager"
 
     def get_queryset(self):
         return BudgetManager.objects.select_related("user").get(user=self.request.user)
 
     def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         user = self.request.user
 
         needs = get_object_or_404(
@@ -23,5 +25,6 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
         )
         savings = get_object_or_404(Saving.objects.select_related("user"), user=user)
 
-        kwargs.update({"needs": needs, "wants": wants, "savings": savings})
-        return super().get_context_data(**kwargs)
+        context.update({"needs": needs, "wants": wants, "savings": savings})
+
+        return context
