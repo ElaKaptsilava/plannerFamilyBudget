@@ -10,11 +10,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post" action="{% url 'subscription:detail-update' pk=request.user.subscription.pk %}">
-                    {% csrf_token %}
-                    {{ subscription_form.as_p }}
-                    <button type="submit" class="btn btn-outline-success">Save Changes</button>
-                </form>
+
             </div>
         </div>
     </div>

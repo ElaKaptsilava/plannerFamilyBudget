@@ -7,6 +7,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
     list_per_page = 20
     list_filter = ["end_date"]
     search_fields = ["user__username", "user__email", "end_date"]
+    list_display = ["user", "plan", "start_date", "end_date", "is_active"]
 
 
 @admin.register(Plan)

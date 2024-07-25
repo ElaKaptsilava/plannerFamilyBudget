@@ -1,4 +1,5 @@
 from accounts.models import CustomUser
+from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
 from subscription.models import Plan
@@ -16,13 +17,14 @@ class Subscription(models.Model):
         help_text="Select subscription plan.",
     )
     start_date = models.DateField(
-        auto_now_add=True, help_text="The date when the subscription started."
+        null=True, blank=True, help_text="The date when the subscription started."
     )
     end_date = models.DateField(
         null=True,
         blank=True,
         help_text="The date when the subscription ends. Automatically set to 30 days from the start date if not specified.",
     )
+    is_active = models.BooleanField(null=True, default=False, blank=True)
 
     class Meta:
         ordering = ["-end_date"]
@@ -36,7 +38,17 @@ class Subscription(models.Model):
     def __str__(self) -> str:
         return f"Subscription for {self.user} to {self.plan} from {self.start_date} to {self.end_date}"
 
-    def is_active(self) -> bool:
-        if not self.end_date:
-            return False
-        return self.end_date > timezone.now()
+    def save(self, *args, **kwargs):
+        if not self.start_date:
+            queryset = self.user.subscription_set.all()
+            self.start_date = timezone.now().date()
+            if queryset.exists():
+                self.start_date = queryset.first().end_date + relativedelta(days=1)
+            self.end_date = self.start_date + relativedelta(months=1)
+        super().save(*args, **kwargs)
+
+    def update_status(self) -> None:
+        self.is_active = self.start_date <= timezone.now().date() <= self.end_date
+
+    def clean(self) -> None:
+        super().clean()
