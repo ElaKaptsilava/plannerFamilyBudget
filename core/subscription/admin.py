@@ -25,4 +25,5 @@ class CreditCardAdmin(admin.ModelAdmin):
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_per_page = 20
-    list_filter = ["amount", "date"]
+    list_filter = ["amount", "due_date"]
+    list_display = ["subscription", "due_date", "status"]

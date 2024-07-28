@@ -30,6 +30,13 @@ app.conf.update(
                 "queue": "default",
             },
         },
+        "generate_next_subscription": {
+            "task": "subscriptions.tasks.generate_next_subscription",
+            "schedule": crontab(minute=0, hour=0),
+            "options": {
+                "queue": "default",
+            },
+        },
         "update_monthly_incomes": {
             "task": "budgets_manager.tasks.update_monthly_incomes",
             "schedule": crontab(hour=0, minute=0, day_of_month=last_day_of_month),

@@ -3,7 +3,7 @@ from http import HTTPStatus
 from accounts.tests import CustomUserFactory
 from budgets_manager.models import BudgetManager
 from budgets_manager.tests import BudgetManagerFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 
 
@@ -49,7 +49,6 @@ class UpdateBudgetViewTestCase(TestCase):
 
         self.assertEqual(messages[0].message, "Check budget data!")
 
-    @tag("test")
     def test_user_create_budget_success(self):
         BudgetManager.objects.all().delete()
         self.client.force_login(self.user)

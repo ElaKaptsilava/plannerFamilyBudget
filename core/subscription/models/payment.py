@@ -15,7 +15,7 @@ class Payment(models.Model):
     subscription = models.OneToOneField(
         "Subscription", on_delete=models.CASCADE, help_text="Enter subscription"
     )
-    date = models.DateField(default=timezone.now, help_text="Enter date of payment")
+    due_date = models.DateField(default=timezone.now, help_text="Enter date of payment")
     status = models.CharField(
         max_length=20,
         choices=Status.choices,
@@ -24,7 +24,7 @@ class Payment(models.Model):
     )
 
     class Meta:
-        ordering = ["-date"]
+        ordering = ["-due_date"]
 
     def __str__(self) -> str:
         return f"{self.amount} {self.subscription}"

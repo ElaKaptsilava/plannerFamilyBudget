@@ -46,9 +46,3 @@ class Subscription(models.Model):
                 self.start_date = queryset.first().end_date + relativedelta(days=1)
             self.end_date = self.start_date + relativedelta(months=1)
         super().save(*args, **kwargs)
-
-    def update_status(self) -> None:
-        self.is_active = self.start_date <= timezone.now().date() <= self.end_date
-
-    def clean(self) -> None:
-        super().clean()

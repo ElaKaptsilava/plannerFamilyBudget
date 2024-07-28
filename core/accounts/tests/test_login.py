@@ -1,4 +1,4 @@
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework import status
 
@@ -38,7 +38,6 @@ class TestLoginLogoutUser(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertFormError(login_form, "email", "This field is required.")
 
-    @tag("test")
     def test_login_case_insensitive_user_success(self):
         data: dict = {
             "email": self.user_build.email.upper(),
