@@ -17,6 +17,10 @@ class Command(BaseCommand):
     @staticmethod
     def generate_next_subscription() -> None:
         for user in CustomUser.objects.all():
-            if hasattr(user, "subscription"):
-                if user.subscription.end_date == timezone.now():
-                    Subscription.objects.create(user=user, plan=user.subscription.plan)
+            if user.subscription_set.exists():
+                last_subscription = user.subscription_set.latest("end_date")
+                if (
+                    last_subscription.end_date == timezone.now().date()
+                    and last_subscription.is_active
+                ):
+                    Subscription.objects.create(user=user, plan=last_subscription.plan)

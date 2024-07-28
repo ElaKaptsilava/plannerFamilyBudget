@@ -28,6 +28,7 @@ class Subscription(models.Model):
 
     class Meta:
         ordering = ["-end_date"]
+        get_latest_by = "end_date"
 
     def __repr__(self) -> str:
         return (
