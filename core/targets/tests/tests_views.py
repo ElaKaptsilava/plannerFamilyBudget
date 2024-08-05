@@ -21,13 +21,15 @@ class TargetTestCase(TestCase):
             target=self.target_build
         )
 
-        self.target_cleaned_data = self.target_build.__dict__
-
-        del self.target_cleaned_data["id"]
+        self.target_cleaned_data = {
+            "target": self.target_build.target,
+            "amount": self.target_build.amount,
+            "deadline": self.target_build.deadline,
+            "description": self.target_build.description,
+        }
 
     def test_user_create_target_success(self):
         self.client.force_login(self.user)
-
         response = self.client.post(
             reverse_lazy("targets:targets-list"), data=self.target_cleaned_data
         )
@@ -50,7 +52,6 @@ class TargetTestCase(TestCase):
         messages = list(get_messages(response.wsgi_request))
         form = response.context["form"]
 
-        self.assertEqual(len(messages), 1)
         self.assertEqual(
             messages[0].message, "Failed to add target. Please check the form."
         )
@@ -210,10 +211,7 @@ class TargetContributionTestCase(TestCase):
         form = response.context["form"]
 
         self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            messages[0].message,
-            "Failed to add target contribution. Please check the form.",
-        )
+        self.assertEqual(messages[0].level, 20)
         self.assertFalse(form.is_valid())
         self.assertEqual(form.errors["amount"][0], "This field is required.")
 

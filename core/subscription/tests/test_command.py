@@ -1,7 +1,7 @@
 from accounts.tests import CustomUserFactory
 from dateutil.relativedelta import relativedelta
 from django.core.management import call_command
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.utils import timezone
 from subscription.models import Subscription
 from subscription.tests import PlanFactory, SubscriptionFactory
@@ -51,7 +51,6 @@ class GenerateSubscriptionStatusTestCase(TestCase):
         self.assertFalse(last_subscription.is_active)
         self.assertTrue(hasattr(last_subscription, "payment"))
 
-    @tag("test")
     def test_generate_next_subscription_command_failure(self):
         subscription = SubscriptionFactory(
             plan=self.plan_1,

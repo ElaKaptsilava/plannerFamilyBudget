@@ -10,7 +10,7 @@ class TargetContributionsDeleteMultipleView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
         target_pk = kwargs.get("pk")
         selected_contributions = request.POST.getlist("selected_contributions")
-        print(selected_contributions)
+
         if target_pk:
             TargetContribution.objects.filter(pk__in=selected_contributions).delete()
             messages.success(request, "Target Contributions were deleted successfully.")

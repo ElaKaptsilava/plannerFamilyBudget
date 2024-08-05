@@ -1,5 +1,5 @@
 from accounts.tests import CustomUserFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.utils import timezone
 from targets.tests.factories import TargetContributionFactory, TargetFactory
 
@@ -32,7 +32,6 @@ class TargetModelTestCase(TestCase):
 
         self.assertEqual(self.target.total_contributions, expected_amount)
 
-    @tag("test")
     def test_monthly_payment(self):
         deadline = timezone.now() + timezone.timedelta(days=62)
         target = TargetFactory.create(user=self.user, deadline=deadline.date())
