@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from subscription.views import PaymentFailureView, PaymentSuccessView, PaymentView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -26,6 +27,18 @@ urlpatterns = [
         dash_app.RevenueSourcesView.as_view(),
         name="revenue-sources",
     ),
+    path("payment/<int:payment_id>/", PaymentView.as_view(), name="payment"),
+    path(
+        "payment/success/<int:payment_id>/",
+        PaymentSuccessView.as_view(),
+        name="payment_success",
+    ),
+    path(
+        "payment/failure/<int:payment_id>/",
+        PaymentFailureView.as_view(),
+        name="payment_failure",
+    ),
+    # path("stripe_webhooks", my_webhook_view, name="stripe-webhooks"),
 ]
 
 if settings.DEBUG:
