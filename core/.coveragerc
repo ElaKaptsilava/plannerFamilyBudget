@@ -1,0 +1,8 @@
+[report]
+omit =
+    */migrations/*
+    */tests/*
+    manage.py
+    */templates/*
+    */django_static/*
+    planner.dot
