@@ -146,4 +146,4 @@ class RunningCostsTestCase(TestCase):
         self.assertEqual(messages[0].level, 40)
         self.assertEqual(RunningCost.objects.all().count(), 1)
         self.assertEqual(get_cost.amount, cost.amount)
-        self.assertEqual(str(get_cost.payment_deadline), cost.payment_deadline)
+        self.assertEqual(get_cost.payment_deadline, cost.payment_deadline.date())
