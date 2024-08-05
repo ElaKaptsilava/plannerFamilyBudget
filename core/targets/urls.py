@@ -12,39 +12,39 @@ from targets.views.targets import (
 
 app_name = "targets"
 urlpatterns = [
-    path("list/", TargetsView.as_view(), name="targets-list"),
+    path("", TargetsView.as_view(), name="targets-list"),
     path(
-        "list/update/<int:pk>/",
+        "<int:pk>/update/",
         TargetUpdateView.as_view(),
         name="targets-list-create",
     ),
     path(
-        "list/delete-multiple/",
+        "delete-multiple/",
         TargetDeleteMultipleView.as_view(),
         name="targets-list-delete-multiple",
     ),
     path(
-        "detail/<int:pk>/contributions/list/",
+        "<int:pk>/contributions/",
         TargetContributionsView.as_view(),
         name="contributions-list",
     ),
     path(
-        "detail/<int:pk>/contributions/create/",
+        "<int:pk>/contributions/create/",
         TargetContributionsView.as_view(),
         name="contributions-list-create",
     ),
     path(
-        "detail/<int:pk>/contributions/delete-multiple/",
+        "<int:pk>/contributions/delete-multiple/",
         TargetContributionsDeleteMultipleView.as_view(),
         name="contributions-list-delete-multiple",
     ),
     path(
-        "saving/create/positive",
+        "saving/create/add/",
         PositiveCreateView.as_view(),
         name="saving-contributions-create-positive",
     ),
     path(
-        "saving/create/negative",
+        "saving/create/reduce/",
         NegativeCreateView.as_view(),
         name="saving-contributions-create-negative",
     ),
