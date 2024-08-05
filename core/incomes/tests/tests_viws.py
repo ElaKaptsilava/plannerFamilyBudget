@@ -1,5 +1,5 @@
 from accounts.tests import CustomUserFactory
-from django.test import TestCase, tag
+from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from incomes.models import Income
 from incomes.tests.factories import IncomeFactory
@@ -21,7 +21,7 @@ class IncomesTests(TestCase):
         self.client.force_login(self.user)
 
         response = self.client.post(
-            reverse_lazy("incomes:income-list-create"), self.cleaned_data
+            reverse_lazy("incomes:incomes-list"), self.cleaned_data
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
@@ -41,7 +41,7 @@ class IncomesTests(TestCase):
         income = IncomeFactory.create(user=self.user)
 
         response = self.client.post(
-            reverse_lazy("incomes:income-detail-update", kwargs={"pk": income.pk}),
+            reverse_lazy("incomes:incomes-detail-update", kwargs={"pk": income.pk}),
             self.cleaned_data,
         )
 
@@ -66,7 +66,7 @@ class DeleteIncomesTests(TestCase):
     def test_user_delete_incomes_success(self):
         self.client.force_login(self.user)
 
-        self.client.post(reverse_lazy("incomes:income-list-create"), self.cleaned_data)
+        self.client.post(reverse_lazy("incomes:incomes-list"), self.cleaned_data)
 
         income = Income.objects.get(user__email=self.user.email)
         initial_incomes_count = Income.objects.count()
@@ -74,18 +74,18 @@ class DeleteIncomesTests(TestCase):
         self.assertEqual(initial_incomes_count, 1)
 
         response = self.client.post(
-            reverse("incomes:delete-multiple"), {"selected_incomes": [income.id]}
+            reverse("incomes:incomes-delete-multiple"),
+            {"selected_incomes": [income.id]},
         )
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Income.objects.count(), initial_incomes_count - 1)
 
-    @tag("x")
     def test_user_delete_incomes_no_selection(self):
         self.client.force_login(self.user)
 
         response = self.client.post(
-            reverse("incomes:delete-multiple"), {"selected_incomes": []}
+            reverse("incomes:incomes-delete-multiple"), {"selected_incomes": []}
         )
 
         self.assertEqual(response.status_code, 302)
