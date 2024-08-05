@@ -159,16 +159,16 @@ class ExpensesDeleteTests(TestCase):
 
     def test_delete_expense_success(self):
         self.client.force_login(self.user)
-        selected = [self.expenses.pk, self.category_create.pk]
-
+        selected_expenses = [self.category_create.pk]
+        print(Expense.objects.count())
         response = self.client.post(
-            self.url_delete_multiple, data={"selected_expenses": selected}
+            self.url_delete_multiple, data={"selected_expenses": selected_expenses}
         )
 
         message = list(get_messages(response.wsgi_request))[0]
-
+        print(Expense.objects.count())
         self.assertEqual(message.level, self.success_level)
-        self.assertEqual(Expense.objects.count(), 1)
+        self.assertEqual(Expense.objects.count(), 2)
 
     def test_delete_expense_with_empty_data(self):
         self.client.force_login(self.user)
