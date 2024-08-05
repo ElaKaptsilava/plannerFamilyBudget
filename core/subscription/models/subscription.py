@@ -22,7 +22,8 @@ class Subscription(models.Model):
     end_date = models.DateField(
         null=True,
         blank=True,
-        help_text="The date when the subscription ends. Automatically set to 30 days from the start date if not specified.",
+        help_text="The date when the subscription ends. Automatically set to 30 days from the start date if not "
+        "specified.",
     )
     is_active = models.BooleanField(null=True, default=False, blank=True)
 
