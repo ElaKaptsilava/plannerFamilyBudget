@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Payment</title>
+</head>
+<body>
+    <h1>Payment for {{ payment.subscription.plan.name }}</h1>
+    <form action="{% url 'payment' payment.id %}" method="post" id="payment-form">
+        {% csrf_token %}
+        <script
+            src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+            data-key="{{ stripe_public_key }}"
+            data-amount="{{ payment.amount|floatformat:0 }}"
+            data-name="Subscription Payment"
+            data-description="Payment for subscription {{ payment.subscription.id }}"
+            data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+            data-locale="auto">
+        </script>
+    </form>
+</body>
+</html>
