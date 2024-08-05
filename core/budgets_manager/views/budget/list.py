@@ -11,7 +11,7 @@ class BudgetManagerListView(LoginRequiredMixin, ListView):
     context_object_name = "budget_manager"
 
     def get_queryset(self):
-        return BudgetManager.objects.select_related("user").get(user=self.request.user)
+        return super().get_queryset().select_related("user").get(user=self.request.user)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
