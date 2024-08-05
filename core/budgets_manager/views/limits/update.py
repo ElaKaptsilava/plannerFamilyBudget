@@ -11,3 +11,6 @@ class UpdateLimitView(LoginRequiredMixin, UpdateView):
     template_name = "budgets_manager/limits/update-modal.html"
     success_url = reverse_lazy("manager:limits-list")
     context_object_name = "limit"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(budget_manager__user=self.request.user)
