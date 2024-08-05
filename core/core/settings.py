@@ -58,6 +58,7 @@ CUSTOM_APPS = [
     "budgets_manager.apps.BudgetsManagerConfig",
     "communication.apps.CommunicationConfig",
     "subscription.apps.SubscriptionConfig",
+    "multi_user.apps.MultiUserConfig",
 ]
 
 THIRD_PARTY_APPS = [

@@ -4,7 +4,7 @@ from django.db import models
 
 class Invitation(models.Model):
     budget = models.ForeignKey(
-        BudgetManager, on_delete=models.CASCADE, help_text="Enter BudgetManager"
+        BudgetManager, on_delete=models.CASCADE, help_text="Enter budget manager..."
     )
     email = models.EmailField(help_text="Enter Email")
     token = models.CharField(max_length=100, unique=True, help_text="Token")
