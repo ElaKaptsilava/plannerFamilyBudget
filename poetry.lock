@@ -2425,6 +2425,21 @@ files = [
 pbr = ">=2.0.0,<2.1.0 || >2.1.0"
 
 [[package]]
+name = "stripe"
+version = "10.5.0"
+description = "Python bindings for the Stripe API"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "stripe-10.5.0-py2.py3-none-any.whl", hash = "sha256:682399995c27cb1dbfecda11f85b1ff3bd96a11a689419bf6156075cd7823099"},
+    {file = "stripe-10.5.0.tar.gz", hash = "sha256:4e7966a2bba0095354ae00d6dc352c2b58646f1ac258a9c28bf56973ae102bb1"},
+]
+
+[package.dependencies]
+requests = {version = ">=2.20", markers = "python_version >= \"3.0\""}
+typing-extensions = {version = ">=4.5.0", markers = "python_version >= \"3.7\""}
+
+[[package]]
 name = "tornado"
 version = "6.4.1"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
@@ -2565,4 +2580,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "4ff75302ede8b7382ab537f035c31a6e38afd4a799e503373405a770f0c1cee7"
+content-hash = "27a52cdad2bff0a30fa24d9106c1ce238ba731a852ff3c93708d1719972693bd"
