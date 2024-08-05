@@ -19,8 +19,6 @@ class Command(BaseCommand):
         for user in CustomUser.objects.all():
             if user.subscription_set.exists():
                 last_subscription = user.subscription_set.latest("end_date")
-                if (
-                    last_subscription.end_date == timezone.now().date()
-                    and last_subscription.is_active
-                ):
+                is_end_date_today = last_subscription.end_date == timezone.now().date()
+                if is_end_date_today and last_subscription.is_active:
                     Subscription.objects.create(user=user, plan=last_subscription.plan)
