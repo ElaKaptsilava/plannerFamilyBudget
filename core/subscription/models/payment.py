@@ -27,7 +27,7 @@ class Payment(models.Model):
         ordering = ["-due_date"]
 
     def __str__(self) -> str:
-        return f"{self.amount} {self.subscription}"
+        return f"{self.amount} - {self.subscription}"
 
     def __repr__(self) -> str:
         return f"<Payment: {self.amount} {self.subscription}>"
