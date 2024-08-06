@@ -38,6 +38,7 @@ urlpatterns = [
         PaymentFailureView.as_view(),
         name="payment_failure",
     ),
+    path("multiuser/", include("multi_user.urls"), name="multiuser"),
     # path("stripe_webhooks", my_webhook_view, name="stripe-webhooks"),
 ]
 
