@@ -14,10 +14,11 @@ class CustomRegisterView(View):
         user: CustomUser = request.user
         if user.is_authenticated:
             return redirect("accounts:login")
+        context = {"registration_form": RegistrationForm()}
         return render(
             request,
             template_name=self.template_name,
-            context={"registration_form": RegistrationForm()},
+            context=context,
         )
 
     def post(self, request, *args, **kwargs) -> HttpResponse:
