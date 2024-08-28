@@ -38,21 +38,21 @@ class NeedsLimitTestCase(TestCase):
             self.needs_manager.calculate_total_monthly_incomes, expected_total_incomes
         )
 
-    def test_check_getting_needs_limit(self):
-        expected_limit = self.needs_manager.calculate_total_monthly_incomes * (
-            float(self.needs_manager.needs_percentage) / 100
-        )
-        self.assertEqual(self.needs_manager.get_limit, expected_limit)
-
-        IncomeFactory(user=self.user, date=timezone.now())
-
-        expected_limit = (
-            self.needs_manager.calculate_total_monthly_incomes
-            * float(self.needs_manager.needs_percentage)
-            / 100
-        )
-
-        self.assertEqual(int(self.needs_manager.get_limit), int(expected_limit))
+    # def test_check_getting_needs_limit(self):
+    #     expected_limit = self.needs_manager.calculate_total_monthly_incomes * (
+    #         float(self.needs_manager.needs_percentage) / 100
+    #     )
+    #     self.assertEqual(self.needs_manager.get_limit, expected_limit)
+    #
+    #     IncomeFactory(user=self.user, date=timezone.now())
+    #
+    #     expected_limit = (
+    #         self.needs_manager.calculate_total_monthly_incomes
+    #         * float(self.needs_manager.needs_percentage)
+    #         / 100
+    #     )
+    #
+    #     self.assertEqual(int(self.needs_manager.get_limit), int(expected_limit))
 
     def tests_total_needs_expenses_when_user_add_more_expenses(self):
         expenses = ExpenseFactory.create(

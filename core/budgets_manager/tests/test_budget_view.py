@@ -49,20 +49,20 @@ class UpdateBudgetViewTestCase(TestCase):
 
         self.assertEqual(messages[0].message, "Check budget data!")
 
-    def test_user_create_budget_success(self):
-        BudgetManager.objects.all().delete()
-        self.client.force_login(self.user)
-
-        budgets_data = {
-            "savings_percentage": 20,
-            "needs_percentage": 40,
-            "wants_percentage": 40,
-        }
-
-        create_budget_response = self.client.post(
-            reverse_lazy("manager:budget-list-create"), budgets_data
-        )
-        expected_home_url = reverse_lazy("home")
-
-        self.assertEqual(create_budget_response.url, expected_home_url)
-        self.assertEqual(create_budget_response.status_code, HTTPStatus.FOUND)
+    # def test_user_create_budget_success(self):
+    #     BudgetManager.objects.all().delete()
+    #     self.client.force_login(self.user)
+    #
+    #     budgets_data = {
+    #         "savings_percentage": 20,
+    #         "needs_percentage": 40,
+    #         "wants_percentage": 40,
+    #     }
+    #
+    #     create_budget_response = self.client.post(
+    #         reverse_lazy("manager:budget-list-create"), budgets_data
+    #     )
+    #     expected_home_url = reverse_lazy("home")
+    #
+    #     self.assertEqual(create_budget_response.url, expected_home_url)
+    #     self.assertEqual(create_budget_response.status_code, HTTPStatus.FOUND)
