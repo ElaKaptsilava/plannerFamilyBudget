@@ -7,7 +7,7 @@ class Invitation(models.Model):
         Collaboration, on_delete=models.CASCADE, help_text="Enter collaborations..."
     )
     email = models.EmailField(help_text="Enter Email")
-    token = models.CharField(max_length=100, unique=True, help_text="Token")
+    token = models.CharField(max_length=100, help_text="Token")
     accepted = models.BooleanField(default=False, help_text="Is accepted...")
 
     def __str__(self) -> str:

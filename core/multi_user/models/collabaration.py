@@ -1,27 +1,30 @@
+import uuid
+
 from accounts.models import CustomUser
-from budgets_manager.models import BudgetManager
 from django.db import models
 
 
 class Collaboration(models.Model):
-    budget_manager = models.OneToOneField(BudgetManager, on_delete=models.CASCADE)
-    users = models.ManyToManyField(
-        CustomUser, related_name="collaborations", through="CollaborationUser"
+    user = models.OneToOneField(
+        CustomUser, on_delete=models.CASCADE, help_text="User to collaborate"
+    )
+    token = models.UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True,
+        help_text="Unique token for user",
     )
 
-    def __str__(self) -> str:
-        return f"Collaboration for {self.budget_manager}"
-
-    def __repr__(self) -> str:
-        return f"Collaboration for {self.budget_manager}"
-
-
-class CollaborationUser(models.Model):
-    collaboration = models.OneToOneField(Collaboration, on_delete=models.CASCADE)
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ["user"]
 
     def __str__(self) -> str:
-        return f"{self.collaboration} - {self.user}"
+        return f"Collaboration for {self.user}"
 
     def __repr__(self) -> str:
-        return f"{self.collaboration} - {self.user}"
+        return f"Collaboration for {self.user}"
+
+    def clean(self):
+        while Collaboration.objects.filter(token=self.token).exists():
+            self.token = uuid.uuid4()
+        super().clean()

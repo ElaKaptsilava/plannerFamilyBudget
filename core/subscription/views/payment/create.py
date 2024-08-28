@@ -29,13 +29,13 @@ class PaymentView(LoginRequiredMixin, View):
                 source=token,
             )
             payment.status = Status.COMPLETED
-            payment.save()
+            payment.save(update_fields=["status"])
             return redirect(
                 reverse("payment_success", kwargs={"payment_id": payment.id})
             )
         except stripe.error.StripeError:
             payment.status = Status.FAILED
-            payment.save()
+            payment.save(update_fields=["status"])
             return redirect(
                 reverse("payment_failure", kwargs={"payment_id": payment.id})
             )

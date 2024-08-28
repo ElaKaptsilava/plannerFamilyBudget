@@ -1,9 +1,7 @@
 import factory
 from accounts.tests import CustomUserFactory
-from budgets_manager.constants import TODAY
-from dateutil.relativedelta import relativedelta
 
-from ..models import CreditCard, Payment, Plan, Subscription
+from ..models import Payment, Plan, Subscription
 
 
 class PlanFactory(factory.django.DjangoModelFactory):
@@ -13,18 +11,6 @@ class PlanFactory(factory.django.DjangoModelFactory):
     name = factory.Sequence(lambda n: f"plan {n}")
     price = factory.Faker("random_int")
     description = factory.Faker("text")
-
-
-class CreditCardFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = CreditCard
-
-    owner = factory.SubFactory(CustomUserFactory)
-    first_name = factory.Faker("first_name")
-    last_name = factory.Faker("last_name")
-    number = "4111 1111 1111 1111"
-    cvv = "1111"
-    valid_thru = TODAY.date() + relativedelta(months=3)
 
 
 class SubscriptionFactory(factory.django.DjangoModelFactory):

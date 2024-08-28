@@ -1,5 +1,5 @@
 from django.contrib import admin
-from multi_user.models import Collaboration, CollaborationUser, Invitation
+from multi_user.models import Collaboration, Invitation
 
 
 @admin.register(Invitation)
@@ -10,9 +10,4 @@ class InvitationAdmin(admin.ModelAdmin):
 
 @admin.register(Collaboration)
 class CollaborationAdmin(admin.ModelAdmin):
-    pass
-
-
-@admin.register(CollaborationUser)
-class CollaborationUserAdmin(admin.ModelAdmin):
-    list_display = ["user", "collaboration"]
+    list_display = ["user", "token"]

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from subscription.models import CreditCard, Payment, Plan, Subscription
+from subscription.models import Payment, Plan, Subscription
 
 
 @admin.register(Subscription)
@@ -14,12 +14,6 @@ class SubscriptionAdmin(admin.ModelAdmin):
 class PlanAdmin(admin.ModelAdmin):
     list_per_page = 20
     search_fields = ["name", "price"]
-
-
-@admin.register(CreditCard)
-class CreditCardAdmin(admin.ModelAdmin):
-    list_per_page = 20
-    search_fields = ["owner__username", "owner__email"]
 
 
 @admin.register(Payment)
