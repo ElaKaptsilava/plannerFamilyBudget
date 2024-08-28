@@ -2,6 +2,7 @@ import typing
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -9,10 +10,11 @@ from subscription.forms import SubscriptionForm
 from subscription.models import Status, Subscription
 
 
-class CreateSubscriptionView(LoginRequiredMixin, CreateView):
+class CreateSubscriptionView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     model = Subscription
     form_class = SubscriptionForm
     template_name = "subscription/create_subscription.html"
+    success_message = "Your subscription has been added!"
 
     def get_success_url(self):
         if self.object.payment.status != Status.COMPLETED:
@@ -29,7 +31,6 @@ class CreateSubscriptionView(LoginRequiredMixin, CreateView):
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user
         form.instance.save()
-        messages.success(self.request, "Your subscription has been added!")
         return super().form_valid(form)
 
     def form_invalid(self, form) -> HttpResponse:

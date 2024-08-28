@@ -300,17 +300,23 @@
         </div>
         <!-- Sidebar Message -->
         <div class="sidebar-card d-none d-lg-flex">
-            <img class="sidebar-card-illustration mb-2"
-                 src="#"
-                 alt="...">
-            <p class="text-center mb-2">
-                <strong>{{ reauest.user.name }} PLANER</strong> is packed with premium features, components, and
-                more!
-            </p>
-            <button type="button" class="btn btn-outline-success btn-sm mt-4" data-toggle="modal"
-                    data-target="#updatePlanModal{{ request.user.subscription.pk }}">
+            {% with subscription=request.user.subscription_set.first %}
+                {% if subscription %}
+                <p class="text-center mb-2 text-light">
+                    <strong>{{ request.user.username }}'s PLAN</strong> is packed with <strong>{{ subscription.plan.name }}</strong> features!
+                    <br>
+                    <i>{{ subscription.start_date }} -- {{ subscription.end_date }}</i>
+                </p>
+                {% else %}
+                    <p class="text-center mb-2">
+                        You don't have an active subscription plan.
+                    </p>
+                {% endif %}
+            {% endwith %}
+            <a href="{% url 'subscription:list-create'%}"
+               class="btn btn-outline-success btn-sm">
                 Upgrade Plan!
-            </button>
+            </a>
         </div>
     </ul>
     <!-- End of Sidebar -->

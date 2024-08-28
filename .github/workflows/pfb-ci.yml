@@ -45,13 +45,19 @@ jobs:
       - name: Run Tests
         run: |
           cd core
-          poetry run python manage.py test
+          poetry run coverage run manage.py test
+          poetry run coverage report
+          poetry run coverage xml
         env:
           DB_NAME: ${{ vars.DB_NAME }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_USER: ${{ vars.DB_USER }}
           DB_HOST: ${{ vars.DB_HOST }}
           DB_PORT: ${{ vars.DB_PORT }}
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Run Bandit
         run: |
           poetry run bandit -r core
