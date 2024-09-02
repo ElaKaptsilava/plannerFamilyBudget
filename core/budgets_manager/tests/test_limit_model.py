@@ -1,6 +1,6 @@
 from accounts.tests import CustomUserFactory
 from budgets_manager.models import LimitManager
-from budgets_manager.tests import BudgetManagerFactory, LimitManagerFactory
+from budgets_manager.tests.factories import BudgetManagerFactory, LimitManagerFactory
 from django.test import TestCase
 from expenses import types
 from expenses.tests.factories import ExpenseCategoryFactory, ExpenseFactory

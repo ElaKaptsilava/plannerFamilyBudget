@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from accounts.tests import CustomUserFactory
 from budgets_manager.models import BudgetManager
-from budgets_manager.tests import BudgetManagerFactory
+from budgets_manager.tests.factories import BudgetManagerFactory
 from django.test import TestCase
 from django.urls import reverse_lazy
 
