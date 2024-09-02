@@ -1,1 +1,13 @@
-from .tests_views import *
+from .tests_views import (
+    ExpenseListTestCase,
+    ExpensesCreateTests,
+    ExpensesDeleteTests,
+    ExpensesUpdateTests,
+)
+
+__all__ = [
+    "ExpensesUpdateTests",
+    "ExpensesDeleteTests",
+    "ExpenseListTestCase",
+    "ExpensesCreateTests",
+]

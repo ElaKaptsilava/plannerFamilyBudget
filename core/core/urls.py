@@ -1,10 +1,11 @@
 from accounts.views.profile import HomeView
-from budgets_manager.views import dash_app
+from budgets_manager.views.dash_app import EarningsDataView, RevenueSourcesView
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from subscription.views import PaymentFailureView, PaymentSuccessView, PaymentView
+from subscription.views import PaymentView
+from subscription.views.payment.create import PaymentFailureView, PaymentSuccessView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -21,10 +22,10 @@ urlpatterns = [
     path("targets/", include("targets.urls"), name="target"),
     path("manager/", include("budgets_manager.urls"), name="manager"),
     path("subscription/", include("subscription.urls"), name="subscription"),
-    path("earnings-data/", dash_app.EarningsDataView.as_view(), name="earnings-data"),
+    path("earnings-data/", EarningsDataView.as_view(), name="earnings-data"),
     path(
         "revenue-sources/",
-        dash_app.RevenueSourcesView.as_view(),
+        RevenueSourcesView.as_view(),
         name="revenue-sources",
     ),
     path("payment/<int:payment_id>/", PaymentView.as_view(), name="payment"),

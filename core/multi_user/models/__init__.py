@@ -1,2 +1,4 @@
-from .collabaration import *
-from .invitation import *
+from .collabaration import Collaboration
+from .invitation import Invitation
+
+__all__ = ["Collaboration", "Invitation"]

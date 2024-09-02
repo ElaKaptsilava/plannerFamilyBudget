@@ -1,1 +1,3 @@
-from .messages import *
+from .messages import Message
+
+__all__ = ["Message"]

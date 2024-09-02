@@ -1,0 +1,1 @@
+[![codecov](https://codecov.io/github/ElaKaptsilava/plannerFamilyBudget/graph/badge.svg?token=NI0789I2JM)](https://codecov.io/github/ElaKaptsilava/plannerFamilyBudget)

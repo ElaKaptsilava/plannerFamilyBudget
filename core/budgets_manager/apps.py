@@ -6,4 +6,4 @@ class BudgetsManagerConfig(AppConfig):
     name = "budgets_manager"
 
     def ready(self):
-        import budgets_manager.signals
+        import budgets_manager.signals  # noqa: F401

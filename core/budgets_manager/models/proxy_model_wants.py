@@ -1,7 +1,8 @@
 from budgets_manager import constants
 from budgets_manager.models import BudgetManager
 from django.db import models
-from expenses.models import Expense, Type
+from expenses.models import Expense
+from expenses.types import Type
 from targets.models import TargetContribution
 
 from core.constants import labels

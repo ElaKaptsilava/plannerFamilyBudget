@@ -3,8 +3,12 @@ from budgets_manager.views.budget import (
     BudgetManagerListView,
     UpdateBudgetView,
 )
-from budgets_manager.views.limits import LimitCreateView, LimitListView, UpdateLimitView
-from budgets_manager.views.limits.multiple_delete import PlannerMultipleDeleteView
+from budgets_manager.views.limits import (
+    LimitCreateView,
+    LimitListView,
+    PlannerMultipleDeleteView,
+    UpdateLimitView,
+)
 from django.urls import path
 
 app_name = "manager"

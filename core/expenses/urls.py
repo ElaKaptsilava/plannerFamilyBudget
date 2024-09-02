@@ -1,12 +1,16 @@
 from django.urls import path
-
-from .views.category_expense.create import CategoryCreateView
-from .views.category_expense.delete import CategoryExpenseDeleteView
-from .views.category_expense.list import CategoryListView
-from .views.category_expense.update import CategoryExpenseUpdateView
-from .views.expence import ExpensesCreateView, ExpensesListView
-from .views.expence.multiple_delete import DeleteMultipleExpenseView
-from .views.expence.update import ExpensesUpdateView
+from expenses.views.category_expense import (
+    CategoryCreateView,
+    CategoryExpenseDeleteView,
+    CategoryExpenseUpdateView,
+    CategoryListView,
+)
+from expenses.views.expence import (
+    DeleteMultipleExpenseView,
+    ExpensesCreateView,
+    ExpensesListView,
+    ExpensesUpdateView,
+)
 
 app_name = "expenses"
 

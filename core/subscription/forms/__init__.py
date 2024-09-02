@@ -1,1 +1,3 @@
-from .subscription import *
+from .subscription import SubscriptionForm
+
+__all__ = ["SubscriptionForm"]

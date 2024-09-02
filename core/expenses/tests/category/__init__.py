@@ -1,1 +1,3 @@
-from .tests_views import *
+from .tests_views import CategoryListViewTestCase
+
+__all__ = ["CategoryListViewTestCase"]
