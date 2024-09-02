@@ -19,11 +19,10 @@ class PaymentViewTest(TestCase):
 
     def test_user_choice_subscription_with_plan_price_greate_than_0(self):
         self.client.force_login(self.user)
-
         response = self.client.post(
             self.create_subscription_url, data={"plan": self.plan_1.pk}
         )
-
+        print(response, self.payment_path(payment_id=self.plan_1.pk))
         self.assertRedirects(response, self.payment_path(payment_id=self.plan_1.pk))
 
     def test_user_choice_subscription_with_plan_price_0(self):

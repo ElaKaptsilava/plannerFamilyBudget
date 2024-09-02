@@ -18,22 +18,24 @@ class TestLoginLogoutUser(TestCase):
             password=self.user_build.password,
             is_active=False,
         )
+        self.create_budget_path = reverse_lazy("manager:budget-list-create")
+        self.login_path = reverse_lazy("accounts:login")
 
-    # def test_login_success(self):
-    #     data = {
-    #         "email": self.user_build.email,
-    #         "password": self.user_build.password,
-    #     }
-    #
-    #     response = self.client.post(reverse_lazy("accounts:login"), data)
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    #     self.assertEqual(response.url, reverse_lazy("home"))
+    def test_login_success(self):
+        data = {
+            "email": self.user_build.email,
+            "password": self.user_build.password,
+        }
+
+        response = self.client.post(self.login_path, data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, self.create_budget_path)
 
     def test_login_with_invalid_email(self):
         data: dict = {"email": "x", "password": self.user_build.password}
 
-        response = self.client.post(reverse_lazy("accounts:login"), data)
+        response = self.client.post(self.login_path, data)
 
         messages = list(get_messages(response.wsgi_request))
 
@@ -41,13 +43,13 @@ class TestLoginLogoutUser(TestCase):
         self.assertEqual(messages[0].message, "Invalid email or password.")
         self.assertEqual(messages[0].level, 40)
 
-    # def test_login_case_insensitive_user_success(self):
-    #     data: dict = {
-    #         "email": self.user_build.email.upper(),
-    #         "password": self.user_build.password,
-    #     }
-    #
-    #     response = self.client.post(reverse_lazy("accounts:login"), data)
-    #
-    #     self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-    #     self.assertEqual(response.url, reverse_lazy("home"))
+    def test_login_case_insensitive_user_success(self):
+        data: dict = {
+            "email": self.user_build.email.upper(),
+            "password": self.user_build.password,
+        }
+
+        response = self.client.post(self.login_path, data)
+
+        self.assertEqual(response.status_code, status.HTTP_302_FOUND)
+        self.assertEqual(response.url, self.create_budget_path)
