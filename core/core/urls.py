@@ -4,8 +4,11 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
-from subscription.views import PaymentView
-from subscription.views.payment.create import PaymentFailureView, PaymentSuccessView
+from subscription.views.payment.create import (
+    PaymentFailureView,
+    PaymentSuccessView,
+    PaymentView,
+)
 
 urlpatterns = [
     path("admin/", admin.site.urls),

@@ -1,5 +1,5 @@
 from django.urls import path
-from subscription.views import CreateSubscriptionView
+from subscription.views.subscription import CreateSubscriptionView
 
 app_name = "subscription"
 

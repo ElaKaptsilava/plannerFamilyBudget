@@ -1,3 +1,3 @@
-from .create import PaymentView
+from .create import PaymentFailureView, PaymentView
 
-__all__ = ["PaymentView"]
+__all__ = ["PaymentView", "PaymentFailureView"]
