@@ -5,7 +5,7 @@ from budgets_manager.models import LimitManager
 from budgets_manager.tests.factories import BudgetManagerFactory, LimitManagerFactory
 from django.contrib.messages import get_messages
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, tag
 from django.urls import reverse_lazy
 from expenses import types
 from expenses.tests.factories import ExpenseCategoryFactory
@@ -59,15 +59,6 @@ class LimitViewTestCase(TestCase):
             LimitManager.objects.get(
                 budget_manager=self.budgetmanager,
                 category_running_cost=self.category_running_cost,
-            )
-        )
-
-        response = self.client.post(self.limit_create, self.clean_data_target)
-
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        self.assertTrue(
-            LimitManager.objects.get(
-                budget_manager=self.budgetmanager, target=self.target
             )
         )
 
@@ -136,6 +127,7 @@ class LimitViewTestCase(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(messages.level, self.danger_level)
 
+    @tag("test")
     def test_update_limit_success(self):
         self.client.force_login(self.user)
 

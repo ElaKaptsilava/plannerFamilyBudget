@@ -1,18 +1,23 @@
 from http import HTTPStatus
 
 from accounts.tests import CustomUserFactory
+from budgets_manager.tests.factories import BudgetManagerFactory
 from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils.http import urlencode
 from expenses.models import Expense
 from expenses.tests.factories import ExpenseCategoryFactory, ExpenseFactory
+from incomes.tests.factories import IncomeFactory
 from rest_framework import status
 
 
 class ExpenseListTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
+
+        self.budget = BudgetManagerFactory.create(user=self.user)
+        self.income = IncomeFactory.create(user=self.user)
 
         self.category_create1 = ExpenseCategoryFactory.create(user=self.user)
         self.category_create2 = ExpenseCategoryFactory.create(user=self.user)
@@ -47,6 +52,8 @@ class ExpenseListTestCase(TestCase):
 class ExpensesCreateTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
+        self.budget = BudgetManagerFactory.create(user=self.user)
+        self.income = IncomeFactory.create(user=self.user)
         self.category_create = ExpenseCategoryFactory.create(user=self.user)
         self.expenses_build = ExpenseFactory.build()
         self.cleaned_data = {

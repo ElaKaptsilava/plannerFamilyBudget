@@ -17,9 +17,12 @@ class ExpensesCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user
-        total_limit = self.request.user.budgetmanager.limitmanager_set.aggregate(
-            total=models.Sum("amount")
-        )["total"]
+        total_limit = (
+            self.request.user.budgetmanager.limitmanager_set.aggregate(
+                total=models.Sum("amount")
+            )["total"]
+            or 0
+        )
         if total_limit < form.instance.amount:
             messages.info(self.request, "You have exceeded your budget limit.")
         else:
