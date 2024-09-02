@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db import models
 from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -16,7 +17,13 @@ class ExpensesCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form) -> HttpResponse:
         form.instance.user = self.request.user
-        messages.success(self.request, "The expense added successfully!")
+        total_limit = self.request.user.budgetmanager.limitmanager_set.aggregate(
+            total=models.Sum("amount")
+        )["total"]
+        if total_limit < form.instance.amount:
+            messages.info(self.request, "You have exceeded your budget limit.")
+        else:
+            messages.success(self.request, "The expense added successfully!")
         return super().form_valid(form)
 
     def form_invalid(self, form) -> HttpResponse:

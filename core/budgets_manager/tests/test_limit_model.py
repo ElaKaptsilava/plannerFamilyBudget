@@ -38,9 +38,6 @@ class TestLimitModel(TestCase):
         )
 
     def test_calculate_target_spent_in_month(self):
-        """
-        ...
-        """
         contribution = TargetContributionFactory.create(
             user=self.user, target=self.target
         )
@@ -87,11 +84,3 @@ class TestLimitModel(TestCase):
         )
 
         self.assertTrue(self.target_limit.within_limit)
-
-    # def test_validation_error_when_amount_greate_the_limit(self):
-    #     with self.assertRaises(ValidationError):
-    #         ExpenseFactory.create(
-    #             user=self.user,
-    #             category=self.expense_category,
-    #             amount=self.income.amount,
-    #         )

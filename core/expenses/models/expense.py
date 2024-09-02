@@ -25,3 +25,10 @@ class Expense(models.Model):
 
     def __repr__(self) -> str:
         return f"Expense(amount={self.amount!r}, user={self.user!r}, category={self.category!r})"
+
+    # def save(self, *args, **kwargs) -> None:
+    #     self.__check_limit()
+    #     super().save(*args, **kwargs)
+    # def __check_limit(self):
+    #      total_limit = self.user.budgetmanager.limitmanager_set.aggregate(total=models.Sum("amount"))["total"]
+    #      if
