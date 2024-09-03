@@ -142,7 +142,7 @@ class LimitViewTestCase(TestCase):
 
         response = self.client.post(self.limit_update, self.clean_data_target)
         messages = list(get_messages(response.wsgi_request))[0]
-
+        print(messages)
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
         self.assertEqual(messages.level, self.success_level)
 
