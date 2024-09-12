@@ -1,17 +1,17 @@
+import uuid
+
 from django.db import models
-from multi_user.models.collabaration import Collaboration
+from multi_user.models import FamilyBudget
 
 
-class Invitation(models.Model):
-    collaboration = models.ForeignKey(
-        Collaboration, on_delete=models.CASCADE, help_text="Enter collaborations..."
-    )
-    email = models.EmailField(help_text="Enter Email")
-    token = models.CharField(max_length=100, help_text="Token")
-    accepted = models.BooleanField(default=False, help_text="Is accepted...")
+class InvitationToken(models.Model):
+    token = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
+    family_budget = models.ForeignKey(FamilyBudget, on_delete=models.CASCADE)
+    email = models.EmailField(help_text="Email of the person invited")
+    is_used = models.BooleanField(default=False)
 
-    def __str__(self) -> str:
-        return f"Invite to {self.collaboration} for {self.email}"
+    def __str__(self):
+        return f"Invitation Token for {self.email} - Used: {self.is_used}"
 
-    def __repr__(self) -> str:
-        return f"Invitation(collaboration={self.collaboration}, email={self.email}, accepted={self.accepted})"
+    def __repr__(self):
+        return f"InvitationToken(family_budget={self.family_budget!r}, email={self.email!r})"

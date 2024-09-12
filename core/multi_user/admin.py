@@ -1,13 +1,12 @@
 from django.contrib import admin
-from multi_user.models import Collaboration, Invitation
+from multi_user.models import FamilyBudget, InvitationToken
 
 
-@admin.register(Invitation)
-class InvitationAdmin(admin.ModelAdmin):
-    list_display = ["email", "token"]
-    search_fields = ["email"]
+@admin.register(InvitationToken)
+class InvitationTokenAdmin(admin.ModelAdmin):
+    pass
 
 
-@admin.register(Collaboration)
-class CollaborationAdmin(admin.ModelAdmin):
-    list_display = ["user", "token"]
+@admin.register(FamilyBudget)
+class FamilyBudgetAdmin(admin.ModelAdmin):
+    pass

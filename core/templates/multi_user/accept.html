@@ -1,0 +1,5 @@
+<form method="post">
+    {% csrf_token %}
+    <p>You have been invited to join a family budget by {{ invitation.family_budget.owner.email }}.</p>
+    <button type="submit">Join Family Budget</button>
+</form>
