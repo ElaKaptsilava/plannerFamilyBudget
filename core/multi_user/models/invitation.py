@@ -15,3 +15,7 @@ class InvitationToken(models.Model):
 
     def __repr__(self):
         return f"InvitationToken(family_budget={self.family_budget!r}, email={self.email!r})"
+
+    @staticmethod
+    def create_token() -> uuid:
+        return uuid.uuid4()

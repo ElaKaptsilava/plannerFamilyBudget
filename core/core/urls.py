@@ -38,11 +38,11 @@ urlpatterns = [
         name="payment_success",
     ),
     path(
-        "payment/failure/<int:payment_id>/",
+        "payments/failure/<int:payment_id>/",
         PaymentFailureView.as_view(),
         name="payment_failure",
     ),
-    path("multiuser/", include("multi_user.urls"), name="multiuser"),
+    path("families/", include("multi_user.urls"), name="multiuser"),
     # path("stripe_webhooks", my_webhook_view, name="stripe-webhooks"),
 ]
 

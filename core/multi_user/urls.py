@@ -5,9 +5,9 @@ app_name = "multiuser"
 
 urlpatterns = [
     path(
-        "invite/<int:family_budget_id>/",
+        "invites/<int:family_budget_id>/",
         invite_family_member,
         name="invite-family-member",
     ),
-    path("accept_invite/<str:token>/", join_family_budget, name="invite-list-accept"),
+    path("invites/<str:token>/accept/", join_family_budget, name="invite-list-accept"),
 ]

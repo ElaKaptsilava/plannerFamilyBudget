@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -179,7 +180,7 @@
                        href="{% url 'manager:budget-info' %}">Budget</a>
                     <a class="collapse-item"
                        href="{% url 'manager:limits-list' %}">Limits</a>
-                    <a href="#" class="collapse-item" onclick="toggleWallet()">Saving wallet</a>
+                    <a href="#" class="collapse-item" onclick="toggleWallet()">{% trans "Saving wallet" %}</a>
 
                     <!-- Wallet Card -->
                     <div id="walletCard" class="wallet-card">
