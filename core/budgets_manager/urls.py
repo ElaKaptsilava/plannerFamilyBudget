@@ -1,6 +1,6 @@
 from budgets_manager.views.budget import (
     BudgetManagerCreateView,
-    BudgetManagerListView,
+    BudgetManagerDetailView,
     UpdateBudgetView,
 )
 from budgets_manager.views.limits import (
@@ -13,7 +13,11 @@ from django.urls import path
 
 app_name = "manager"
 urlpatterns = [
-    path("budget/info/", BudgetManagerListView.as_view(), name="budget-info"),
+    path(
+        "budget/<int:pk>/info/",
+        BudgetManagerDetailView.as_view(),
+        name="budget-detail-info",
+    ),
     path(
         "budget/create/",
         BudgetManagerCreateView.as_view(),

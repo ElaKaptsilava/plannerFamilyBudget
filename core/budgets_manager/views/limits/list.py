@@ -1,5 +1,5 @@
 from budgets_manager.filters import LimitFilterSet
-from budgets_manager.forms import LimitForm
+from budgets_manager.forms.limit import LimitForm
 from budgets_manager.models import LimitManager
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin

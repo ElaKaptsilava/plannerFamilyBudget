@@ -177,8 +177,7 @@
                  data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">{{ request.user.username }} Components:</h6>
-                    <a class="collapse-item"
-                       href="{% url 'manager:budget-info' %}">Budget</a>
+                    <a class="collapse-item" href="{% url 'manager:budget-detail-info' pk=request.user.set_budget.pk %}">Budget</a>
                     <a class="collapse-item"
                        href="{% url 'manager:limits-list' %}">Limits</a>
 
@@ -236,16 +235,7 @@
                  class="collapse"
                  aria-labelledby="headingTwo"
                  data-parent="#accordionSidebar">
-                <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">{{ request.user.username }}'s Budgets:</h6>
-                    {% if family_budget %}
-                    <a class="collapse-item"
-                   href="{% url 'multiuser:invite-family-member' family_budget_id=family_budget.pk %}">{{ family_budget }}</a>
-                    {% else %}
-                    <a class="collapse-item"
-                   href="{% url 'multiuser:family-budget-list-create' %}">Add</a>
-                    {% endif %}
-                </div>
+
 
             </div>
         </li>

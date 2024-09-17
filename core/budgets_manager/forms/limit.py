@@ -1,13 +1,21 @@
+from budgets_manager.models import BudgetManager, LimitManager
+from colorfield.widgets import ColorWidget
 from django import forms
-
-from .models import BudgetManager, LimitManager
 
 
 class BudgetManagerForm(forms.ModelForm):
     class Meta:
         model = BudgetManager
-        fields = ["savings_percentage", "needs_percentage", "wants_percentage"]
+        fields = [
+            "title",
+            "color",
+            "savings_percentage",
+            "needs_percentage",
+            "wants_percentage",
+        ]
         widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control form-control-user"}),
+            "color": ColorWidget(),
             "savings_percentage": forms.NumberInput(
                 attrs={
                     "class": "form-control form-control-user",

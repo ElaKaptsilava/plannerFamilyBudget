@@ -34,7 +34,7 @@ class HomeView(LoginRequiredMixin, TemplateView):
 
     @staticmethod
     def get_budget_object(user: CustomUser) -> BudgetManager:
-        return user.budgetmanager
+        return user.set_budget.budget
 
     @staticmethod
     def get_needs_manager_object_or_404(user: CustomUser) -> NeedsManager:

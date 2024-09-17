@@ -1,5 +1,10 @@
 {% extends "registration/base_auth.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
+
+{% block script %}
+<script src="/django_static/colorfield/jscolor/jscolor.js"></script>
+{% endblock %}
 
 {% block content %}
 <div class="text-center">
@@ -7,11 +12,8 @@
 </div>
 <form class="user" method="POST">
     {% csrf_token %}
-    {% for field in form %}
-    <div class="form-group">
-        {{ field }}
-    </div>
-    {% endfor %}
+    {{ form.as_p }}
+
     <button type="submit" class="btn btn-outline-primary btn-user btn-block">Create</button>
 </form>
 {% endblock %}

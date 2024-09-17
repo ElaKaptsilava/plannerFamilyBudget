@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import BudgetManager, LimitManager, MonthlyIncomes, WantsManager
+from .models import BudgetManager, LimitManager, MonthlyIncomes, SetBudget, WantsManager
 
 
 @admin.register(LimitManager)
@@ -21,3 +21,8 @@ class MonthlyIncomesAdmin(admin.ModelAdmin):
 @admin.register(WantsManager)
 class WantsManagerAdmin(admin.ModelAdmin):
     list_per_page = 20
+
+
+@admin.register(SetBudget)
+class SetBudgetAdmin(admin.ModelAdmin):
+    pass

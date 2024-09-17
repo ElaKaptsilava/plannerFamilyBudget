@@ -1,4 +1,4 @@
-from budgets_manager.forms import LimitForm
+from budgets_manager.forms.limit import LimitForm
 from budgets_manager.models import LimitManager
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy

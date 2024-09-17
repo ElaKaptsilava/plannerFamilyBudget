@@ -1,3 +1,4 @@
+from budgets_manager.models import BudgetManager
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
@@ -20,7 +21,7 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
     success_url = reverse_lazy("incomes:incomes-list")
 
     def get_members_queryset(self) -> QuerySet[FamilyBudget]:
-        return FamilyBudget.objects.get(owner=self.request.user).members.all()
+        return BudgetManager.objects.get(user=self.request.user).participants.all()
 
     def get_queryset(self):
         queryset = super().get_queryset()

@@ -13,7 +13,7 @@ class Saving(models.Model):
 
     def __repr__(self) -> str:
         return (
-            f"Saving(user={self.user!r}, amount={self.total_amount!r}, "
+            f"Saving(user={self.user!r}, amount={self.total_amount()!r}, "
             f"date={self.date!r})"
         )
 

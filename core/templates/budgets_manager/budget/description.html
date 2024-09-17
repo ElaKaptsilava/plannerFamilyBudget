@@ -5,8 +5,8 @@
 {% load crispy_forms_tags %}
 
 {% block appname %}
-<p class="nav-item dropdown no-arrow appname">Budget Plan Description</p>
-<a href="{% url 'manager:budget-detail-update' pk=request.user.budgetmanager.pk %}"
+<p class="nav-item dropdown no-arrow appname">{{ budget_manager.title }}'s Budget Description</p>
+<a href="{% url 'manager:budget-detail-update' pk=request.user.set_budget.budget.pk %}"
    class="btn btn-sm btn-outline-success btn-user float-right"><i class="fas fa-edit"></i></a>
 {% endblock %}
 

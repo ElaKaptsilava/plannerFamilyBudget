@@ -1,5 +1,6 @@
-from accounts.models import CustomUser
+from accounts.models.user import CustomUser
 from budgets_manager import constants
+from colorfield.fields import ColorField
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import QuerySet
@@ -10,10 +11,15 @@ from incomes.models import Income
 
 class BudgetManager(models.Model):
     TODAY = constants.TODAY
-    user = models.OneToOneField(
+    user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         help_text="The user this budget is associated with.",
+    )
+    title = models.CharField(max_length=50, default="Family")
+    color = ColorField(default="#FF0000")
+    participants = models.ManyToManyField(
+        CustomUser, related_name="participants", default=list
     )
     savings_percentage = models.DecimalField(
         max_digits=5,
@@ -45,7 +51,7 @@ class BudgetManager(models.Model):
         super().save(*args, **kwargs)
 
     def get_family_budget_incomes(self) -> QuerySet[Income]:
-        return Income.objects.filter(user__in=self.familybudget.members.all())
+        return Income.objects.filter(user__in=self.participants.all())
 
     def get_current_month_range(self):
         start_date = self.TODAY.replace(

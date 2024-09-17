@@ -1,4 +1,4 @@
-from budgets_manager.forms import BudgetManagerForm
+from budgets_manager.forms.limit import BudgetManagerForm
 from budgets_manager.models import BudgetManager
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin

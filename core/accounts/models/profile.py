@@ -5,7 +5,7 @@ from PIL import Image
 DEFAULT_PROFILE_IMAGE = "undraw_profile.svg"
 
 
-def get_upload_path(self, instance, filename):
+def get_upload_path(instance, filename):
     folder_name = f"{instance.email}_{instance.id}"
     return "/".join(["accounts", folder_name, filename])
 

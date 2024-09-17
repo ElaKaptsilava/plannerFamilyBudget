@@ -13,7 +13,7 @@ from incomes.models import Income
 class EarningsDataView(View):
     def get(self, request, *args, **kwargs) -> JsonResponse:
         year = timezone.now().year
-        budget = request.user.budgetmanager
+        budget = request.user.set_budget.budget
         earnings = MonthlyIncomes.objects.filter(year=year, budget=budget)
         earns = [0] * 12
         for earning in earnings:
