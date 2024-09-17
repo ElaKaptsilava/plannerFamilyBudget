@@ -67,6 +67,7 @@ THIRD_PARTY_APPS = [
     "django_filters",
     "django_extensions",
     "silk",
+    "colorfield",
 ]
 
 INSTALLED_APPS += THIRD_PARTY_APPS + CUSTOM_APPS
@@ -112,7 +113,8 @@ TEMPLATES = [
     },
 ]
 
-STATIC_URL = "/static/"
+STATIC_URL = "/django_static/"
+STATIC_ROOT = BASE_DIR / "django_static"
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -210,9 +212,6 @@ MESSAGE_TAGS = {
     messages.WARNING: "alert-warning",
     messages.ERROR: "alert-danger",
 }
-
-STATIC_URL = "/django_static/"
-STATIC_ROOT = BASE_DIR / "django_static"
 
 LOGIN_REDIRECT_URL = "home"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

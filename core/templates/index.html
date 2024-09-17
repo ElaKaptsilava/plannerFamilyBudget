@@ -122,6 +122,7 @@
     </script>
     <title>SB Admin 2 - Dashboard</title>
     <!-- Custom fonts for this template-->
+
     <link href="{% static 'vendor/fontawesome-free/css/all.min.css' %}"
           rel="stylesheet"
           type="text/css">
@@ -180,8 +181,8 @@
                        href="{% url 'manager:budget-info' %}">Budget</a>
                     <a class="collapse-item"
                        href="{% url 'manager:limits-list' %}">Limits</a>
-                    <a href="#" class="collapse-item" onclick="toggleWallet()">{% trans "Saving wallet" %}</a>
 
+                    <a href="#" class="collapse-item" onclick="toggleWallet()">{% trans "Saving wallet" %}</a>
                     <!-- Wallet Card -->
                     <div id="walletCard" class="wallet-card">
                         <img src="{{ request.user.profile.avatar.url }}" alt="Wallet Logo" class="wallet-logo">
@@ -221,6 +222,34 @@
                 </div>
             </div>
         </li>
+        <li class="nav-item">
+            <a class="nav-link collapsed"
+               href="#"
+               data-toggle="collapse"
+               data-target="#collapseTree"
+               aria-expanded="true"
+               aria-controls="collapseTree">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Collaboration</span>
+            </a>
+            <div id="collapseTree"
+                 class="collapse"
+                 aria-labelledby="headingTwo"
+                 data-parent="#accordionSidebar">
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">{{ request.user.username }}'s Budgets:</h6>
+                    {% if family_budget %}
+                    <a class="collapse-item"
+                   href="{% url 'multiuser:invite-family-member' family_budget_id=family_budget.pk %}">{{ family_budget }}</a>
+                    {% else %}
+                    <a class="collapse-item"
+                   href="{% url 'multiuser:family-budget-list-create' %}">Add</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </li>
+
         <!-- Nav Item - Utilities Collapse Menu -->
         <li class="nav-item">
             <a class="nav-link collapsed"

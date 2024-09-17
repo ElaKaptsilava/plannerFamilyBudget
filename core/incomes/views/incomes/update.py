@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import UpdateView
@@ -14,7 +15,10 @@ class IncomeUpdateView(LoginRequiredMixin, UpdateView):
     context_object_name = "incomes"
     template_name: str = "incomes/list.html"
 
-    def form_invalid(self, form):
+    def get_queryset(self) -> QuerySet[Income]:
+        return Income.objects.filter(user=self.request.user)
+
+    def form_invalid(self, form) -> HttpResponseRedirect:
         messages.error(
             self.request, "Failed to update the income. Please check the form."
         )

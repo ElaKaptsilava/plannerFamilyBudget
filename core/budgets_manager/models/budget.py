@@ -44,8 +44,8 @@ class BudgetManager(models.Model):
         self.clean()
         super().save(*args, **kwargs)
 
-    def _get_current_year_incomes(self) -> QuerySet[Income]:
-        return Income.objects.filter(user=self.user, date__year=self.TODAY.year)
+    def get_family_budget_incomes(self) -> QuerySet[Income]:
+        return Income.objects.filter(user__in=self.familybudget.members.all())
 
     def get_current_month_range(self):
         start_date = self.TODAY.replace(
@@ -58,22 +58,20 @@ class BudgetManager(models.Model):
 
     @property
     def calculate_total_monthly_incomes(self) -> float:
-        monthly_incomes = self._get_current_year_incomes().filter(
+        monthly_incomes = self.get_family_budget_incomes().filter(
             date__month=self.TODAY.month, date__year=self.TODAY.year
         )
         total = monthly_incomes.aggregate(total=models.Sum("amount"))["total"]
-        if not total:
-            return 0.0
-        return float(total)
+        return float(total) if total else 0.0
 
     @property
     def calculate_annual_incomes(self) -> float:
-        annual_incomes = self._get_current_year_incomes().aggregate(
-            annual_incomes=models.Sum("amount")
-        )["annual_incomes"]
-        if not annual_incomes:
-            return 0.0
-        return float(annual_incomes) or 0.0
+        annual_incomes = (
+            self.get_family_budget_incomes()
+            .filter(date__year=self.TODAY.year)
+            .aggregate(annual_incomes=models.Sum("amount"))["annual_incomes"]
+        )
+        return float(annual_incomes) if annual_incomes else 0.0
 
     @property
     def calculate_monthly_expenses(self) -> float:

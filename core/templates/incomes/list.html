@@ -52,6 +52,7 @@
                                 <label class="form-check-label" for="selectAll">ALL</label>
                             </div>
                         </th>
+                        <th class="card-header">Owner</th>
                         <th class="card-header">Source</th>
                         <th class="card-header">Category</th>
                         <th class="card-header">Amount</th>
@@ -90,17 +91,20 @@
                                     <label class="form-check-label" for="markSource{{ income.id }}"></label>
                                 </div>
                             </td>
+                            <td class="{% if income.user == request.user %} text-primary {% endif %}">{{ income.user.email }}</td>
                             <td>{{ income.source }}</td>
                             <td>{{ income.category }}</td>
                             <td>{{ income.amount }}</td>
                             <td>{{ income.date }}</td>
                             <td>
+                                {% if income.user == request.user %}
                                 <div class="btn-group" role="group" aria-label="Actions">
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal"
                                             data-target="#editIncomeModal{{ income.id }}">
                                         Edit
                                     </button>
                                 </div>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}
