@@ -16,3 +16,10 @@ class ExpenseCategory(models.Model):
 
     def __repr__(self) -> str:
         return f"ExpenseCategory(name={self.name!r}, type={self.type!r})"
+
+    def get_expenses(self) -> float:
+        return self.expense_set.filter(budget=self.user.set_budget.budget)
+
+    def total_expenses(self) -> float:
+        total = self.get_expenses().aggregate(total=models.Sum("amount"))["total"]
+        return total if total else 0.0

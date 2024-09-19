@@ -18,17 +18,16 @@ class ExpensesListView(LoginRequiredMixin, FilterView, ListView):
     def get_queryset(self):
         queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-        return self.filterset.qs.filter(user=self.request.user).select_related(
-            "category"
-        )
+        return self.filterset.qs.filter(budget=self.request.user.set_budget.budget)
 
     def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["form"] = ExpenseForm()
-        context["categories"] = ExpenseCategory.objects.filter(user=self.request.user)
-        context["object_list"] = self.get_queryset()
-        if not context["object_list"]:
+        context = {
+            "form": ExpenseForm(),
+            "categories": ExpenseCategory.objects.filter(user=self.request.user),
+        }
+        kwargs.update(context)
+        if not self.object_list:
             messages.info(
                 self.request, "You haven't added any expenses yet. Start by adding one!"
             )
-        return context
+        return super().get_context_data(**kwargs)
