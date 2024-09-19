@@ -22,6 +22,7 @@ class MonthlyIncomes(models.Model):
         null=True,
         blank=True,
     )
+    monthly_income = models.IntegerField(default=0)
 
     class Meta:
         unique_together = ["budget", "year", "month"]

@@ -1,7 +1,6 @@
 from budgets_manager import constants
 from budgets_manager.models import BudgetManager
 from django.db import models
-from expenses.models import Expense
 from expenses.types import Type
 from runningCosts.models import RunningCost
 
@@ -15,7 +14,7 @@ class NeedsManager(BudgetManager):
     @property
     def get_limit(self) -> float:
         return (
-            self.calculate_total_monthly_incomes
+            self.total_monthly_incomes
             * float(self.needs_percentage)
             / constants.MAX_ALLOCATION
         )
@@ -28,7 +27,7 @@ class NeedsManager(BudgetManager):
 
     @property
     def total_spent_in_month(self) -> float:
-        return self.total_expenses_spent_in_month + self.total_costs_spent_in_month
+        return self.total_monthly_needs_expenses + self.total_costs_spent_in_month
 
     @property
     def total_costs_spent_in_month(self) -> float:
@@ -45,18 +44,12 @@ class NeedsManager(BudgetManager):
         return sum(total_amounts_in_month)
 
     @property
-    def total_expenses_spent_in_month(self) -> float:
-        queryset = Expense.objects.prefetch_related("category", "user")
-        if not queryset:
-            return 0.0
-        expenses_wants = queryset.filter(
-            user=self.user,
-            datetime__month=self.TODAY.month,
-            datetime__year=self.TODAY.year,
+    def total_monthly_needs_expenses(self) -> float:
+        expenses_wants = self.get_monthly_expenses().filter(
             category__type=Type.NEEDS,
         )
-        total = expenses_wants.aggregate(total=models.Sum("amount"))["total"] or 0.0
-        return float(total)
+        total = expenses_wants.aggregate(total=models.Sum("amount"))["total"]
+        return float(total) if total else 0.0
 
     @property
     def is_within_needs_budget(self) -> str:

@@ -1,7 +1,6 @@
 from budgets_manager import constants
 from budgets_manager.models import BudgetManager
 from django.db import models
-from expenses.models import Expense
 from expenses.types import Type
 from targets.models import TargetContribution
 
@@ -14,7 +13,7 @@ class WantsManager(BudgetManager):
 
     @property
     def get_limit(self) -> float:
-        return self.calculate_total_monthly_incomes * float(
+        return self.total_monthly_incomes * float(
             self.wants_percentage / constants.MAX_ALLOCATION
         )
 
@@ -27,8 +26,7 @@ class WantsManager(BudgetManager):
     @property
     def total_spent_in_month(self) -> float:
         return (
-            self.total_targets_contribution_in_month
-            + self.total_expenses_spent_in_month
+            self.total_targets_contribution_in_month + self.total_monthly_wants_expenses
         )
 
     @property
@@ -38,7 +36,7 @@ class WantsManager(BudgetManager):
         )
 
         targets = get_queryset.filter(
-            user=self.user, date__range=self.get_current_month_range()
+            user=self.user, date__range=self.get_month_range()
         )
         total = targets.aggregate(total=models.Sum("amount"))["total"]
         if not total:
@@ -46,19 +44,15 @@ class WantsManager(BudgetManager):
         return float(total)
 
     @property
-    def total_expenses_spent_in_month(self) -> float:
-        expenses_wants = Expense.objects.filter(
-            user=self.user,
-            datetime__range=self.get_current_month_range(),
+    def total_monthly_wants_expenses(self) -> float:
+        expenses_wants = self.get_monthly_expenses().filter(
             category__type=Type.WANTS,
         )
         total = expenses_wants.aggregate(total=models.Sum("amount"))["total"]
-        if not total:
-            return 0.0
-        return float(total)
+        return float(total) if total else 0.0
 
     @property
-    def is_within_wants_budget(self):
+    def is_within_wants_budget(self) -> bool:
         return self.total_spent_in_month <= self.get_limit
 
     @property
