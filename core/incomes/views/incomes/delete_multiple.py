@@ -1,3 +1,4 @@
+from accounts.mixins.ownership import OwnerRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect
@@ -6,7 +7,7 @@ from django.views import View
 from incomes.models import Income
 
 
-class DeleteMultipleIncomesView(LoginRequiredMixin, View):
+class DeleteMultipleIncomesView(LoginRequiredMixin, OwnerRequiredMixin, View):
     def post(self, request):
         selected_incomes = request.POST.getlist("selected_incomes")
         if selected_incomes:

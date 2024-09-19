@@ -1,5 +1,7 @@
+from accounts.mixins.ownership import OwnerRequiredMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
 from django.db.models import QuerySet
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -8,15 +10,18 @@ from incomes.forms import IncomeForm
 from incomes.models import Income
 
 
-class IncomeUpdateView(LoginRequiredMixin, UpdateView):
+class IncomeUpdateView(
+    LoginRequiredMixin, OwnerRequiredMixin, SuccessMessageMixin, UpdateView
+):
     form_class = IncomeForm
     model = Income
     success_url = reverse_lazy("incomes:incomes-list")
     context_object_name = "incomes"
     template_name: str = "incomes/list.html"
+    success_message = "Income updated successfully"
 
     def get_queryset(self) -> QuerySet[Income]:
-        return Income.objects.filter(user=self.request.user)
+        return self.request.user.set_budget.budget.get_annual_incomes()
 
     def form_invalid(self, form) -> HttpResponseRedirect:
         messages.error(
@@ -26,7 +31,5 @@ class IncomeUpdateView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form) -> HttpResponseRedirect:
         """If the form is valid, save the associated model."""
-        self.object = form.save()
-        response = super().form_valid(form)
         messages.success(self.request, "The income updated successfully!")
-        return response
+        return super().form_valid(form)
