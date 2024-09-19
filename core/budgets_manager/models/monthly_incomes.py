@@ -29,5 +29,5 @@ class MonthlyIncomes(models.Model):
         ordering = ["budget", "year", "month"]
 
     @property
-    def total_incomes_sum(self) -> dict:
-        return self.budget.calculate_total_monthly_incomes
+    def total_incomes(self) -> dict:
+        return self.budget.total_monthly_incomes
