@@ -1,4 +1,5 @@
 from accounts.models import CustomUser
+from budgets_manager.models import BudgetManager
 from django.db import models
 from django.utils import timezone
 
@@ -6,6 +7,9 @@ from django.utils import timezone
 class Income(models.Model):
     user = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE, related_name="incomes"
+    )
+    budget = models.ForeignKey(
+        BudgetManager, on_delete=models.CASCADE, related_name="incomes"
     )
     category = models.CharField(
         max_length=100,
