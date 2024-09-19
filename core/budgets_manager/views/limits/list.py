@@ -16,17 +16,20 @@ class LimitListView(LoginRequiredMixin, ListView):
     def get_queryset(self) -> QuerySet[LimitManager]:
         queryset = super().get_queryset()
         self.filterset = self.filterset_class(self.request.GET, queryset=queryset)
-        queryset = self.filterset.qs.filter(budget_manager__user=self.request.user)
+        queryset = self.filterset.qs.filter(
+            budget_manager=self.request.user.set_budget.budget
+        )
         return queryset.select_related("budget_manager")
 
     def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["object_list"] = self.get_queryset()
-        context["form"] = LimitForm()
-        context["filter"] = self.filterset
-        context["limit_forms"] = {
-            limit.pk: LimitForm(instance=limit) for limit in self.object_list
-        }.items()
+        context = {
+            "form": LimitForm(),
+            "filter": self.filterset,
+            "limit_forms": {
+                limit.pk: LimitForm(instance=limit) for limit in self.object_list
+            }.items(),
+        }
+        kwargs.update(context)
         if not self.get_queryset().exists():
             messages.info(self.request, "No limits found.")
-        return context
+        return super().get_context_data(**kwargs)

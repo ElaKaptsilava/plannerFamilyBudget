@@ -6,7 +6,7 @@ from budgets_manager.views.budget import (
 from budgets_manager.views.limits import (
     LimitCreateView,
     LimitListView,
-    PlannerMultipleDeleteView,
+    LimitMultipleDeleteView,
     UpdateLimitView,
 )
 from django.urls import path
@@ -40,7 +40,7 @@ urlpatterns = [
     ),
     path(
         "limits/list/delete/multiple/",
-        PlannerMultipleDeleteView.as_view(),
+        LimitMultipleDeleteView.as_view(),
         name="limits-delete-multiple",
     ),
     path(
