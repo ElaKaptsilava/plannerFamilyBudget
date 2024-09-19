@@ -3,7 +3,6 @@ from datetime import datetime
 from budgets_manager.models import BudgetManager
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from incomes.models import Income
 
 
 class MonthlyIncomes(models.Model):
@@ -30,8 +29,4 @@ class MonthlyIncomes(models.Model):
 
     @property
     def total_incomes_sum(self) -> dict:
-        incomes = Income.objects.filter(
-            user=self.budget.user, date__year=self.year, date__month=self.month
-        )
-        total = incomes.aggregate(total=models.Sum("amount"))["total"]
-        return total
+        return self.budget.calculate_total_monthly_incomes
