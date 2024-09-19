@@ -1,5 +1,6 @@
 import uuid
 
+from budgets_manager.models import SetBudget
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.mail import send_mail
@@ -7,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.generic import CreateView
 from multi_user.forms.invitation_token import InvitationTokenForm
-from multi_user.models import FamilyBudget, InvitationToken
+from multi_user.models import InvitationToken
 
 
 class InviteMemberView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -22,8 +23,8 @@ class InviteMemberView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         )
 
     def form_valid(self, form):
-        family_budget = FamilyBudget.objects.get(pk=self.kwargs["family_budget_id"])
-        form.instance.family_budget = family_budget
+        budget = SetBudget.objects.get(user=self.request.user).budget
+        form.instance.budget = budget
         form.instance.token = uuid.uuid4()
         response = super().form_valid(form)
 
