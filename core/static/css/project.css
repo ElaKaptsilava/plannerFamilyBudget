@@ -201,20 +201,15 @@
 }
 
 .appname {
-    font-family: 'Munich', 'Bodoni', 'Playfair Display', serif;
-    font-size: 18px;
-    font-weight: 700;
-    color: #283480;
+    font-family: 'Indie Flower', 'Amatic SC', 'Caveat', 'Satisfy', 'Reenie Beanie', cursive;
+    font-size: 22px;
+    font-weight: 700; /* Adjust as needed; handwritten fonts often don't use bold */
+    color: rgba(0, 0, 0, 0.4);
     padding: 10px 15px;
     margin: 0;
     display: flex;
     align-items: center;
     transition: background-color 0.3s, box-shadow 0.3s;
-}
-
-.appname:hover {
-    color: #090d1b;
-    font-size: 20px;
 }
 
 .titleBudget {
@@ -256,4 +251,91 @@
 
 .modal-footer {
     padding: 10px;
+}
+
+.wallet-card {
+    width: 100%;
+    max-width: 450px;
+    height: 250px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #ffa742, #9013FE);
+    color: white;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1050;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.wallet-card .wallet-logo {
+    width: 50px;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+.wallet-card .wallet-name {
+    font-size: 2.1em;
+    letter-spacing: 1px;
+    text-align: right;
+    position: absolute; /* Position absolutely within relative parent */
+    top: 20px; /* Adjust top position */
+    right: 20px;
+}
+
+.wallet-card .wallet-balance {
+    font-size: 1.8em;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+
+}
+
+
+.wallet-card .wallet-currency {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    color: #ffa742;
+
+}
+
+/* Darkened overlay */
+.dark-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    z-index: 1040;
+}
+
+.show-card,
+.show-overlay {
+    display: block;
+}
+
+.resizable {
+    position: relative;
+}
+
+.resize-handle {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border: 2px solid #666;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    cursor: se-resize;
+    z-index: 10;
 }

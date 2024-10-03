@@ -1,7 +1,7 @@
 from accounts.tests import CustomUserFactory
-from budgets_manager.tests.factories import BudgetManagerFactory
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.test import TestCase
-from expenses.tests import ExpenseCategoryFactory, ExpenseFactory
+from expenses.tests.factories import ExpenseCategoryFactory, ExpenseFactory
 from expenses.types import Type
 from incomes.tests.factories import IncomeFactory
 from runningCosts.tests.factories import RunningCostCategoryFactory, RunningCostFactory

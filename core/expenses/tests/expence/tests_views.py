@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 from accounts.tests import CustomUserFactory
-from budgets_manager.tests.factories import BudgetManagerFactory
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse_lazy

@@ -4,7 +4,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 from subscription.models import Subscription
-from subscription.tests import PlanFactory, SubscriptionFactory
+from subscription.tests.factories import PlanFactory, SubscriptionFactory
 
 
 class UpdateSubscriptionStatusTestCase(TestCase):
