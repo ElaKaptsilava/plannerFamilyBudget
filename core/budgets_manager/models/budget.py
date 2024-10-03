@@ -40,7 +40,7 @@ class BudgetManager(models.Model):
 
     def __repr__(self) -> str:
         return (
-            f"Budget(user={self.user.username!r},"
+            f"Budget(user={self.user.username!r}, "
             f"savings_percentage={self.savings_percentage!r}, wants_percentage={self.wants_percentage!r}, "
             f"needs_percentage={self.needs_percentage!r})"
         )
@@ -55,6 +55,8 @@ class BudgetManager(models.Model):
             )
 
     def get_annual_incomes(self) -> QuerySet:
+        if self.participants:
+            return self.incomes.filter(date__year=self.TODAY.year)
         return self.incomes.filter(
             user__in=self.participants.all(), date__year=self.TODAY.year
         )
@@ -63,6 +65,8 @@ class BudgetManager(models.Model):
         return self.get_annual_incomes().filter(date__month=self.TODAY.month)
 
     def get_annual_expenses(self) -> QuerySet:
+        if self.participants:
+            return self.expenses.filter(datetime__year=self.TODAY.year)
         return self.expenses.filter(
             user__in=self.participants.all(), datetime__year=self.TODAY.year
         )

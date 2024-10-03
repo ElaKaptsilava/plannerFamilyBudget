@@ -57,14 +57,17 @@ class LimitManager(models.Model):
         super().save(*args, **kwargs)
 
     def __validate_budget_type(self):
-        if self.type == Type.NEEDS and self.target:
-            raise ValidationError(
-                "For 'needs' type, either category expense or category running cost must be set."
-            )
-        elif self.type == Type.WANTS and self.category_running_cost:
-            raise ValidationError(
-                "For 'wants' type, target or category expense must be set."
-            )
+        if self.type == Type.NEEDS:
+            if not self.category_expense and not self.category_running_cost:
+                raise ValidationError(
+                    "For 'needs' type, either category expense or category running cost must be set."
+                )
+        elif self.type == Type.WANTS:
+            if not self.category_expense and not self.category_running_cost:
+
+                raise ValidationError(
+                    "For 'wants' type, target or category expense must be set."
+                )
 
     def __validate_amount(self):
         limits = {
