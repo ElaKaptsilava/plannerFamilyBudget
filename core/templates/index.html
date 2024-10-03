@@ -9,94 +9,6 @@
           content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <style>
-        .wallet-card {
-            width: 100%;
-            max-width: 450px;
-            height: 250px;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #ffa742, #9013FE);
-            color: white;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            position: fixed;
-            top: 25%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: none;
-            z-index: 1050;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: flex-end;
-        }
-
-        .wallet-card .wallet-logo {
-            width: 50px;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-
-        .wallet-card .wallet-name {
-            font-size: 2.1em;
-            letter-spacing: 1px;
-            text-align: right;
-            position: absolute; /* Position absolutely within relative parent */
-            top: 20px; /* Adjust top position */
-            right: 20px;
-        }
-
-        .wallet-card .wallet-balance {
-            font-size: 1.8em;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-
-        }
-
-
-        .wallet-card .wallet-currency {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            color: #ffa742;
-
-        }
-
-        /* Darkened overlay */
-        .dark-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            z-index: 1040;
-        }
-
-        .show-card,
-        .show-overlay {
-            display: block;
-        }
-
-        .resizable {
-            position: relative;
-        }
-
-        .resize-handle {
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border: 2px solid #666;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            cursor: se-resize;
-            z-index: 10;
-        }
-    </style>
     <script>
         function toggleWallet() {
             var walletCard = document.getElementById('walletCard');
@@ -120,6 +32,9 @@
         });
 
     </script>
+    <!-- Add this to your HTML <head> -->
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Dancing+Script:wght@700&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+
     <title>SB Admin 2 - Dashboard</title>
     <!-- Custom fonts for this template-->
 
@@ -142,10 +57,11 @@
         <a class="sidebar-brand d-flex align-items-center justify-content-center"
            href="{% url 'home' %}">
             <div class="sidebar-brand-icon rotate-n-15">
-                <i class="fas fa-laugh-wink"></i>
+                <i class="fas fa-landmark" style="color: {{ request.user.set_budget.budget.color }}"></i>
             </div>
             <div class="sidebar-brand-text mx-3">
-                Planer <sup>{{ request.user.last_name }}</sup>
+                Planer
+                <sup style="color: {{ request.user.set_budget.budget.color }}" ">{{ request.user.set_budget.budget.title }}</sup>
             </div>
         </a>
         <!-- Divider -->
@@ -221,7 +137,7 @@
                 </div>
             </div>
         </li>
-        <li class="nav-item">
+                <li class="nav-item">
             <a class="nav-link collapsed"
                href="#"
                data-toggle="collapse"
@@ -229,14 +145,18 @@
                aria-expanded="true"
                aria-controls="collapseTree">
                 <i class="fas fa-fw fa-cog"></i>
-                <span>Collaboration</span>
+                <span>Budgets</span>
             </a>
             <div id="collapseTree"
                  class="collapse"
                  aria-labelledby="headingTwo"
                  data-parent="#accordionSidebar">
-
-
+                <div class="bg-white py-2 collapse-inner rounded">
+                    <h6 class="collapse-header">{{ request.user.username }} Budgets:</h6>
+                    {% for budget in request.user.budgetmanager_set.all %}
+                    <a class="collapse-item" style="color: {{ budget.color }}" href="{% url 'multiuser:invite-family-member' family_budget_id=budget.pk %}">{{ budget.title }}</a>
+                    {% endfor %}
+                </div>
             </div>
         </li>
 
@@ -349,7 +269,6 @@
                     <i class="fa fa-bars"></i>
                 </button>
                 {% block back %}{% endblock %}
-                {% block appname %}{% endblock %}
                 <!-- Topbar Search -->
                 <form
                         class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
@@ -365,6 +284,7 @@
                         </div>
                     </div>
                 </form>
+                {% block appname %}{% endblock %}
                 <!-- Topbar Navbar -->
                 <ul class="navbar-nav ml-auto">
                     {% block actions %}{% endblock %}

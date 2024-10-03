@@ -22,7 +22,7 @@
                                 {{ budget.TODAY.date|date:"F Y" }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ budget.calculate_total_monthly_incomes }}
+                                {{ budget.total_monthly_incomes }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -42,7 +42,7 @@
                                 {{ budget.TODAY.date.year }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ budget.calculate_annual_incomes }}
+                                {{ budget.total_annual_incomes }}
                             </div>
                         </div>
                         <div class="col-auto">
@@ -61,7 +61,7 @@
                                 {{ budget.TODAY.date|date:"F Y" }})
                             </div>
                             <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                {{ budget.calculate_monthly_expenses }}
+                                {{ budget.total_monthly_expenses }}
                             </div>
                         </div>
                         <div class="col-auto">
