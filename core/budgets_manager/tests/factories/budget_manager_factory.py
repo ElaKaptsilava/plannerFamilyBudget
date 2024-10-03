@@ -1,6 +1,8 @@
 import factory
 from accounts.tests import CustomUserFactory
 from budgets_manager.models import BudgetManager, LimitManager
+from expenses.tests import ExpenseCategoryFactory
+from targets.tests import TargetFactory
 
 
 class BudgetManagerFactory(factory.django.DjangoModelFactory):
@@ -18,3 +20,5 @@ class LimitManagerFactory(factory.django.DjangoModelFactory):
         model = LimitManager
 
     amount = factory.Faker("pyint")
+    target = factory.SubFactory(TargetFactory)
+    category_expense = factory.SubFactory(ExpenseCategoryFactory)
