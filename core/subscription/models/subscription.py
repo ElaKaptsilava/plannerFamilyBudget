@@ -2,7 +2,7 @@ from accounts.models import CustomUser
 from dateutil.relativedelta import relativedelta
 from django.db import models
 from django.utils import timezone
-from subscription.models import Plan
+from subscription.models import Plan, Status
 
 
 class Subscription(models.Model):
@@ -48,3 +48,11 @@ class Subscription(models.Model):
                 self.start_date = queryset.first().end_date + relativedelta(days=1)
             self.end_date = self.start_date + relativedelta(months=1)
         super().save(*args, **kwargs)
+
+    def check_is_active(self):
+        if self.start_date and self.end_date:
+            if self.payment and self.payment.status == Status.COMPLETED:
+                self.is_active = True
+            else:
+                self.is_active = False
+            self.save()
