@@ -1,12 +1,11 @@
 from typing import Any, Optional
 
 from accounts.models import CustomUser
-from budgets_manager.models import BudgetManager, NeedsManager, WantsManager
+from budgets_manager.models import NeedsManager, WantsManager
 from communication.models.messages import Message
 from django.core.management.base import BaseCommand
 from django.db.models import QuerySet, Sum
 from django.utils import timezone
-from expenses.types import Type
 from openai import OpenAI
 from openai.types.chat import ChatCompletion
 from subscription.models import Plan
@@ -26,13 +25,14 @@ class Command(BaseCommand):
 
     def create_budget_message(self) -> None:
         users: QuerySet[CustomUser] = CustomUser.objects.select_related(
-            "budgetmanager"
+            "set_budget__budget"
         ).prefetch_related("expense_categories")
         basic_plan_names = set(
             Plan.objects.filter(price=0).values_list("name", flat=True)
         )
         for user in users:
-            if user.subscription.plan.name in basic_plan_names:
+            user_plan = user.subscription_set.last().plan
+            if user_plan.name in basic_plan_names:
                 continue
             needs_manager: NeedsManager = NeedsManager.objects.get(user=user)
             wants_manager: WantsManager = WantsManager.objects.get(user=user)
@@ -80,37 +80,9 @@ class Command(BaseCommand):
         return completion.choices[0].message.content.replace("[Your Name]", "")
 
     @staticmethod
-    def calculate_want_expenses_monthly(
-        user: CustomUser, budget: BudgetManager
-    ) -> float:
-        want_expenses: QuerySet = user.expenses.filter(
-            category__type=Type.WANTS, datetime__range=budget.get_current_month_range()
-        )
-        total = 0.0
-        if want_expenses:
-            total: Optional[float] = want_expenses.aggregate(total_w=Sum("amount"))[
-                "total_w"
-            ]
-        return total
-
-    @staticmethod
-    def calculate_need_expenses_monthly(
-        user: CustomUser, budget: BudgetManager
-    ) -> float:
-        need_expenses: QuerySet = user.expenses.filter(
-            category__type=Type.NEEDS, datetime__range=budget.get_current_month_range()
-        )
-        total = 0.0
-        if need_expenses:
-            total: Optional[float] = need_expenses.aggregate(total_n=Sum("amount"))[
-                "total_n"
-            ]
-        return total
-
-    @staticmethod
     def calculate_savings_monthly(user: CustomUser, budget: Any) -> float:
         savings_monthly: QuerySet = user.saving.savingcontributions_set.filter(
-            date__range=budget.get_current_month_range()
+            date__range=budget.get_month_range()
         )
         total: Optional[float] = savings_monthly.aggregate(total_sav=Sum("amount"))[
             "total_sav"
@@ -120,7 +92,9 @@ class Command(BaseCommand):
     def write_summary(
         self, user: CustomUser, wants_manager: WantsManager, needs_manager: NeedsManager
     ) -> str:
-        budget: Any = user.budgetmanager
+        budget: Any = user.set_budget.budget
+        wants_expenses = WantsManager.objects.get(user=user)
+        needs = NeedsManager.objects.get(user=user)
         summary: str = (
             f"User: {user.username}\n\n"
             f"Monthly Budget Plan:\n"
@@ -133,10 +107,10 @@ class Command(BaseCommand):
             f"For savings: {budget.savings_percentage}%\n"
             f"Total savings (monthly): {self.calculate_savings_monthly(user=user, budget=budget)}\n"
             f"Total savings: {user.saving.total_amount}\n\n"
-            f"Total monthly incomes: {budget.calculate_total_monthly_incomes}\n"
-            f"Total monthly expenses: {budget.calculate_monthly_expenses}\n"
-            f"Total want expenses (monthly): {self.calculate_want_expenses_monthly(user=user, budget=budget)}\n"
-            f"Total need expenses (monthly): {self.calculate_need_expenses_monthly(user=user, budget=budget)}\n"
+            f"Total monthly incomes: {budget.total_monthly_incomes}\n"
+            f"Total monthly expenses: {budget.total_monthly_expenses}\n"
+            f"Total want expenses (monthly): {wants_expenses.total_monthly_wants_expenses}\n"
+            f"Total need expenses (monthly): {needs.total_monthly_needs_expenses}\n"
             f"Total running costs: {needs_manager.total_costs_spent_in_month}\n"
         )
         last_message = user.messages.first()
