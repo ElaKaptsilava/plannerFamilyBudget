@@ -19,6 +19,7 @@ class SubscriptionFactory(factory.django.DjangoModelFactory):
 
     user = factory.SubFactory(CustomUserFactory)
     plan = factory.SubFactory(PlanFactory)
+    is_active = False
 
 
 class PaymentFactory(factory.django.DjangoModelFactory):
