@@ -45,7 +45,11 @@ class BudgetManager(models.Model):
             f"needs_percentage={self.needs_percentage!r})"
         )
 
-    def clean(self):
+    def save(self, *args, **kwargs) -> None:
+        self.check_total_allocation()
+        super().save(*args, **kwargs)
+
+    def check_total_allocation(self):
         allocation = (
             self.savings_percentage + self.needs_percentage + self.wants_percentage
         )
