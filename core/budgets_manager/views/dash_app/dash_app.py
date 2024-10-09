@@ -2,29 +2,29 @@ import secrets
 from collections import defaultdict
 
 from budgets_manager.models import MonthlyIncomes
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.utils import timezone
 from django.views import View
 
 
-class EarningsDataView(View):
+class EarningsDataView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs) -> JsonResponse:
         year = timezone.now().year
         budget = request.user.set_budget.budget
         earnings = MonthlyIncomes.objects.filter(year=year, budget=budget)
-        earns = [0] * 12
+        earns = [0.0] * 12
         for earning in earnings:
             earns[earning.month - 1] = earning.total_incomes
 
         return JsonResponse({"data": earns})
 
 
-class RevenueSourcesView(View):
+class RevenueSourcesView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs) -> JsonResponse:
         incomes = request.user.set_budget.budget.get_monthly_incomes().order_by(
             "-amount"
         )
-
         data = defaultdict(list)
         labels = defaultdict(float)
 
@@ -38,7 +38,6 @@ class RevenueSourcesView(View):
             color = self.generate_random_color()
             if color not in data["colors"]:
                 data["colors"].append(color)
-
         return JsonResponse(dict(data))
 
     @staticmethod
