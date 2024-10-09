@@ -8,6 +8,8 @@ class BudgetManagerFactory(factory.django.DjangoModelFactory):
         model = BudgetManager
 
     user = factory.SubFactory(CustomUserFactory)
+    title = "Test Budget Manager"
+    color = "#FF0000"
     savings_percentage = 20
     wants_percentage = 40
     needs_percentage = 40
