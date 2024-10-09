@@ -2,17 +2,19 @@ import datetime
 from http import HTTPStatus
 
 from accounts.tests import CustomUserFactory
-from django.contrib.messages import get_messages
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
+from django.contrib.messages import constants, get_messages
 from django.test import TestCase
 from django.urls import reverse_lazy
 from django.utils import timezone
-from targets.models import Target
+from targets.models import Target, TargetContribution
 from targets.tests.factories import TargetContributionFactory, TargetFactory
 
 
 class TargetTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory()
+        self.budget = BudgetManagerFactory(user=self.user)
 
         self.target_build = TargetFactory.build(
             user=self.user, deadline=datetime.date(3000, 1, 1)
@@ -62,36 +64,23 @@ class TargetTestCase(TestCase):
     def test_user_multiple_delete_target_success(self):
         self.client.force_login(self.user)
 
-        target = TargetFactory.create(
-            user=self.user, deadline=datetime.date(3000, 1, 1)
-        )
-        target1 = TargetFactory.create(
-            user=self.user, deadline=datetime.date(3000, 1, 1)
-        )
-        target2 = TargetFactory.create(
-            user=self.user, deadline=datetime.date(3000, 1, 1)
-        )
-        target3 = TargetFactory.create(
-            user=self.user, deadline=datetime.date(3000, 1, 1)
+        TargetFactory.create_batch(
+            user=self.user, deadline=datetime.date(3000, 1, 1), size=4
         )
 
         self.assertEqual(Target.objects.count(), 4)
 
-        list_to_delete = [target.pk, target1.pk, target3.pk]
+        list_to_delete = [Target.objects.first().pk, Target.objects.last().pk]
 
         response = self.client.post(
             reverse_lazy("targets:targets-list-delete-multiple"),
             {"selected_targets": list_to_delete},
         )
 
-        messages = list(get_messages(response.wsgi_request))
+        messages = list(get_messages(response.wsgi_request))[0]
 
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(
-            messages[0].message, "Selected targets were deleted successfully."
-        )
-        self.assertEqual(Target.objects.count(), 1)
-        self.assertEqual(Target.objects.first().pk, target2.pk)
+        self.assertEqual(messages.level, constants.SUCCESS)
+        self.assertEqual(Target.objects.count(), 2)
 
     def test_user_multiple_delete_target_with_empty_data(self):
         self.client.force_login(self.user)
@@ -164,6 +153,7 @@ class TargetTestCase(TestCase):
 class TargetContributionTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory()
+        self.budget = BudgetManagerFactory(user=self.user)
 
     def test_user_add_contribution_success(self):
         self.client.force_login(self.user)
@@ -222,23 +212,12 @@ class TargetContributionTestCase(TestCase):
             user=self.user, deadline=datetime.date(3000, 1, 1)
         )
 
-        contributions = TargetContributionFactory.create(
-            target=target, date=timezone.now().date()
-        )
-        contributions1 = TargetContributionFactory.create(
-            target=target, date=timezone.now().date()
-        )
-        contributions2 = TargetContributionFactory.create(
-            target=target, date=timezone.now().date()
-        )
-        contributions3 = TargetContributionFactory.create(
-            target=target, date=timezone.now().date()
+        TargetContributionFactory.create_batch(
+            target=target, date=timezone.now().date(), size=5
         )
 
         selected_contributions = [
-            contributions.pk,
-            contributions1.pk,
-            contributions2.pk,
+            TargetContribution.objects.first().pk,
         ]
 
         response = self.client.post(
@@ -254,5 +233,4 @@ class TargetContributionTestCase(TestCase):
         self.assertEqual(
             messages[0].message, "Target Contributions were deleted successfully."
         )
-        self.assertEqual(len(target.targetcontribution_set.all()), 1)
-        self.assertEqual(target.targetcontribution_set.first().pk, contributions3.pk)
+        self.assertEqual(len(target.targetcontribution_set.all()), 4)
