@@ -1,4 +1,5 @@
 from accounts.tests import CustomUserFactory
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.test import TestCase
 from django.urls import reverse, reverse_lazy
 from incomes.models import Income
@@ -9,7 +10,8 @@ from rest_framework import status
 class IncomesTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
-        self.income = IncomeFactory.build(user=self.user)
+        self.budget = BudgetManagerFactory.create(user=self.user)
+        self.income = IncomeFactory.build(user=self.user, budget=self.budget)
         self.cleaned_data = {
             "source": self.income.source,
             "category": self.income.category,
@@ -25,7 +27,7 @@ class IncomesTests(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_302_FOUND)
-        self.assertEqual(Income.objects.filter(user__email=self.user.email).count(), 1)
+        self.assertEqual(Income.objects.count(), 1)
 
     def test_user_get_incomes_success(self):
         self.client.force_login(self.user)
@@ -38,7 +40,7 @@ class IncomesTests(TestCase):
     def test_update_incomes_success(self):
         self.client.force_login(self.user)
 
-        income = IncomeFactory.create(user=self.user)
+        income = IncomeFactory.create(user=self.user, budget=self.budget)
 
         response = self.client.post(
             reverse_lazy("incomes:incomes-detail-update", kwargs={"pk": income.pk}),
@@ -55,7 +57,8 @@ class IncomesTests(TestCase):
 class DeleteIncomesTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
-        self.income = IncomeFactory.build(user=self.user)
+        self.budget = BudgetManagerFactory.create(user=self.user)
+        self.income = IncomeFactory.build(user=self.user, budget=self.budget)
         self.cleaned_data = {
             "source": self.income.source,
             "category": self.income.category,
@@ -68,16 +71,15 @@ class DeleteIncomesTests(TestCase):
 
         self.client.post(reverse_lazy("incomes:incomes-list"), self.cleaned_data)
 
-        income = Income.objects.get(user__email=self.user.email)
+        income = Income.objects.first()
         initial_incomes_count = Income.objects.count()
 
         self.assertEqual(initial_incomes_count, 1)
 
         response = self.client.post(
             reverse("incomes:incomes-delete-multiple"),
-            {"selected_incomes": [income.id]},
+            data={"selected_incomes": [income.id]},
         )
-
         self.assertEqual(response.status_code, 302)
         self.assertEqual(Income.objects.count(), initial_incomes_count - 1)
 

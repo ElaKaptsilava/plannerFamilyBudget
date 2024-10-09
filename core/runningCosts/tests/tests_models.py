@@ -1,6 +1,7 @@
 import datetime
 
 from accounts.tests import CustomUserFactory
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.test import TestCase
 from runningCosts.models import RunningCost
 from runningCosts.tests.factories import RunningCostCategoryFactory, RunningCostFactory
@@ -10,6 +11,7 @@ class TestNextPaymentDateUpdate(TestCase):
 
     def setUp(self):
         self.user = CustomUserFactory.create()
+        self.budget = BudgetManagerFactory.create(user=self.user)
         self.category = RunningCostCategoryFactory.create(user=self.user)
 
     def test_next_payment_date_is_updated_correctly_when_paid_and_period_is_month(self):

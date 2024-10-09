@@ -17,16 +17,16 @@ class ExpenseListTestCase(TestCase):
         self.user = CustomUserFactory.create()
 
         self.budget = BudgetManagerFactory.create(user=self.user)
-        self.income = IncomeFactory.create(user=self.user)
+        self.income = IncomeFactory.create(user=self.user, budget=self.budget)
 
         self.category_create1 = ExpenseCategoryFactory.create(user=self.user)
         self.category_create2 = ExpenseCategoryFactory.create(user=self.user)
 
         self.expenses_build1 = ExpenseFactory.create(
-            user=self.user, category=self.category_create1
+            user=self.user, category=self.category_create1, budget=self.budget
         )
         self.expenses_build2 = ExpenseFactory.create(
-            user=self.user, category=self.category_create2
+            user=self.user, category=self.category_create2, budget=self.budget
         )
 
         self.expenses_list_url = reverse_lazy("expenses:expenses-list")
@@ -53,7 +53,7 @@ class ExpensesCreateTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
         self.budget = BudgetManagerFactory.create(user=self.user)
-        self.income = IncomeFactory.create(user=self.user)
+        self.income = IncomeFactory.create(user=self.user, budget=self.budget)
         self.category_create = ExpenseCategoryFactory.create(user=self.user)
         self.expenses_build = ExpenseFactory.build()
         self.cleaned_data = {
@@ -104,9 +104,11 @@ class ExpensesCreateTests(TestCase):
 class ExpensesUpdateTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
+        self.budget = BudgetManagerFactory.create(user=self.user)
+
         self.category_create = ExpenseCategoryFactory.create(user=self.user)
         self.expenses = ExpenseFactory.create(
-            user=self.user, category=self.category_create
+            user=self.user, category=self.category_create, budget=self.budget
         )
         self.success_level = 25
         self.error_level = 40
@@ -148,15 +150,17 @@ class ExpensesUpdateTests(TestCase):
 class ExpensesDeleteTests(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
+        self.budget = BudgetManagerFactory.create(user=self.user)
+
         self.category_create = ExpenseCategoryFactory.create(user=self.user)
         self.expenses = ExpenseFactory.create(
-            user=self.user, category=self.category_create
+            user=self.user, category=self.category_create, budget=self.budget
         )
         self.expenses = ExpenseFactory.create(
-            user=self.user, category=self.category_create
+            user=self.user, category=self.category_create, budget=self.budget
         )
         self.expenses = ExpenseFactory.create(
-            user=self.user, category=self.category_create
+            user=self.user, category=self.category_create, budget=self.budget
         )
         self.success_level = 25
         self.info_level = 20
@@ -164,18 +168,18 @@ class ExpensesDeleteTests(TestCase):
             "expenses:expenses-list-delete-multiple"
         )
 
-    # def test_delete_expense_success(self):
-    #     self.client.force_login(self.user)
-    #     selected_expenses = [self.category_create.pk]
-    #     print(Expense.objects.count())
-    #     response = self.client.post(
-    #         self.url_delete_multiple, data={"selected_expenses": selected_expenses}
-    #     )
-    #
-    #     message = list(get_messages(response.wsgi_request))[0]
-    #     print(Expense.objects.count())
-    #     self.assertEqual(message.level, self.success_level)
-    #     self.assertEqual(Expense.objects.count(), 2)
+    def test_delete_expense_success(self):
+        self.client.force_login(self.user)
+
+        selected_expenses = [self.category_create.pk]
+        response = self.client.post(
+            self.url_delete_multiple, data={"selected_expenses": selected_expenses}
+        )
+
+        message = list(get_messages(response.wsgi_request))[0]
+
+        self.assertEqual(message.level, self.success_level)
+        self.assertEqual(Expense.objects.count(), 3)
 
     def test_delete_expense_with_empty_data(self):
         self.client.force_login(self.user)

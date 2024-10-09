@@ -1,6 +1,7 @@
 import datetime
 
 from accounts.tests import CustomUserFactory
+from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.contrib.messages import get_messages
 from django.test import TestCase
 from django.urls import reverse_lazy
@@ -11,6 +12,7 @@ from runningCosts.tests.factories import RunningCostCategoryFactory, RunningCost
 class RunningCostsTestCase(TestCase):
     def setUp(self):
         self.user = CustomUserFactory.create()
+        self.budget = BudgetManagerFactory.create(user=self.user)
         self.category = RunningCostCategoryFactory.create(user=self.user)
         self.cost_build = RunningCostFactory.build(
             category=self.category,

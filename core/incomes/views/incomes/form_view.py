@@ -26,8 +26,9 @@ class IncomesView(LoginRequiredMixin, FilterView, FormView):
 
     def form_valid(self, form) -> HttpResponseRedirect:
         form.instance.user = self.request.user
-        form.instance.budget = self.request.user
+        form.instance.budget = self.request.user.set_budget.budget
         messages.success(self.request, "The income added successfully!")
+        form.save()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs) -> dict:

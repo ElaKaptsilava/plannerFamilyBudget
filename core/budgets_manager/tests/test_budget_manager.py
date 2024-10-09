@@ -3,7 +3,7 @@ import unittest
 from accounts.tests import CustomUserFactory
 from budgets_manager.tests.factories.budget_manager_factory import BudgetManagerFactory
 from django.core.exceptions import ValidationError
-from django.test import TestCase
+from django.test import TestCase, tag
 from expenses.tests.factories import ExpenseCategoryFactory, ExpenseFactory
 from incomes.tests.factories import IncomeFactory
 
@@ -40,12 +40,13 @@ class TestBudgetManager(TestCase):
         )
         self.assertEqual(repr(self.budget_manager), expected_repr)
 
+    @tag("test")
     def test_clean_method_invalid(self):
         self.budget_manager.savings_percentage = 40.0
         self.budget_manager.wants_percentage = 30.0
         self.budget_manager.needs_percentage = 20.0
         with self.assertRaises(ValidationError):
-            self.budget_manager.clean()
+            self.budget_manager.check_total_allocation()
 
     def test_get_annual_incomes(self):
         incomes = self.budget_manager.get_annual_incomes()

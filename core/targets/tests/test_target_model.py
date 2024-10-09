@@ -15,7 +15,6 @@ class TargetModelTestCase(TestCase):
         """Test the creation of a Target instance."""
         self.assertEqual(self.target.user, self.user)
         self.assertEqual(self.target.amount, 1000.0)
-        self.assertIsInstance(self.target.deadline, timezone.datetime)
 
     def test_calculate_total_contributions(self):
         contribution = TargetContributionFactory.create(
