@@ -16,10 +16,8 @@ class BudgetManagerDetailView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
         needs = NeedsManager.objects.get(pk=self.get_object().pk)
         wants = WantsManager.objects.get(pk=self.get_object().pk)
         savings = Saving.objects.get(user=self.get_object().user)
         context.update({"needs": needs, "wants": wants, "savings": savings})
-
         return context
