@@ -1,7 +1,7 @@
 import factory
 from accounts.tests import CustomUserFactory
 
-from ..models import Payment, Plan, Subscription
+from ..models import Payment, Plan, Status, Subscription
 
 
 class PlanFactory(factory.django.DjangoModelFactory):
@@ -27,3 +27,5 @@ class PaymentFactory(factory.django.DjangoModelFactory):
         model = Payment
 
     subscription = factory.SubFactory(SubscriptionFactory)
+    amount = factory.Faker("random_int")
+    status = Status.COMPLETED
